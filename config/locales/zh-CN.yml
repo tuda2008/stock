@@ -1,0 +1,315 @@
+"zh-CN":
+  date:
+    formats:
+      #long: "%{published_at}"
+  web_name: "倍轻松股票管理系统"
+  views:
+    pagination:
+      previous: "上一页"
+      next: "下一页"
+      first: "首页"
+      last: "末页"
+  stock_companies: "公司"
+  activerecord:
+    models:
+      user: "股东"
+      admin: "管理员"
+      stock_company: "公司"
+      stock_split: "分红派股"
+      stock_account: "股票认购"
+      ransom_stock: "股票赎回"
+      account_static: "持股汇总"
+      category: "类别"
+      product: "产品"
+      journal: "历史"
+      admin_user: "管理员"
+      banner: "广告"
+      order: "订单"
+      shipment: '收货信息'
+      page: '文档'
+      coupon: '优惠券'
+      discounting: '优惠记录'
+      discount_event: '优惠活动'
+      site_config: '站点配置'
+      invite: '邀请'
+      express: '快递'
+      partner: '合作伙伴'
+      order_product: '订单信息统计'
+      trade: '财务记录'
+      reward: '推广奖励'
+    attributes:
+      user:
+        mobile: "手机"
+        email: "邮箱"
+        name: "真实姓名"
+        card: "卡号"
+        cert_id: "身份证号"
+        locked_at: "冻结时间"
+        password: "密码"
+        password_confirmation: "确认密码"
+        avatar: "头像"
+        signature: "个性签名"
+        private_token: "Token"
+        verified: "账户可用"
+        score: '积分'
+        balance: '余额'
+        recommender: '推荐人'
+        verified: '账号可用'
+      stock_account:
+        user: "股东名"
+        user_id: "股东名"
+        stock_company: "公司名"
+        company_id: "公司名"
+        stock_sum: "认购股数"
+        stock_price: "认购价格"
+        level: "股东级数"
+        published_at: "认购日期"
+        visible: "认购有效"
+      stock_company:
+        name: "公司名称"
+        description: "公司简介"
+        legal_representative: "法人代表"
+        visible: "公司运营请情况"
+        stockholders_num: "现股东总数"
+        holders_stock_num: "现持股总数"
+        holders_buy_sum_price: "认购总额"
+        ransom_stock_num: "赎回总股数"
+        ransom_sum_price: "赎回总额"
+        holders_stock_sum_price: "现股东持股总额"
+        stock_price: "每股现价"
+        estimate_market_price: "预估市值"
+      stock_split:
+        company_id: "公司名"
+        stock_company: "公司名"
+        stock_transfer: "转股"
+        stock_send: "送股"
+        stock_bonus: "分红"
+        published_at: "派股日期"
+        enabled: "确认派送"
+        info: "备注说明"
+      ransom_stock:
+        user: "股东名"
+        user_id: "股东名"
+        company_id: "公司名"
+        stock_company: "公司名"
+        stock_num: "赎回股数"
+        stock_price: "赎回价格"
+        published_at: "赎回日期"
+        info: "备注说明"
+        visible: "确认赎回"
+      account_static:
+        user: "股东名"
+        user_id: "股东名"
+        company_id: "公司名"
+        stock_company: "公司名"
+        stock_sum: "现持股数"
+        stock_bonus: "已分红"
+        ransom_stock_num: "已赎回股数"
+        ransom_sum_price: "赎回所得"
+      shipment:
+        name: "姓名"
+        mobile: "手机"
+        address: "收货地址"
+        region: "所在区域"
+      page:
+        title: '标题'
+        slug: '链接'
+        body: '内容'
+        created_at: '创建时间'
+      coupon:
+        title: '标题'
+        body: '内容'
+        note: '使用说明'
+        value: '优惠额度'
+        max_value: '最大优惠额度'
+        coupon_type: '优惠券类型'
+        use_type: '发放方式'
+        created_at: '优惠券创建时间'
+        expired_days: '有效期'
+      discounting:
+        discounted_at: '优惠券激活时间'
+        created_at: '创建时间'
+        coupon_id: '优惠券'
+        user_id: '用户'
+        expired_on: '有效期'
+      discount_event:
+        code: '优惠码'
+        title: '活动简介'
+        body: '活动详情'
+        expired_on: '活动截止日期'
+        score: '活动权重'
+        coupon_ids: '优惠券'
+        created_at: '创建时间'
+      site_config:
+        key: '配置项'
+        value: '配置值'
+        note: '描述'
+      partner:
+        name: '姓名'
+        mobile: '手机'
+        address: '服务地址'
+        service_scope: '经营范围'
+        pay_type: '收款方式'
+        pay_card_no: '收款账号'
+        orders_count: '订单数'
+        pay_account: '收款人姓名'
+      trade:
+        money: '支付金额'
+        partner_id: '合作伙伴'
+        operator: '操作人'
+        orders: '支付的订单'
+        note: '备注'
+      order_product:
+        sku: '产品编号'
+        product_images: '产品图片'
+        price: '产品单价'
+        unit: '计量单位'
+        quantity: '采购时计量'
+        shipment_quantity: '打包后计量'
+        order_id: '所属订单'
+        pack_cost: '包装成本'
+        shipment_cost: '物流成本'
+        pay_buyer_loss: '赔偿买家'
+      invite:
+        title: '分享标题'
+        share_body: '分享内容'
+        body: '活动详情'
+        link: '活动链接'
+        icon: '活动图标'
+        inviter_benefits: '邀请人实惠'
+        invitee_benefits: '被邀请人实惠'
+        score: '权重'
+      admin_user:
+        email: "邮箱"
+        password: "密码"
+        current_password: "旧密码"
+        password_confirmation: "确认密码"
+        current_sign_in_at: "最新登录时间"
+        current_sign_in_ip: "最新登录IP"
+        last_sign_in_at: "上次登录时间"
+        last_sign_in_ip: "上次登录IP"
+        sign_in_count: "登录次数"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      category:
+        name: "类别名"
+        image: "缩略图"
+        sort: "显示顺序"
+        products_count: "产品总数"
+        created_at: "创建时间"
+      product: 
+        category: "所属类别"
+        title: "产品标题"
+        intro: "产品简介"
+        price: "产品促销价格"
+        m_price: "产品市场价格"
+        on_sale: "是否上架"
+        images: "产品缩略图"
+        detail_images: "产品简介图"
+        param_images: "产品参数图"
+        stock: "库存"
+        visit: "访问量"
+        visible: "是否可见"
+        created_at: "创建时间"
+      order:
+        user_id: '用户'
+        product_id: '产品'
+        order_no: '订单号'
+        note: '订单备注'
+        state: '订单状态'
+        quantity: '购买数量'
+        total_fee: '订单总价'
+        discount_fee: '订单优惠'
+        created_at: '下单时间'
+      banner:
+        image: "广告图片"
+        link: "链接地址"
+        sort: "显示顺序"
+      express:
+        name: "快递名字"
+        exp_no: '运单号'
+        company_code: '快递公司代号'
+        order_id: '所属订单'
+      reward:
+        money: '奖励金额'
+        order_id: '所属订单'
+        recommending_id: '推荐人'
+        recommended_id: '被推荐人'
+        
+    errors:
+      models:
+        user: "用户"
+        admin_user: "管理员"
+        category: "类别"
+        stock_account:
+          attributes:
+            user:
+              required: "必选"
+            stock_company:
+              required: "必选"
+        stock_split:
+          attributes:
+            stock_company:
+              required: "必选"
+        ransom_stock:
+          attributes:
+            stock_company:
+              required: "必选"
+            user:
+              required: "必选"
+      messages:
+        inclusion: "不包含于列表中"
+        exclusion: "是保留关键字"
+        invalid: "是无效的"
+        confirmation: "与确认值不匹配"
+        accepted: "必须是可被接受的"
+        empty: "不能留空"
+        blank: "不能为空字符"
+        too_long: "过长（最长为 %{count} 个字符）"
+        too_short: "过短（最短为 %{count} 个字符）"
+        wrong_length: "长度非法（必须为 %{count} 个字符）"
+        taken: "已经被使用"
+        not_a_number: "不是数字"
+        not_an_integer: "必须是整数"
+        greater_than: "必须大于 %{count}"
+        greater_than_or_equal_to: "必须大于或等于 %{count}"
+        equal_to: "必须等于 %{count}"
+        less_than: "必须小于 %{count}"
+        less_than_or_equal_to: "必须小于或等于 %{count}"
+        odd: "必须为单数"
+        even: "必须为双数"
+        record_invalid: "校验失败: %{errors}"
+        taken:
+          已占用
+        document_not_found:
+          没有发现类是 %{klass} ID 是 %{identifiers} 的文档
+        invalid_database:
+          数据库应该是Mongo::DB,而不是%{name}.
+        invalid_type:
+          在类%{klass}中定义了字段,实际值是%{value}的%{other}.
+        unsupported_version:
+          MongoDB %{version} 版本已过期，请升级到 %{mongo_version}.
+        validations:
+          校验失败 - %{errors}.
+        invalid_collection:
+          不允许直接访问嵌入式的集合%{klass} , 请从文档的根访问集合.
+        invalid_field:
+          字段的名字不允许为 %{name}. 你不应该定义跟Mongoid内部属性或者方法相同的名字，详细请看Use Document#instance_methods.
+        too_many_nested_attribute_records:
+          被关联的%{association} 嵌入式属性不能超过 %{limit}.
+        embedded_in_must_have_inverse_of:
+          embedded_in的关联属性必须包含inverse_of.
+        dependent_only_references_one_or_many:
+          dependent => destroy|delete 选项只有在references_one或者references_many时候有效.
+        association_cant_have_inverse_of:
+          在当前的关联中，不允许定义inverse_of去,其只有在embedded_in或者references_many是数组的情况下使用
+        unsaved_document:
+          You cannot call create or create! through a relational association
+          relation (%{document}) whos parent (%{base}) is not already saved.
+
+  text_journal_changed: "%{label} 从 %{old} 变更为 %{new}"
+  text_journal_set_to: "%{label} 被设置为 %{value}"
+  text_journal_deleted: "%{label} 已删除 (%{old})"
+  text_journal_added: "%{label} %{value} 已添加"
+  general_text_Yes: "是"
+  general_text_No: "否"

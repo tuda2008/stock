@@ -1,0 +1,13 @@
+:verbose: false
+:pidfile: ./tmp/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
+:queues:
+  - [phoenix_job,7]
+  - [default, 2]
+ 
+staging:
+  :concurrency: 5
+development:
+  :concurrency: 5
+production:
+  :concurrency: 5

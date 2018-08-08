@@ -1,0 +1,86 @@
+
+<div class="container">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">持股信息汇总</h3>
+    </div>
+    <div class="panel-body">
+<%- unless @stock_statics.empty? -%>
+      <ul class="list-group">
+    <%- @stock_statics.each do |stock_static| -%>
+	    <li class="list-group-item">
+		  <%= "您 当前共持股 #{stock_static.stock_sum} 股[#{stock_static.stock_company.name}]，已分红 #{stock_static.stock_bonus.to_f.round(2)} ¥， 卖出 #{stock_static.ransom_stock_num} 股获益 #{stock_static.ransom_sum_price.to_f.round(2)} ¥" %>
+		</li>
+	<%- end -%>
+	  </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">股票认购记录</h3>
+    </div>
+    <div class="panel-body">
+      <ul class="list-group">
+	<%- @stock_account_histories.each do |journal| -%>
+	<%- arrs = []
+	    journal.details.each do |detail|
+	        arrs << show_detail(detail, 'stock_account')
+	    end
+	-%>
+		<li class="list-group-item"><%= "#{arrs.join(", ")} --- #{journal.created_at.strftime("%Y-%m-%d %H:%M:%S")}" %></li>
+	<%- end -%>
+	  </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">分红派现记录</h3>
+    </div>
+    <div class="panel-body">
+      <ul class="list-group">
+	<%- @stock_split_histories.each do |journal| -%>
+	<%- arrs = []
+	    journal.details.each do |detail|
+	        arrs << show_detail(detail, 'stock_split')
+	    end
+	-%>
+		<li class="list-group-item"><%= "#{arrs.join(", ")} --- #{journal.created_at.strftime("%Y-%m-%d %H:%M:%S")}" %></li>
+	<%- end -%>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">股票卖出记录</h3>
+    </div>
+    <div class="panel-body">
+      <ul class="list-group">
+  <%- @stock_ransom_histories.each do |journal| -%>
+  <%- arrs = []
+      journal.details.each do |detail|
+          arrs << show_detail(detail, 'ransom_stock')
+      end
+  -%>
+    <li class="list-group-item"><%= "#{arrs.join(", ")} --- #{journal.created_at.strftime("%Y-%m-%d %H:%M:%S")}" %></li>
+  <%- end -%>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<%- else -%>
+	  <span>您当前还未持有任何股份.</span>
+    </div>
+  </div>
+</div>
+<%- end -%>
+

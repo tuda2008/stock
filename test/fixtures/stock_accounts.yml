@@ -1,0 +1,34 @@
+# == Schema Information
+#
+# Table name: stock_accounts
+#
+#  id           :bigint(8)        not null, primary key
+#  user_id      :integer
+#  company_id   :bigint(8)
+#  stock_sum    :bigint(8)
+#  stock_price  :float(24)
+#  visible      :boolean          default(FALSE)
+#  level        :integer
+#  published_at :date
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+# Indexes
+#
+#  index_stock_accounts_on_company_id         (company_id)
+#  index_stock_accounts_on_user_company_info  (user_id,company_id)
+#  index_stock_accounts_on_user_visible       (user_id,visible)
+#  index_stock_accounts_on_visible            (visible)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value

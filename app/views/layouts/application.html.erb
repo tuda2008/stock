@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>股票信息</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default" role="navigation">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="#">倍轻松股票系统</a>
+	    </div>
+	    <ul class="nav navbar-nav navbar-right">
+	      <%- unless current_user.nil? -%>
+	      <li><a href="#" click="javascript:void(0)"><%= "您好，#{current_user.name}" %></a></li>
+	      <li><%= link_to "<span class='glyphicon glyphicon-log-out'></span> 退出".html_safe, destroy_user_session_path, :method => 'delete' %></li>
+	      <%- else -%>
+	      <li><a href="/auth/login"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+	      <%- end -%>
+	    </ul>
+	  </div>
+	</nav>
+
+    <div>
+      <%- unless notice.nil? -%>
+    	<p class="alert alert-success"><%= notice %></p>
+      <%- end -%>
+      <%- unless alert.nil? -%>
+        <p class="alert alert-danger"><%= alert %></p>
+      <%- end -%>
+    <div>
+	<%= yield %>
+  </body>
+</html>

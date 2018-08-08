@@ -1,0 +1,7 @@
+"zh-CN":
+  active_admin:
+    web_name: "倍轻松股票管理系统"
+    filters:
+      predicates:
+        from: 开始日期
+        to: 结束日期
