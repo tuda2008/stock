@@ -3,10 +3,14 @@
 bundle install
 
 bundle exec rake db:create
+
 bundle exec rake db:migrate
+
 bundle exec rake db:seed
 
 bundle exec rails s
+
+bundle exec sidekiq
 
 open new tab http://127.0.0.1:3000/admin
 
