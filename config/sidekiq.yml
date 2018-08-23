@@ -6,8 +6,8 @@
   - [default, 2]
  
 staging:
-  :concurrency: 5
+  :concurrency: 2
 development:
-  :concurrency: 5
+  :concurrency: 2
 production:
-  :concurrency: 5
+  :concurrency: 3

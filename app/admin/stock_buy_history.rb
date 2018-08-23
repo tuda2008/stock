@@ -23,6 +23,7 @@ menu priority: 5, label: "股票认购历史查询", parent: "历史查询"
 content title: '股票认购历史查询' do
   panel '最近认购历史' do
     @journals = Journal.stock_account.includes(:user, :details).page(params[:page]).per(10)
+    @journals.reload
     paginated_collection(@journals, download_links: false) do
         table class: "index_table index" do 
             thead do 

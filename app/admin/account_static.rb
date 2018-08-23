@@ -15,7 +15,7 @@ menu priority: 1, label: "持股汇总"
 controller do
   def index
     index! do |format|
-      @statics = AccountStatic.all
+      @statics = AccountStatic.all.reload
 
       format.html
       format.csv   { export_csv @statics }
