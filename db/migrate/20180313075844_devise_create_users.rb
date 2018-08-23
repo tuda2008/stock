@@ -23,8 +23,15 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.1]
 
       t.string   :mobile
       t.string   :name
+      t.string   :bank_name
       t.string   :card
       t.string   :cert_id
+      t.string   :cert_address
+      t.string   :department
+
+
+      t.integer  :user_cate, default: 1, null: false
+      t.integer  :user_type, default: 1, null: false
 
       ## Confirmable
       # t.string   :confirmation_token
@@ -49,5 +56,10 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.1]
     # add_index :users, :confirmation_token,   unique: true
     add_index :users, :unlock_token,         unique: true
     add_index :users, :cert_id,              unique: true
+
+    add_index :users, :department
+    add_index :users, :user_cate
+    add_index :users, :user_type
+    add_index :users, [:user_cate, :user_type]
   end
 end

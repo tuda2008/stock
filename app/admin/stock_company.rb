@@ -4,7 +4,7 @@ ActiveAdmin.register StockCompany do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 
-permit_params :list, :of, [:name, :description, :legal_representative, :stock_price, :estimate_market_price], :on, :model
+permit_params :list, :of, [:name, :description], :on, :model
 
 actions :all, except: [:destroy]
 
@@ -38,7 +38,7 @@ index do
   column(:name, sortable: false) do |company|
     company.name
   end
-  column :legal_representative, sortable: false
+  #column :legal_representative, sortable: false
   column :stockholders_num, sortable: false
   column :holders_stock_num, sortable: false
   column :holders_buy_sum_price, sortable: false
@@ -95,7 +95,7 @@ show do
     row :description do |company|
       company.description.blank? ? '' : raw("<div style='text-align:left'>#{company.description}</div>")
     end
-    row :legal_representative
+    #row :legal_representative
     row :stockholders_num
     row :holders_stock_num
     row :holders_buy_sum_price
@@ -114,18 +114,18 @@ form html: { multipart: true } do |f|
   f.semantic_errors
   
   f.inputs "公司信息" do
-    f.input :name
+    f.input :name, :hint => "未指定公司的名字暂用\"内部管理\"代替"
     f.input :description
-    f.input :legal_representative
-    f.input :stock_price
-    f.input :estimate_market_price
+    #f.input :legal_representative
+    #f.input :stock_price
+    #f.input :estimate_market_price
   end
   
   actions
 end
 
 sidebar "使用须知", :only => [:index] do
-    "第一步.在 '系统管理' -> '股东管理' -> '新建股东'<br /> 
+    "第一步.在 '股东管理' -> '新建股东'<br /> 
      第二步.在 '公司管理' -> '新建公司'<br />
      第三步.在 '股票认购' -> '新建股票认购'<br />
      第四步.在 '分红派股' -> '新建分红派股'<br />".html_safe

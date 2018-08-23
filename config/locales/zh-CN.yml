@@ -19,31 +19,17 @@
       stock_account: "股票认购"
       ransom_stock: "股票赎回"
       account_static: "持股汇总"
-      category: "类别"
-      product: "产品"
-      journal: "历史"
       admin_user: "管理员"
-      banner: "广告"
-      order: "订单"
-      shipment: '收货信息'
-      page: '文档'
-      coupon: '优惠券'
-      discounting: '优惠记录'
-      discount_event: '优惠活动'
-      site_config: '站点配置'
-      invite: '邀请'
-      express: '快递'
-      partner: '合作伙伴'
-      order_product: '订单信息统计'
-      trade: '财务记录'
-      reward: '推广奖励'
     attributes:
       user:
         mobile: "手机"
         email: "邮箱"
-        name: "真实姓名"
-        card: "卡号"
-        cert_id: "身份证号"
+        name: "股东姓名"
+        bank_name: "开户行名称"
+        card: "银行账号"
+        cert_id: "身份证号码"
+        cert_address: "身份证地址"
+        department: "部门名称"
         locked_at: "冻结时间"
         password: "密码"
         password_confirmation: "确认密码"
@@ -51,10 +37,8 @@
         signature: "个性签名"
         private_token: "Token"
         verified: "账户可用"
-        score: '积分'
-        balance: '余额'
-        recommender: '推荐人'
-        verified: '账号可用'
+        user_cate: "股东类别"
+        user_type: "股东性质"
       stock_account:
         user: "股东名"
         user_id: "股东名"

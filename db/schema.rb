@@ -156,19 +156,28 @@ ActiveRecord::Schema.define(version: 2018_07_28_133937) do
     t.string "last_sign_in_ip"
     t.string "mobile"
     t.string "name"
+    t.string "bank_name"
     t.string "card"
     t.string "cert_id"
+    t.string "cert_address"
+    t.string "department"
+    t.integer "user_cate", default: 1, null: false
+    t.integer "user_type", default: 1, null: false
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cert_id"], name: "index_users_on_cert_id", unique: true
+    t.index ["department"], name: "index_users_on_department"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["mobile"], name: "index_users_on_mobile", unique: true
     t.index ["name"], name: "index_users_on_name"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+    t.index ["user_cate", "user_type"], name: "index_users_on_user_cate_and_user_type"
+    t.index ["user_cate"], name: "index_users_on_user_cate"
+    t.index ["user_type"], name: "index_users_on_user_type"
   end
 
 end
