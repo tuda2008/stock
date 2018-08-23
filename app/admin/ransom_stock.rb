@@ -3,16 +3,18 @@ ActiveAdmin.register RansomStock do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :list, :of, [:user_id, :company_id, :stock_num, :stock_price, :published_at, :info, :visible], :on, :model
+permit_params :list, :of, [:user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, 
+  :capital_sum, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, :info, :visible], :on, :model
 
 actions :all, except: [:destroy]
 
-menu priority: 4, label: "股票赎回"
+menu priority: 3, label: "股票赎回"
 
 filter :stock_company
 filter :user
-filter :stock_num
 filter :stock_price
+filter :stock_sum_price
+filter :breo_stock_percentage
 filter :visible
 
 scope :all, default: true
@@ -30,8 +32,9 @@ index do
   column(:user, sortable: false) do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
-  column :stock_num, sortable: true
   column :stock_price, sortable: true
+  column :stock_sum_price, sortable: true
+  column :breo_stock_percentage, sortable: true
   column(:published_at, sortable: true) do |stock|
     stock.published_at.to_s
   end
@@ -71,10 +74,21 @@ show do
     row :user do |stock|
       stock.user.name + " " + stock.user.cert_id
     end
-    row :stock_num
+    row :breo_stock_num
+    row :breo_stock_percentage
+    row :capital_sum
+    row :capital_percentage
     row :stock_price
+    row :stock_sum_price
+    row :register_price
+    row :register_sum_price
+    row :tax
+    row :sum_price_after_tax
     row :published_at do |stock|
       stock.published_at.to_s
+    end
+    row :tax_payed_at do |stock|
+      stock.tax_payed_at.to_s
     end
     row :info
     row :visible
@@ -92,9 +106,17 @@ form html: { multipart: true } do |f|
   f.inputs "赎回股票信息" do
     f.input :user, :as => :select, :collection => Hash[@users], :hint => "股东名 + 股东身份证"
     f.input :stock_company, :as => :select, :collection => Hash[@companies]
-    f.input :stock_num, :hint => "这里填赎回所选股东的总股数,通常为100的倍数"
-    f.input :stock_price, :hint => "这里填每股赎回单价（1股的价格）"
+    f.input :breo_stock_num
+    f.input :breo_stock_percentage
+    f.input :capital_sum
+    #f.input :capital_percentage
+    f.input :stock_price
+    f.input :stock_sum_price
+    f.input :register_price
+    f.input :register_sum_price
+    f.input :tax
     f.input :published_at, as: :datepicker
+    f.input :tax_payed_at, as: :datepicker
     f.input :info
     f.input :visible
   end

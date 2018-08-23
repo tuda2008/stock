@@ -58,11 +58,10 @@ class StockAccount < ApplicationRecord
   belongs_to :user, foreign_key: :user_id
   belongs_to :stock_company, foreign_key: :company_id
 
-  validates :user_id, :company_id, :stock_sum, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :investment_at, presence: true
-  #validates :level, numericality: {greater_than: 0, less_than_or_equal_to: 10}
-  validates :stock_sum, numericality: {greater_than_or_equal_to: 100}
-  #validates :stock_price, numericality: {min: 0.1, max: 1000}
-  validate :stock_sum_numericality, :visible_validate 
+  validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :investment_at, presence: true
+  #validates :stock_sum, numericality: {greater_than_or_equal_to: 100}
+  validates :stock_price, numericality: {min: 0.1, max: 1000}
+  #validate :stock_sum_numericality, :visible_validate 
 
   after_create :cteate_stock_account, :update_stock_accounts_history
   before_update :update_stock_accounts
@@ -88,13 +87,13 @@ class StockAccount < ApplicationRecord
   def update_stock_accounts
     if self.visible_changed?
       if self.visible == true
-        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, self.stock_sum)
+        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, self.stock_sum_price)
       else
-        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, -self.stock_sum_was)
+        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, -self.stock_sum_price_was)
       end
     else
-      if (self.visible == true && self.stock_sum_changed?)
-        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, self.stock_sum - self.stock_sum_was)
+      if (self.visible == true && self.stock_sum_price_changed?)
+        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, self.stock_sum_price - self.stock_sum_price_was)
       end
     end
   end
@@ -107,7 +106,7 @@ class StockAccount < ApplicationRecord
 
   def visible_validate
   	if self.visible_was == true
-      if self.visible == false && (self.stock_sum_changed? || self.stock_price_changed?)
+      if self.visible == false && (self.stock_sum_price_changed? || self.stock_price_changed?)
         errors.add :stock_sum, "认购有效变为无效时，不能变更股票数量与单价"
         false
       end

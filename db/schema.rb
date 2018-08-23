@@ -15,7 +15,9 @@ ActiveRecord::Schema.define(version: 2018_07_28_133937) do
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.bigint "company_id"
-    t.integer "stock_sum", default: 0
+    t.integer "breo_stock_num", default: 0
+    t.float "breo_stock_percentage", default: 0.0
+    t.float "stock_sum_price", default: 0.0
     t.float "stock_bonus", default: 0.0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -82,8 +84,18 @@ ActiveRecord::Schema.define(version: 2018_07_28_133937) do
     t.integer "company_id"
     t.bigint "stock_num"
     t.float "stock_price"
-    t.string "info"
+    t.float "stock_sum_price"
+    t.float "breo_stock_num"
+    t.float "breo_stock_percentage"
+    t.float "capital_sum"
+    t.float "capital_percentage"
+    t.float "register_price"
+    t.float "register_sum_price"
+    t.float "tax"
+    t.float "sum_price_after_tax"
     t.date "published_at"
+    t.date "tax_payed_at"
+    t.string "info"
     t.boolean "visible", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

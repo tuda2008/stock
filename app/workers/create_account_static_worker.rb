@@ -8,7 +8,9 @@ class CreateAccountStaticWorker
       	unless acs
       	  acs = AccountStatic.new(user_id: sa.user_id, company_id: sa.company_id)
       	end
-      	acs.stock_sum += sa.stock_sum.to_i
+        acs.breo_stock_num += sa.breo_stock_num.to_i
+        acs.stock_sum_price += sa.stock_sum_price.to_f
+      	acs.breo_stock_percentage += sa.breo_stock_percentage.to_f
         acs.save if acs.valid?
     end
   end

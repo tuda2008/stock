@@ -5,7 +5,7 @@ actions :index, :show
 
 filter :user
 filter :stock_company
-filter :stock_sum
+filter :stock_sum_price
 filter :stock_bonus
 filter :ransom_stock_num
 filter :ransom_sum_price
@@ -38,8 +38,11 @@ index do
   column "公司名" do |account|
     account.stock_company.name
   end
-  column "现持股数" do |account|
-    account.stock_sum
+  column "现倍轻松股份占比" do |account|
+    account.breo_stock_percentage.to_f.round(4).to_s + " %"
+  end
+  column "现实际持股金额" do |account|
+    account.stock_sum_price.to_f.round(2).to_s + " ¥"
   end
   column "已分红" do |account|
     account.stock_bonus.to_f.round(2).to_s + " ¥"

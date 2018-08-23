@@ -2,16 +2,26 @@
 #
 # Table name: ransom_stocks
 #
-#  id           :bigint(8)        not null, primary key
-#  user_id      :integer
-#  company_id   :integer
-#  stock_num    :bigint(8)
-#  stock_price  :float(24)
-#  info         :string(255)
-#  published_at :date
-#  visible      :boolean          default(FALSE)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id                    :bigint(8)        not null, primary key
+#  user_id               :integer
+#  company_id            :integer
+#  stock_num             :bigint(8)
+#  stock_price           :float(24)
+#  stock_sum_price       :float(24)
+#  breo_stock_num        :float(24)
+#  breo_stock_percentage :float(24)
+#  capital_sum           :float(24)
+#  capital_percentage    :float(24)
+#  register_price        :float(24)
+#  register_sum_price    :float(24)
+#  tax                   :float(24)
+#  sum_price_after_tax   :float(24)
+#  published_at          :date
+#  tax_payed_at          :date
+#  info                  :string(255)
+#  visible               :boolean          default(FALSE)
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
 #
 # Indexes
 #
@@ -26,29 +36,29 @@ class RansomStock < ApplicationRecord
   belongs_to :user, foreign_key: :user_id
   belongs_to :stock_company, foreign_key: :company_id
 
-  validates :user_id, :company_id, :stock_num, :stock_price, :published_at, presence: true
-  validates :stock_num, numericality: {greater_than_or_equal_to: 100}
+  validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :capital_sum, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, presence: true
+  #validates :stock_num, numericality: {greater_than_or_equal_to: 100}
   validates :stock_price, numericality: {min: 0.1, max: 1000}
-  validate :stock_num_numericality, :stock_num_validate
+  validate :breo_stock_num_numericality, :breo_stock_num_validate
 
   after_save :update_stock_ransom_history
   before_create :update_account_statics
   before_update :update_account_stock_statics
   
-  def stock_num_numericality
-  	if (self.stock_num.to_i)%100 > 0
-  		errors.add :stock_sum, "必须是100的倍数"
+  def breo_stock_num_numericality
+  	if (self.breo_stock_num.to_i)%100 > 0
+  		errors.add :breo_stock_num, "必须是100的倍数"
   		false
   	else
   		true
   	end
   end
 
-  def stock_num_validate
+  def breo_stock_num_validate
     account_static = AccountStatic.where(user_id: self.user_id, company_id: self.company_id).first
     unless account_static.nil?
-      if account_static.stock_sum < self.stock_num.to_i
-        errors.add :stock_num, "赎回股数大于股东持有股数（#{account_static.stock_sum}）"
+      if account_static.breo_stock_num < self.breo_stock_num.to_i
+        errors.add :stock_num, "赎回股数大于股东持有股数（#{account_static.breo_stock_num}）"
       end
     else
       errors.add :company_id, "所选股东未持有该公司股票"
@@ -62,44 +72,50 @@ class RansomStock < ApplicationRecord
     end
   end
 
+  def sum_price_after_tax
+    self.register_sum_price.to_f - self.tax.to_f
+  end
+
   def update_account_statics
     if self.visible == true
-      UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.stock_num, -(self.stock_num*self.stock_price))
+      UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price)
     end
   end
 
   def update_account_stock_statics
     if self.visible_changed?
       if self.visible == true
-        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.stock_num, -(self.stock_num*self.stock_price))
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price)
       else
         stock_sum_price = 0
-        if self.stock_num_changed?
-          stock_sum_price = self.stock_num_was*self.stock_price_was - self.stock_num*self.stock_price
-        else
-          stock_sum_price = self.stock_num*self.stock_price_was - self.stock_num*self.stock_price
+        breo_stock_num = 0
+        breo_stock_percentage = 0
+        if self.stock_sum_price_changed?
+          stock_sum_price = self.stock_sum_price_was - self.stock_sum_price
         end
-        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.stock_num_was, stock_sum_price)
+        if self.breo_stock_num_changed?
+          breo_stock_num = self.breo_stock_num_was - self.breo_stock_num
+        end
+        if self.breo_stock_percentage_changed?
+          breo_stock_percentage = self.breo_stock_percentage_was - self.breo_stock_percentage
+        end
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, breo_stock_num, breo_stock_percentage, stock_sum_price)
       end
     else
       if self.visible == true
-        if self.stock_num_changed?
-          stock_sum_price = 0
-          if self.stock_price_changed?
-            stock_sum_price = self.stock_num_was*self.stock_price_was - self.stock_num*self.stock_price
-          else
-            stock_sum_price = self.stock_num_was*self.stock_price - self.stock_num*self.stock_price
-          end
-          UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.stock_num_was - self.stock_num, stock_sum_price)
-        elsif self.stock_price_changed?
-          stock_sum_price = 0
-          if self.stock_num_changed?
-            stock_sum_price = self.stock_num_was*self.stock_price_was - self.stock_num*self.stock_price
-          else
-            stock_sum_price = self.stock_num*self.stock_price_was - self.stock_num*self.stock_price
-          end
-          UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.stock_num_was - self.stock_num, stock_sum_price)
+        stock_sum_price = 0
+        breo_stock_num = 0
+        breo_stock_percentage = 0
+        if self.stock_sum_price_changed?
+          stock_sum_price = self.stock_sum_price_was - self.stock_sum_price
         end
+        if self.breo_stock_num_changed?
+          breo_stock_num = self.breo_stock_num_was - self.breo_stock_num
+        end
+        if self.breo_stock_percentage_changed?
+          breo_stock_percentage = self.breo_stock_percentage_was - self.breo_stock_percentage
+        end
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, breo_stock_num, breo_stock_percentage, stock_sum_price)
       end
     end
   end
