@@ -3,7 +3,9 @@ ActiveAdmin.register StockAccount do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :list, :of, [:user_id, :company_id, :stock_sum, :stock_price, :published_at, :visible], :on, :model
+permit_params :list, :of, [:user_id, :company_id, :stock_sum, :stock_sum_price, :breo_stock_num, :breo_stock_percentage,
+  :capital_sum, :capital_percentage, :register_price, :register_sum_price, :register_status, :register_at, :investment_sum_price,
+  :investment_at, :transfered_at, :change_type, :info, :visible], :on, :model
 
 actions :all, except: [:destroy]
 
@@ -24,9 +26,10 @@ menu priority: 2, label: "股票认购"
 filter :stock_company
 filter :user
 filter :stock_sum
-filter :stock_price
-filter :published_at
-#filter :level
+filter :investment_at
+filter :register_status, :as => :select, :collection => StockAccount::STATUSES
+filter :change_type, :as => :select, :collection => StockAccount::TYPES
+filter :info
 filter :visible
 
 scope :all, default: true
@@ -46,10 +49,12 @@ index do
     stock.user.name + " " + stock.user.cert_id
   end
   column :stock_sum, sortable: false
-  column :stock_price, sortable: false
-  #column :level, sortable: true
-  column(:published_at, sortable: true) do |stock|
-    stock.published_at.to_s
+  column :stock_sum_price, sortable: false
+  column :breo_stock_percentage do |stock|
+    stock.breo_stock_percentage.to_s + " %"
+  end
+  column(:investment_at, sortable: true) do |stock|
+    stock.investment_at.to_s
   end
   column :visible, sortable: true
   
@@ -96,11 +101,34 @@ show do
       stock.user.name + " " + stock.user.cert_id
     end
     row :stock_sum
-    row :stock_price
-    #row :level
-    row :published_at do |stock|
-      stock.published_at.to_s
+    row :stock_sum_price
+    row :breo_stock_num
+    row :breo_stock_percentage do |stock|
+      stock.breo_stock_percentage.to_s + " %"
     end
+    row :capital_sum
+    row :capital_percentage do |stock|
+      stock.capital_percentage.to_s + " %"
+    end
+    row :register_price
+    row :register_sum_price
+    row :register_status do |stock|
+      StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
+    end
+    row :register_at do |stock|
+      stock.register_at.blank? ? "" : stock.register_at.to_s
+    end
+    row :investment_sum_price
+    row :investment_at do |stock|
+      stock.investment_at.to_s
+    end
+    row :transfered_at do |stock|
+      stock.transfered_at.blank? ? "" : stock.transfered_at.to_s
+    end
+    row :change_type do |stock|
+      StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
+    end
+    row :info
     
     row :visible do |stock|
       stock.visible ? "有效" : "无效"
@@ -114,10 +142,24 @@ form html: { multipart: true } do |f|
   f.inputs "认购信息" do
     f.input :user, :as => :select, :collection => Hash[User.active.map{|u| [u.name + " " + u.cert_id,u.id]}], :hint => "股东名 + 股东身份证"
     f.input :stock_company
-    f.input :stock_sum, :hint => "这里填所选股东的认购总股数,通常为100的倍数"
-    f.input :stock_price, :hint => "这里填所选股东的每股认购单价（1股的价格）"
-    #f.input :level, :hint => "这里填您的股东级数，若2级股东填2"
-    f.input :published_at, as: :datepicker
+    f.input :stock_sum, :hint => "这里填所选股东的\"实际入股总数\",通常为100的倍数"
+    f.input :stock_sum_price
+    f.input :breo_stock_num, :hint => "这里填所选股东的\"增加倍轻松股份数\",通常为100的倍数"
+    f.input :breo_stock_percentage
+    f.input :capital_sum
+    f.input :capital_percentage
+    f.input :register_price
+    f.input :register_sum_price
+    f.input :register_status, :as => :select, :collection => StockAccount::STATUSES
+    f.input :register_at, as: :datepicker, :hint => "\"工商系统办结状态\" 为已办结时再填写该时间"
+    f.input :investment_sum_price
+    f.input :investment_at, as: :datepicker
+    f.input :transfered_at, as: :datepicker
+    f.input :change_type, :as => :select, :collection => StockAccount::TYPES
+    f.input :info
+
+    #f.input :stock_price, :hint => "这里填所选股东的每股认购单价（1股的价格）"
+
     f.input :visible
   end
   

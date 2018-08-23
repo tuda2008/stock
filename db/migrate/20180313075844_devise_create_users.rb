@@ -30,8 +30,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.1]
       t.string   :department
 
 
-      t.integer  :user_cate, default: 1, null: false
-      t.integer  :user_type, default: 1, null: false
+      t.integer  :user_cate, default: 1, null: false, limit: 4
+      t.integer  :user_type, default: 1, null: false, limit: 4
 
       ## Confirmable
       # t.string   :confirmation_token

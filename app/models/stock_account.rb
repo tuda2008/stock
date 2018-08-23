@@ -2,19 +2,32 @@
 #
 # Table name: stock_accounts
 #
-#  id           :bigint(8)        not null, primary key
-#  user_id      :integer
-#  company_id   :bigint(8)
-#  stock_sum    :bigint(8)
-#  stock_price  :float(24)
-#  visible      :boolean          default(FALSE)
-#  level        :integer
-#  published_at :date
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id                    :bigint(8)        not null, primary key
+#  user_id               :integer
+#  company_id            :bigint(8)
+#  stock_sum             :bigint(8)
+#  stock_price           :float(24)
+#  stock_sum_price       :float(24)
+#  breo_stock_num        :float(24)
+#  breo_stock_percentage :float(24)
+#  capital_sum           :float(24)
+#  capital_percentage    :float(24)
+#  register_price        :float(24)
+#  register_sum_price    :float(24)
+#  register_status       :integer
+#  register_at           :date
+#  investment_sum_price  :float(24)
+#  investment_at         :date
+#  transfered_at         :date
+#  change_type           :integer
+#  visible               :boolean          default(FALSE)
+#  info                  :string(255)
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
 #
 # Indexes
 #
+#  index_stock_accounts_on_change_type        (change_type)
 #  index_stock_accounts_on_company_id         (company_id)
 #  index_stock_accounts_on_user_company_info  (user_id,company_id)
 #  index_stock_accounts_on_user_visible       (user_id,visible)
@@ -22,14 +35,33 @@
 #
 
 class StockAccount < ApplicationRecord
+  # 办结状态
+  HANDLED   = 1 # 已办结
+  HANDING   = 2 # 办理中
+  NO_RECORD = 3 # 不备案
+
+  STATUSES = [["已办结", HANDLED], ["办理中", HANDING], ["不备案", NO_RECORD]]
+  STATUSES_NAME = {"#{HANDLED}": "已办结", "#{HANDING}": "办理中", "#{NO_RECORD}": "不备案"}
+
+  # 变动类别
+  INSPIRE      = 1 #股权激励
+  TRANSFER     = 2 #股东间股权转让
+  BONUS        = 3 #股票股利
+  PRIVATE_JOIN = 4 #私募入股
+  WORK_JUMP    = 5 #离职退股
+  PRIVATE_OUT  = 6 #私募退股
+
+  TYPES = [["股权激励", INSPIRE], ["股东间股权转让", TRANSFER], ["股票股利", BONUS], ["私募入股", PRIVATE_JOIN], ["离职退股", WORK_JUMP], ["私募退股", PRIVATE_OUT]]
+  TYPES_NAME = {"#{INSPIRE}": "股权激励", "#{TRANSFER}": "股东间股权转让", "#{BONUS}": "股票股利", "#{PRIVATE_JOIN}": "私募入股", "#{WORK_JUMP}": "离职退股", "#{PRIVATE_OUT}": "私募退股"}
+
   has_many :journals, :as => :journalized, :dependent => :destroy, :inverse_of => :journalized
   belongs_to :user, foreign_key: :user_id
   belongs_to :stock_company, foreign_key: :company_id
 
-  validates :user_id, :company_id, :stock_sum, :stock_price, :published_at, presence: true
+  validates :user_id, :company_id, :stock_sum, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :investment_at, presence: true
   #validates :level, numericality: {greater_than: 0, less_than_or_equal_to: 10}
   validates :stock_sum, numericality: {greater_than_or_equal_to: 100}
-  validates :stock_price, numericality: {min: 0.1, max: 1000}
+  #validates :stock_price, numericality: {min: 0.1, max: 1000}
   validate :stock_sum_numericality, :visible_validate 
 
   after_create :cteate_stock_account, :update_stock_accounts_history
@@ -79,7 +111,7 @@ class StockAccount < ApplicationRecord
         errors.add :stock_sum, "认购有效变为无效时，不能变更股票数量与单价"
         false
       end
-  		ss = StockSplit.where(company_id: self.company_id, enabled: true).where("published_at > ?", self.published_at).first
+  		ss = StockSplit.where(company_id: self.company_id, enabled: true).where("published_at > ?", self.investment_at).first
   		if ss
   		  	errors.add :visible, "派送股后不能再编辑或删除"
   		  	false
