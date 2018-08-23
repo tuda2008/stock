@@ -4,8 +4,8 @@ ActiveAdmin.register_page "StockSplitHistory" do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 
-
-menu priority: 3, label: "股票分红派股历史查询", parent: "历史查询"
+#menu priority: 3, label: "股票分红派股历史查询", parent: "历史查询"
+menu false
 
 #
 # or

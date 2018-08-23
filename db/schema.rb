@@ -17,6 +17,8 @@ ActiveRecord::Schema.define(version: 2018_07_28_133937) do
     t.bigint "company_id"
     t.integer "breo_stock_num", default: 0
     t.float "breo_stock_percentage", default: 0.0
+    t.float "investment_sum_price", default: 0.0
+    t.float "capital_sum", default: 0.0
     t.float "stock_sum_price", default: 0.0
     t.float "stock_bonus", default: 0.0
     t.datetime "created_at", null: false

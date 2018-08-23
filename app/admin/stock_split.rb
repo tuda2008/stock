@@ -7,7 +7,8 @@ permit_params :list, :of, [:company_id, :stock_transfer, :stock_send, :stock_bon
 
 actions :all, except: [:destroy]
 
-menu priority: 6, label: "分红派股"
+#menu priority: 6, label: "分红派股"
+menu false
 
 filter :stock_company
 filter :stock_transfer

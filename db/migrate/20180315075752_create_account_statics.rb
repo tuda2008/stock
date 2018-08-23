@@ -5,6 +5,8 @@ class CreateAccountStatics < ActiveRecord::Migration[5.1]
     	t.integer  "company_id",       limit: 6
     	t.integer  "breo_stock_num",   default: 0
         t.float    "breo_stock_percentage",  default: 0, limit: 24
+        t.float    "investment_sum_price",   default: 0, limit: 24
+        t.float    "capital_sum",   default: 0, limit: 24
         t.float    "stock_sum_price",  default: 0, limit: 24
     	t.float    "stock_bonus",      default: 0, limit: 24
         
