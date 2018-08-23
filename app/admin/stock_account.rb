@@ -4,7 +4,7 @@ ActiveAdmin.register StockAccount do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :list, :of, [:user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage,
-  :capital_sum, :capital_percentage, :register_price, :register_sum_price, :register_status, :register_at, :investment_sum_price,
+  :capital_sum, :register_price, :register_sum_price, :register_status, :register_at, :investment_sum_price,
   :investment_at, :transfered_at, :change_type, :info, :visible], :on, :model
 
 actions :all, except: [:destroy]
@@ -147,7 +147,6 @@ form html: { multipart: true } do |f|
     f.input :breo_stock_num, :hint => "这里填所选股东的\"增加倍轻松股份数\",通常为100的倍数"
     f.input :breo_stock_percentage
     f.input :capital_sum
-    f.input :capital_percentage
     f.input :register_price
     f.input :register_sum_price
     f.input :register_status, :as => :select, :collection => StockAccount::STATUSES
@@ -165,7 +164,7 @@ form html: { multipart: true } do |f|
 end
 
 sidebar "注意事项", :only => [:new, :edit] do
-    "1.认购股数必须是100的整数倍<br /> 2.勾选 '认购有效' 后，最好不要再修改、删除该认购信息".html_safe
+    "1.认购倍轻松股份数必须是100的整数倍<br /> 2.勾选 '认购有效' 后，最好不要再修改、删除该认购信息".html_safe
 end
 
 end

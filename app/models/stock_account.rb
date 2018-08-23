@@ -59,9 +59,10 @@ class StockAccount < ApplicationRecord
   belongs_to :stock_company, foreign_key: :company_id
 
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :investment_at, presence: true
-  #validates :stock_sum, numericality: {greater_than_or_equal_to: 100}
+  validates :breo_stock_num, numericality: {greater_than_or_equal_to: 100}
+  validates :capital_sum, numericality: {greater_than_or_equal_to: 100}
   validates :stock_price, numericality: {min: 0.1, max: 1000}
-  #validate :stock_sum_numericality, :visible_validate 
+  validate :stock_sum_numericality, :visible_validate 
 
   after_create :cteate_stock_account, :update_stock_accounts_history
   before_update :update_stock_accounts
@@ -70,9 +71,11 @@ class StockAccount < ApplicationRecord
   scope :companies, lambda { |user_id| where(user_id: user_id).includes(:stock_company) }
 
   def stock_sum_numericality
-  	if (self.stock_sum.to_i)%100 > 0
-  		errors.add :stock_sum, "必须是100的倍数"
+  	if (self.breo_stock_num.to_i)%100 > 0
+  		errors.add :breo_stock_num, "必须是100的倍数"
   		false
+    elsif (self.capital_sum.to_i)%100 > 0
+      errors.add :capital_sum, "必须是100的倍数"
   	else
   		true
   	end
@@ -106,10 +109,10 @@ class StockAccount < ApplicationRecord
 
   def visible_validate
   	if self.visible_was == true
-      if self.visible == false && (self.stock_sum_price_changed? || self.stock_price_changed?)
-        errors.add :stock_sum, "认购有效变为无效时，不能变更股票数量与单价"
-        false
-      end
+      #if self.visible == false && (self.stock_sum_price_changed? || self.stock_price_changed?)
+        #errors.add :breo_stock_num, "认购有效变为无效时，不能变更股票数量与单价"
+        #false
+      #end
   		ss = StockSplit.where(company_id: self.company_id, enabled: true).where("published_at > ?", self.investment_at).first
   		if ss
   		  	errors.add :visible, "派送股后不能再编辑或删除"
