@@ -135,7 +135,7 @@ class StockAccount < ApplicationRecord
   end
 
   def self.sum_stock_price
-    StockAccount.active.select("sum(register_sum_price) as sum_register_sum_price, sum(capital_sum) as sum_capital_sum").first
+    StockAccount.active.select("company_id, sum(register_sum_price) as sum_register_sum_price, sum(capital_sum) as sum_capital_sum").group(:company_id)
   end
 
 end

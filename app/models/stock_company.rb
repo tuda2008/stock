@@ -31,6 +31,15 @@ class StockCompany < ApplicationRecord
   validates :name, length: 3..50
   validates :description, :legal_representative, length: { maximum: 250 }
 
+  def self.sum_stock_price
+    sum = { sum_register_sum_price: 0, sum_capital_sum: 0 }
+    StockAccount.sum_stock_price.each do |stock|
+      sum[:sum_register_sum_price] += stock.sum_register_sum_price.to_f
+      sum[:sum_capital_sum] += stock.sum_capital_sum.to_f
+      sum["#{stock.company_id}"] = { sum_register_sum_price: stock.sum_register_sum_price.to_f, sum_capital_sum: stock.sum_capital_sum.to_f }
+    end
+    sum
+  end
 
   def block!
     self.visible = false

@@ -94,7 +94,7 @@ member_action :unvisible, method: :put do
 end
 
 show do
-  @stock = StockAccount.sum_stock_price
+  @sum = StockCompany.sum_stock_price
   attributes_table do
     row :id
     row :stock_company
@@ -109,8 +109,8 @@ show do
     end
     row :capital_sum
     row :capital_percentage do |stock|
-      if @stock.sum_capital_sum.to_f > 0 
-        (stock.capital_sum.to_f*100/@stock.sum_capital_sum.to_f).round(5).to_s + " %"
+      if @sum[:sum_capital_sum] > 0 
+        (stock.capital_sum.to_f*100/@sum[:sum_capital_sum]).round(5).to_s + " %"
       end
     end
     row :register_price
