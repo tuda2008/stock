@@ -74,6 +74,25 @@ index do
   end
 end
 
+csv do
+  @@sum = StockCompany.sum_stock_price
+  column :name
+  column "工商登记入股金额合计" do |company|
+    @@sum["#{company.id}"][:sum_register_sum_price] if @@sum["#{company.id}"]
+  end
+  column "增加所持公司工商登记出资额合计" do |company|
+    @@sum["#{company.id}"][:sum_capital_sum] if @@sum["#{company.id}"]
+  end
+  column "平均股价" do |company|
+    if @@sum["#{company.id}"]
+      @@sum["#{company.id}"][:sum_capital_sum] > 0 ? (@@sum["#{company.id}"][:sum_register_sum_price]/@@sum["#{company.id}"][:sum_capital_sum]).to_f.round(2) : ""
+    end
+  end
+  column "公司运营情况" do |company|
+    company.visible ? "正常" : "不正常"
+  end
+end
+
 # 批量禁用账号
 batch_action "不正常" do |ids|
   batch_action_collection.find(ids).each do |company|

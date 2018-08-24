@@ -47,6 +47,21 @@ index do
   end
 end
 
+csv do
+  column(:stock_company) do |stock|
+    stock.stock_company.name
+  end
+  column(:user) do |stock|
+    stock.user.name + " " + stock.user.cert_id
+  end
+  column :stock_price
+  column :stock_sum_price
+  column :breo_stock_percentage
+  column(:published_at) do |stock|
+    stock.published_at.to_s
+  end
+end
+
 # 批量赎回
 batch_action "赎回派送" do |ids|
   batch_action_collection.find(ids).each do |stock|

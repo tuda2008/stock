@@ -61,6 +61,16 @@ index do
   
 end
 
+csv do
+  column :name
+  column :mobile, sortable: false
+  column :card
+  column :cert_id
+  column :department
+  column :user_cate do |user|
+    User::CATES_NAME[user.user_cate.to_s.to_sym]
+  end
+end
 
 show do
   attributes_table do

@@ -55,6 +55,30 @@ index do
   end
 end
 
+csv do
+  column "股东名" do |account|
+    account.user.name
+  end
+  column "公司名" do |account|
+    account.stock_company.name
+  end
+  column "现倍轻松股份占比" do |account|
+    account.breo_stock_percentage.to_f.round(5).to_s + " %"
+  end
+  column "现实际持股金额" do |account|
+    account.stock_sum_price.to_f.round(2).to_s + " ¥"
+  end
+  column "已分红" do |account|
+    account.stock_bonus.to_f.round(2).to_s + " ¥"
+  end
+  column "已赎回股数" do |account|
+    account.ransom_stock_num
+  end
+  column "赎回所得" do |account|
+    account.ransom_sum_price.to_f.round(2).to_s + " ¥"
+  end
+end
+
 show do
     panel '最近认购历史' do
         @journals = Journal.stock_account.where(user_id: params[:id]).includes(:user, :details).page(params[:page]).per(10)

@@ -69,6 +69,24 @@ index do
   
 end
 
+csv do
+  column(:stock_company) do |stock|
+    stock.stock_company.name
+  end
+  column(:user) do |stock|
+    stock.user.name + " " + stock.user.cert_id
+  end
+  column :stock_price
+  column :stock_sum_price
+  column :breo_stock_percentage do |stock|
+    stock.breo_stock_percentage.to_s + " %"
+  end
+  column(:investment_at) do |stock|
+    stock.investment_at.to_s
+  end
+  column :visible
+end
+
 batch_action "设为有效" do |ids|
   batch_action_collection.find(ids).each do |user|
     user.visible!
