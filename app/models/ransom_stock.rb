@@ -37,8 +37,9 @@ class RansomStock < ApplicationRecord
   belongs_to :stock_company, foreign_key: :company_id
 
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :capital_sum, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, presence: true
-  #validates :stock_num, numericality: {greater_than_or_equal_to: 100}
+  validates :breo_stock_num, numericality: {greater_than_or_equal_to: 100}
   validates :stock_price, numericality: {min: 0.1, max: 1000}
+  validates :register_price, numericality: {min: 0.1, max: 1000}
   validate :breo_stock_num_numericality, :breo_stock_num_validate
 
   after_save :update_stock_ransom_history
@@ -78,18 +79,19 @@ class RansomStock < ApplicationRecord
 
   def update_account_statics
     if self.visible == true
-      UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price)
+      UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
     end
   end
 
   def update_account_stock_statics
     if self.visible_changed?
       if self.visible == true
-        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price)
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
       else
         stock_sum_price = 0
         breo_stock_num = 0
         breo_stock_percentage = 0
+        capital_sum = 0
         if self.stock_sum_price_changed?
           stock_sum_price = self.stock_sum_price_was - self.stock_sum_price
         end
@@ -99,13 +101,17 @@ class RansomStock < ApplicationRecord
         if self.breo_stock_percentage_changed?
           breo_stock_percentage = self.breo_stock_percentage_was - self.breo_stock_percentage
         end
-        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, breo_stock_num, breo_stock_percentage, stock_sum_price)
+        if self.capital_sum_changed?
+          capital_sum = self.capital_sum_was - self.capital_sum
+        end
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, breo_stock_num, breo_stock_percentage, stock_sum_price, capital_sum)
       end
     else
       if self.visible == true
         stock_sum_price = 0
         breo_stock_num = 0
         breo_stock_percentage = 0
+        capital_sum = 0
         if self.stock_sum_price_changed?
           stock_sum_price = self.stock_sum_price_was - self.stock_sum_price
         end
@@ -115,7 +121,10 @@ class RansomStock < ApplicationRecord
         if self.breo_stock_percentage_changed?
           breo_stock_percentage = self.breo_stock_percentage_was - self.breo_stock_percentage
         end
-        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, breo_stock_num, breo_stock_percentage, stock_sum_price)
+        if self.capital_sum_changed?
+          capital_sum = self.capital_sum_was - self.capital_sum
+        end
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, breo_stock_num, breo_stock_percentage, stock_sum_price, capital_sum)
       end
     end
   end

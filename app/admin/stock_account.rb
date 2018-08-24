@@ -142,12 +142,12 @@ form html: { multipart: true } do |f|
   f.inputs "认购信息" do
     f.input :user, :as => :select, :collection => Hash[User.active.map{|u| [u.name + " " + u.cert_id,u.id]}], :hint => "股东名 + 股东身份证"
     f.input :stock_company
-    f.input :stock_price, :hint => "这里填所选股东的每股认购单价（1股的价格）"
+    f.input :stock_price, :hint => "1股的价格"
     f.input :stock_sum_price
     f.input :breo_stock_num, :hint => "这里填所选股东的\"增加倍轻松股份数\",通常为100的倍数"
-    f.input :breo_stock_percentage
+    f.input :breo_stock_percentage, :hint => "可含4位小数,不大于100"
     f.input :capital_sum
-    f.input :register_price
+    f.input :register_price, :hint => "1股的价格"
     f.input :register_sum_price
     f.input :register_status, :as => :select, :collection => StockAccount::STATUSES
     f.input :register_at, as: :datepicker, :hint => "\"工商系统办结状态\" 为已办结时再填写该时间"

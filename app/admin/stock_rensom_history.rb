@@ -6,7 +6,7 @@ ActiveAdmin.register_page "StockRensomHistory" do
 
 
 
-menu priority: 5, label: "股票赎回历史查询", parent: "历史查询"
+menu priority: 2, label: "股票赎回历史查询", parent: "历史查询"
 
 #
 # or

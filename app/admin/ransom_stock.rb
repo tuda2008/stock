@@ -110,9 +110,9 @@ form html: { multipart: true } do |f|
     f.input :breo_stock_percentage
     f.input :capital_sum
     #f.input :capital_percentage
-    f.input :stock_price
+    f.input :stock_price, :hint => "1股的价格"
     f.input :stock_sum_price
-    f.input :register_price
+    f.input :register_price, :hint => "1股的价格"
     f.input :register_sum_price
     f.input :tax
     f.input :published_at, as: :datepicker

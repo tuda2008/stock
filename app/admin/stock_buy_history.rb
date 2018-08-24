@@ -5,7 +5,7 @@ ActiveAdmin.register_page "StockBuyHistory" do
 #
 
 
-menu priority: 5, label: "股票认购历史查询", parent: "历史查询"
+menu priority: 1, label: "股票认购历史查询", parent: "历史查询"
 
 #
 # or
