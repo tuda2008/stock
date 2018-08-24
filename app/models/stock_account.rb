@@ -70,6 +70,7 @@ class StockAccount < ApplicationRecord
   after_update :update_stock_accounts_history
 
   scope :companies, lambda { |user_id| where(user_id: user_id).includes(:stock_company) }
+  scope :active, -> { where(visible: true) }
 
   def stock_sum_numericality
   	if (self.breo_stock_num.to_i)%100 > 0
@@ -132,4 +133,9 @@ class StockAccount < ApplicationRecord
     self.visible = false
     self.save!
   end
+
+  def self.sum_stock_price
+    StockAccount.active.select("sum(register_sum_price) as sum_register_sum_price, sum(capital_sum) as sum_capital_sum").first
+  end
+
 end

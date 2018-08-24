@@ -32,13 +32,22 @@ scope '正常运营', :visible do |companies|
 end
 
 index do
+  @stock = StockAccount.sum_stock_price
   selectable_column
   column("#", :id) { |company| link_to company.id, admin_stock_company_path(company) }
 
   column(:name, sortable: false) do |company|
     company.name
   end
-  column :description, sortable: false
+  column "工商登记入股金额合计" do |company|
+    @stock.sum_register_sum_price.to_f
+  end
+  column "增加所持公司工商登记出资额合计" do |company|
+    @stock.sum_capital_sum.to_f
+  end
+  column "平均股价" do |company|
+    @stock.sum_capital_sum.to_f > 0 ? (@stock.sum_register_sum_price/@stock.sum_capital_sum).to_f.round(2) : ""
+  end
   #column :legal_representative, sortable: false
   #column :stockholders_num, sortable: false
   #column :holders_stock_num, sortable: false

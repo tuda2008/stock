@@ -95,43 +95,13 @@ class RansomStock < ApplicationRecord
       if self.visible == true
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
       else
-        stock_sum_price = 0
-        breo_stock_num = 0
-        breo_stock_percentage = 0
-        capital_sum = 0
-        if self.stock_sum_price_changed?
-          stock_sum_price = self.stock_sum_price_was - self.stock_sum_price
-        end
-        if self.breo_stock_num_changed?
-          breo_stock_num = self.breo_stock_num_was - self.breo_stock_num
-        end
-        if self.breo_stock_percentage_changed?
-          breo_stock_percentage = self.breo_stock_percentage_was - self.breo_stock_percentage
-        end
-        if self.capital_sum_changed?
-          capital_sum = self.capital_sum_was - self.capital_sum
-        end
-        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, breo_stock_num, breo_stock_percentage, stock_sum_price, capital_sum)
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num_was - self.breo_stock_num, self.breo_stock_percentage_was - self.breo_stock_percentage, 
+          self.stock_sum_price_was - self.stock_sum_price,  self.capital_sum_was - self.capital_sum)
       end
     else
       if self.visible == true
-        stock_sum_price = 0
-        breo_stock_num = 0
-        breo_stock_percentage = 0
-        capital_sum = 0
-        if self.stock_sum_price_changed?
-          stock_sum_price = self.stock_sum_price_was - self.stock_sum_price
-        end
-        if self.breo_stock_num_changed?
-          breo_stock_num = self.breo_stock_num_was - self.breo_stock_num
-        end
-        if self.breo_stock_percentage_changed?
-          breo_stock_percentage = self.breo_stock_percentage_was - self.breo_stock_percentage
-        end
-        if self.capital_sum_changed?
-          capital_sum = self.capital_sum_was - self.capital_sum
-        end
-        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, breo_stock_num, breo_stock_percentage, stock_sum_price, capital_sum)
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num_was - self.breo_stock_num, self.breo_stock_percentage_was - self.breo_stock_percentage, 
+          self.stock_sum_price_was - self.stock_sum_price,  self.capital_sum_was - self.capital_sum)
       end
     end
   end

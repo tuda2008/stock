@@ -31,6 +31,7 @@ class StockCompany < ApplicationRecord
   validates :name, length: 3..50
   validates :description, :legal_representative, length: { maximum: 250 }
 
+
   def block!
     self.visible = false
     self.save!
