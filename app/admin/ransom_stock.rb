@@ -96,7 +96,11 @@ end
 
 form html: { multipart: true } do |f|
   @users = User.active
-  @companies = @users.empty? ? [] : StockAccount.companies(@users.first.id)
+  if resource.user_id.present?
+    @companies = StockAccount.companies(resource.user_id)
+  else
+    @companies = @users.empty? ? [] : StockAccount.companies(@users.first.id)
+  end
   @companies = @companies.map{|c| [c.stock_company.name, c.company_id]}
   @users = @users.map{|u| [u.name + " " + u.cert_id, u.id]}
 
