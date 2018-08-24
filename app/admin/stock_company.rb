@@ -38,15 +38,16 @@ index do
   column(:name, sortable: false) do |company|
     company.name
   end
+  column :description, sortable: false
   #column :legal_representative, sortable: false
-  column :stockholders_num, sortable: false
-  column :holders_stock_num, sortable: false
-  column :holders_buy_sum_price, sortable: false
-  column :ransom_stock_num, sortable: false
-  column :ransom_sum_price, sortable: false
-  column :holders_stock_sum_price, sortable: false
-  column :stock_price, sortable: false
-  column :estimate_market_price, sortable: false
+  #column :stockholders_num, sortable: false
+  #column :holders_stock_num, sortable: false
+  #column :holders_buy_sum_price, sortable: false
+  #column :ransom_stock_num, sortable: false
+  #column :ransom_sum_price, sortable: false
+  #column :holders_stock_sum_price, sortable: false
+  #column :stock_price, sortable: false
+  #column :estimate_market_price, sortable: false
   
   column "公司运营情况" do |company|
     company.visible ? "正常" : "不正常"
@@ -58,7 +59,7 @@ index do
     else
       item "正常", unblock_admin_stock_company_path(company), method: :put
     end
-    item "    编辑", edit_admin_stock_company_path(company)
+    item "编辑", edit_admin_stock_company_path(company)
   end
 end
 
@@ -96,14 +97,14 @@ show do
       company.description.blank? ? '' : raw("<div style='text-align:left'>#{company.description}</div>")
     end
     #row :legal_representative
-    row :stockholders_num
-    row :holders_stock_num
-    row :holders_buy_sum_price
-    row :ransom_stock_num
-    row :ransom_sum_price
-    row :holders_stock_sum_price
-    row :stock_price
-    row :estimate_market_price
+    #row :stockholders_num
+    #row :holders_stock_num
+    #row :holders_buy_sum_price
+    #row :ransom_stock_num
+    #row :ransom_sum_price
+    #row :holders_stock_sum_price
+    #row :stock_price
+    #row :estimate_market_price
     row :visible do |company|
       company.visible ? "正常" : "不正常"
     end
@@ -116,9 +117,6 @@ form html: { multipart: true } do |f|
   f.inputs "公司信息" do
     f.input :name, :hint => "未指定公司的名字暂用\"内部管理\"代替"
     f.input :description
-    #f.input :legal_representative
-    #f.input :stock_price
-    #f.input :estimate_market_price
   end
   
   actions

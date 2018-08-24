@@ -38,7 +38,6 @@ index do
   column(:published_at, sortable: true) do |stock|
     stock.published_at.to_s
   end
-  column :info, sortable: false
   
   actions defaults: false do |stock|
     unless stock.visible

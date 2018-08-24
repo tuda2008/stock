@@ -7,9 +7,9 @@ class UpdateAccountStockSumWorker
         acs.breo_stock_num += breo_stock_num
         acs.breo_stock_percentage += breo_stock_percentage
         acs.stock_sum_price += stock_sum_price
-        acs.ransom_stock_num = acs.ransom_stock_num - breo_stock_num
-        acs.ransom_sum_price = acs.ransom_sum_price - stock_sum_price
         acs.capital_sum += capital_sum
+        acs.ransom_stock_num = acs.ransom_stock_num - breo_stock_num
+        acs.ransom_sum_price = acs.ransom_sum_price 
         acs.save if acs.valid?
       end
   end

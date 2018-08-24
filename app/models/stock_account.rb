@@ -91,13 +91,14 @@ class StockAccount < ApplicationRecord
   def update_stock_accounts
     if self.visible_changed?
       if self.visible == true
-        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, self.stock_sum_price)
+        CreateAccountStaticWorker.perform_in(5.seconds, self.id)
       else
-        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, -self.stock_sum_price_was)
+        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num_was, -self.breo_stock_percentage_was, -self.stock_sum_price_was, -self.capital_sum_was)
       end
     else
-      if (self.visible == true && self.stock_sum_price_changed?)
-        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.id, self.stock_sum_price - self.stock_sum_price_was)
+      if (self.visible == true)
+        UpdateAccountStaticSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num - self.breo_stock_num_was, self.breo_stock_percentage - self.breo_stock_percentage_was, 
+          self.stock_sum_price - self.stock_sum_price_was, self.capital_sum - self.capital_sum_was)
       end
     end
   end

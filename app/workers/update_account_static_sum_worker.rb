@@ -1,15 +1,14 @@
 class UpdateAccountStaticSumWorker
   include Sidekiq::Worker
 
-  def perform(stock_id, sum_price)
-    sa = StockAccount.where(id: stock_id).first
-    if sa
-        acs = AccountStatic.where(user_id: sa.user_id, company_id: sa.company_id).first
-        unless acs
-          acs = AccountStatic.new(user_id: sa.user_id, company_id: sa.company_id)
-        end
-        acs.stock_sum_price = acs.stock_sum_price.to_f + sum_price.to_f
+  def perform(user_id, company_id, breo_stock_num, breo_stock_percentage, stock_sum_price, capital_sum)
+      acs = AccountStatic.where(user_id: user_id, company_id: company_id).first
+      if acs
+        acs.breo_stock_num += breo_stock_num
+        acs.breo_stock_percentage += breo_stock_percentage
+        acs.stock_sum_price += stock_sum_price
+        acs.capital_sum += capital_sum
         acs.save if acs.valid?
-    end
+      end
   end
 end
