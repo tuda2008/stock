@@ -39,7 +39,7 @@ index do
     account.stock_company.name
   end
   column "现倍轻松股份占比" do |account|
-    account.breo_stock_percentage.to_f.round(4).to_s + " %"
+    account.breo_stock_percentage.to_f.round(5).to_s + " %"
   end
   column "现实际持股金额" do |account|
     account.stock_sum_price.to_f.round(2).to_s + " ¥"

@@ -37,9 +37,10 @@ class RansomStock < ApplicationRecord
   belongs_to :stock_company, foreign_key: :company_id
 
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :capital_sum, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, presence: true
-  validates :breo_stock_num, numericality: {greater_than_or_equal_to: 100}
-  validates :stock_price, numericality: {min: 0.1, max: 1000}
-  validates :register_price, numericality: {min: 0.1, max: 1000}
+  validates :breo_stock_num, :capital_sum, :register_sum_price, :stock_sum_price, numericality: {greater_than_or_equal_to: 100}
+  validates :stock_price, :register_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
+  validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0.0001, less_than_or_equal_to: 100}
+  validates :tax, numericality: {greater_than_or_equal_to: 1}
   validate :breo_stock_num_numericality, :breo_stock_num_validate
 
   after_save :update_stock_ransom_history
@@ -59,12 +60,18 @@ class RansomStock < ApplicationRecord
     account_static = AccountStatic.where(user_id: self.user_id, company_id: self.company_id).first
     unless account_static.nil?
       if account_static.breo_stock_num < self.breo_stock_num.to_i
-        errors.add :stock_num, "赎回股数大于股东持有股数（#{account_static.breo_stock_num}）"
+        errors.add :breo_stock_num, "赎回股数大于股东持有股数（#{account_static.breo_stock_num}）"
+        return false
+      end
+      if account_static.breo_stock_percentage < self.breo_stock_percentage.to_f
+        errors.add :breo_stock_percentage, "赎回股份占比大于股东持有股份占比（#{account_static.breo_stock_percentage}）"
+        return false
       end
     else
       errors.add :company_id, "所选股东未持有该公司股票"
-      false
+      return false
     end
+    return true
   end
 
   def update_stock_ransom_history
