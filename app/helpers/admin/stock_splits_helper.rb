@@ -5,9 +5,8 @@ module Admin::StockSplitsHelper
     show_diff = false
     no_details = false
 
-
-      field = detail.prop_key.to_s
-      label = I18n.t(("activerecord.attributes." + stock_model + "." + field).to_sym)
+    field = detail.prop_key.to_s
+    label = I18n.t(("activerecord.attributes." + stock_model + "." + field).to_sym)
 
       case detail.prop_key
       when 'published_at'
@@ -41,7 +40,15 @@ module Admin::StockSplitsHelper
       when 'stock_bonus', 'stock_price'
         value = "#{detail.value} ¥" unless detail.value.blank?
         old_value = "#{detail.old_value} ¥" unless detail.old_value.blank?
-
+      when 'change_type'
+        value = StockAccount::TYPES_NAME[detail.value.to_s.to_sym] unless detail.value.blank?
+        old_value = StockAccount::TYPES_NAME[detail.old_value.to_s.to_sym] unless detail.old_value.blank?
+      when 'register_status'
+        value = StockAccount::STATUSES_NAME[detail.value.to_s.to_sym] unless detail.value.blank?
+        old_value = StockAccount::STATUSES_NAME[detail.old_value.to_s.to_sym] unless detail.old_value.blank?
+      when 'breo_stock_percentage'
+        value = "#{detail.value} %" unless detail.value.blank?
+        old_value = "#{detail.old_value} %" unless detail.old_value.blank?
       when 'enabled', 'visible'
         value = I18n.t(detail.value == "0" ? :general_text_No : :general_text_Yes) unless detail.value.blank?
         old_value = I18n.t(detail.old_value == "0" ? :general_text_No : :general_text_Yes) unless detail.old_value.blank?
