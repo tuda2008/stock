@@ -12,18 +12,6 @@ filter :ransom_sum_price
 
 menu priority: 1, label: "持股汇总"
 
-controller do
-  def index
-    index! do |format|
-      @statics = AccountStatic.all.reload
-
-      format.html
-      format.csv   { export_csv @statics }
-      format.json  { render json: @statics }
-      format.xml   { render xml: @statics }
-    end
-  end
-end
 
 scope :all, default: true
 scope("有赎回Y") { |static| static.ransom }
@@ -33,7 +21,7 @@ scope("小股东S") { |static| static.small }
 
 index do
   column "股东名" do |account|
-    link_to account.user.name, admin_account_static_path(account.user_id)
+    link_to account.user.name, admin_account_static_path(id: 1, user_id: account.user_id)
   end
   column "公司名" do |account|
     account.stock_company.name
@@ -81,7 +69,7 @@ end
 
 show do
     panel '最近认购历史' do
-        @journals = Journal.stock_account.where(user_id: params[:id]).includes(:user, :details).page(params[:page]).per(10)
+        @journals = Journal.stock_account.where(user_id: params[:user_id]).includes(:user, :details).page(params[:page]).per(10)
         paginated_collection(@journals, download_links: false) do
             table class: "index_table index" do 
                 thead do 
@@ -122,7 +110,7 @@ show do
     end
 
     panel '最近赎回历史' do
-        @journals = Journal.stock_ransom.where(user_id: params[:id]).includes(:user, :details).page(params[:page]).per(10)
+        @journals = Journal.stock_ransom.where(user_id: params[:user_id]).includes(:user, :details).page(params[:page]).per(10)
         paginated_collection(@journals, download_links: false) do
             table class: "index_table index" do 
                 thead do 
@@ -163,7 +151,7 @@ show do
     end
 
     panel '最近分红历史' do
-        @journals = Journal.stock_split.where(user_id: params[:id]).includes(:user, :details).page(params[:page]).per(10)
+        @journals = Journal.stock_split.where(user_id: params[:user_id]).includes(:user, :details).page(params[:page]).per(10)
         paginated_collection(@journals, download_links: false) do
             table class: "index_table index" do 
                 thead do 
