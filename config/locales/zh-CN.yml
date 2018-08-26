@@ -20,6 +20,7 @@
       ransom_stock: "股票赎回"
       account_static: "持股汇总"
       admin_user: "管理员"
+      journal: "历史"
     attributes:
       user:
         mobile: "手机"
@@ -115,6 +116,9 @@
         stock_bonus: "已分红"
         ransom_stock_num: "已赎回股数"
         ransom_sum_price: "赎回所得"
+      journal:
+        user: "股东名"
+        created_at: "操作时间"
       shipment:
         name: "姓名"
         mobile: "手机"

@@ -109,48 +109,7 @@ show do
                             journal.user.name
                         end
                         td class: "col" do 
-                            arrs.join(", ")
-                        end
-                        td class: "col" do 
-                            journal.created_at.strftime("%Y-%m-%d %H:%M:%S")
-                        end
-                    end
-                  end
-                end
-            end
-        end
-    end
-
-    panel '最近分红历史' do
-        @journals = Journal.stock_split.where(user_id: params[:id]).includes(:user, :details).page(params[:page]).per(10)
-        paginated_collection(@journals, download_links: false) do
-            table class: "index_table index" do 
-                thead do 
-                    tr do
-                        th class: "col" do 
-                            "股东名"
-                        end 
-                        th class: "col" do 
-                            "历史详情"
-                        end
-                        th class: "col" do 
-                            "操作时间"
-                        end
-                    end
-                end
-                tbody do 
-                  @journals.each do |journal|
-                    arrs = []
-                    journal.details.each do |detail|
-                      arrs << show_detail(detail, 'stock_split')
-                    end
-                      
-                    tr class: "even" do
-                        td class: "col" do 
-                            journal.user.name
-                        end
-                        td class: "col" do 
-                            arrs.join(", ")
+                            link_to("#{arrs.first(3).join(", ")}......", admin_journal_path(journal))
                         end
                         td class: "col" do 
                             journal.created_at.strftime("%Y-%m-%d %H:%M:%S")
@@ -191,7 +150,48 @@ show do
                             journal.user.name
                         end
                         td class: "col" do 
-                            arrs.join(", ")
+                            link_to("#{arrs.first(3).join(", ")}......", admin_journal_path(journal))
+                        end
+                        td class: "col" do 
+                            journal.created_at.strftime("%Y-%m-%d %H:%M:%S")
+                        end
+                    end
+                  end
+                end
+            end
+        end
+    end
+
+    panel '最近分红历史' do
+        @journals = Journal.stock_split.where(user_id: params[:id]).includes(:user, :details).page(params[:page]).per(10)
+        paginated_collection(@journals, download_links: false) do
+            table class: "index_table index" do 
+                thead do 
+                    tr do
+                        th class: "col" do 
+                            "股东名"
+                        end 
+                        th class: "col" do 
+                            "历史详情"
+                        end
+                        th class: "col" do 
+                            "操作时间"
+                        end
+                    end
+                end
+                tbody do 
+                  @journals.each do |journal|
+                    arrs = []
+                    journal.details.each do |detail|
+                      arrs << show_detail(detail, 'stock_split')
+                    end
+                      
+                    tr class: "even" do
+                        td class: "col" do 
+                            journal.user.name
+                        end
+                        td class: "col" do 
+                            link_to("#{arrs.first(3).join(", ")}......", admin_journal_path(journal))
                         end
                         td class: "col" do 
                             journal.created_at.strftime("%Y-%m-%d %H:%M:%S")

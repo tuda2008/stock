@@ -52,7 +52,7 @@ content title: '股票赎回历史查询' do
                         journal.user.name
                     end
                     td class: "col" do 
-                        arrs.join(", ")
+                        link_to("#{arrs.first(3).join(", ")}......", admin_journal_path(journal))
                     end
                     td class: "col" do 
                         journal.created_at.strftime("%Y-%m-%d %H:%M:%S")
