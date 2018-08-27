@@ -149,54 +149,13 @@ show do
             end
         end
     end
-
-    panel '最近分红历史' do
-        @journals = Journal.stock_split.where(user_id: params[:user_id]).includes(:user, :details).page(params[:page]).per(10)
-        paginated_collection(@journals, download_links: false) do
-            table class: "index_table index" do 
-                thead do 
-                    tr do
-                        th class: "col" do 
-                            "股东名"
-                        end 
-                        th class: "col" do 
-                            "历史详情"
-                        end
-                        th class: "col" do 
-                            "操作时间"
-                        end
-                    end
-                end
-                tbody do 
-                  @journals.each do |journal|
-                    arrs = []
-                    journal.details.each do |detail|
-                      arrs << show_detail(detail, 'stock_split')
-                    end
-                      
-                    tr class: "even" do
-                        td class: "col" do 
-                            journal.user.name
-                        end
-                        td class: "col" do 
-                            arrs.size > 2 ? link_to("#{arrs.first(2).join(", ")}......", admin_journal_path(journal)) : arrs.join(", ")
-                        end
-                        td class: "col" do 
-                            journal.created_at.strftime("%Y-%m-%d %H:%M:%S")
-                        end
-                    end
-                  end
-                end
-            end
-        end
-    end
 end
 
 sidebar "使用须知", :only => [:index] do
     "第一步.在 '系统管理' -> '股东管理' -> '新建股东'<br /> 
      第二步.在 '公司管理' -> '新建公司'<br />
      第三步.在 '股票认购' -> '新建股票认购'<br />
-     第四步.在 '分红派股' -> '新建分红派股'<br />".html_safe
+     第四步.在 '股票赎回' -> '新建股票赎回'<br />".html_safe
 end
 
 end
