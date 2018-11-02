@@ -1,3 +1,4 @@
+require 'creek'
 ActiveAdmin.register User do
 
 # See permitted parameters documentation:
@@ -73,7 +74,14 @@ csv do
 end
 
 collection_action :import, method: :get do
-  p "ssss"
+  render 'admin/users/import'
+end
+
+collection_action :import, method: :post do
+  file = params[:file]
+  unless file.blank?
+    Creek::Book.new file.path, check_file_extension: false
+  end
 end
 
 show do

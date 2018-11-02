@@ -114,7 +114,9 @@ end
 
 collection_action :import, method: :post do
   file = params[:file]
-  Creek::Book.new file.path, check_file_extension: false
+  unless file.blank?
+    Creek::Book.new file.path, check_file_extension: false
+  end
 end
 
 collection_action :import, method: :get do
