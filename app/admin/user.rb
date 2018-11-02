@@ -77,10 +77,7 @@ show do
     row :id
     row :name
     row :mobile
-    row :email
 
-    row :bank_name
-    row :card
     row :cert_id
     row :cert_address
 
@@ -91,6 +88,11 @@ show do
     row :user_type do |user|
       User::TYPE_NAME[user.user_type.to_s.to_sym]
     end
+
+    row :email
+    row :bank_name
+    row :card
+
     row :locked_at do |user|
       user.locked_at.blank? ? "正常用户，未冻结" : "已冻结于 " + user.locked_at.to_s
     end
@@ -103,22 +105,27 @@ form html: { multipart: true } do |f|
   f.inputs "股东信息" do
     f.input :name, :hint => "重名则加上部门，如\"财务王五\""
     f.input :mobile
-    f.input :email
 
-    f.input :bank_name
-    f.input :card
-    f.input :cert_id
+    f.input :cert_id, :required => true
     f.input :cert_address
 
     f.input :department
     f.input :user_cate, :as => :select, :collection => User::CATES
     f.input :user_type, :as => :select, :collection => User::TYPE
 
+    f.input :email
+    f.input :bank_name
+    f.input :card
+
     #f.input :password
     #f.input :password_confirmation
   end
   
   actions
+end
+
+sidebar "导入", :only => [:new, :edit, :index] do
+    "todo".html_safe
 end
 
 end

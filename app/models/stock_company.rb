@@ -18,6 +18,7 @@
 #  holders_stock_sum_price :float(24)        default(0.0)
 #  stock_price             :float(24)        default(0.0)
 #  estimate_market_price   :float(24)        default(0.0)
+#  stock_num               :float(24)        default(0.0)
 #
 # Indexes
 #
@@ -26,9 +27,10 @@
 #
 
 class StockCompany < ApplicationRecord
- 
-  validates :name, presence: true, uniqueness: true
+  validates :name, :stock_num, presence: true
+  validates :name, uniqueness: true
   validates :name, length: 3..50
+  validates :stock_num, numericality: {greater_than_or_equal_to: 1, only_integer: true}
   validates :description, :legal_representative, length: { maximum: 250 }
 
   def self.sum_stock_price

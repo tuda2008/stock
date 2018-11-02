@@ -18,6 +18,7 @@
 #  holders_stock_sum_price :float(24)        default(0.0)
 #  stock_price             :float(24)        default(0.0)
 #  estimate_market_price   :float(24)        default(0.0)
+#  stock_num               :float(24)        default(0.0)
 #
 # Indexes
 #

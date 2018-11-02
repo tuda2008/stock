@@ -127,7 +127,7 @@ form html: { multipart: true } do |f|
     f.input :breo_stock_num, :hint => "不能大于买入倍轻松股份数"
     f.input :breo_stock_percentage, :hint => "不能大于买入倍轻松股份占比"
     f.input :capital_sum
-    #f.input :capital_percentage
+    f.input :capital_percentage
     f.input :stock_price, :hint => "1股的价格"
     f.input :stock_sum_price
     f.input :register_price, :hint => "1股的价格"

@@ -59,11 +59,11 @@ class StockAccount < ApplicationRecord
   belongs_to :stock_company, foreign_key: :company_id
 
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :investment_at, presence: true
-  validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 100}
+  validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 1, only_integer: true}
   validates :stock_price, :register_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
   validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0.0001, less_than_or_equal_to: 100}
   validates :stock_sum_price, :investment_sum_price, :register_sum_price, numericality: {greater_than_or_equal_to: 1000}
-  validate :stock_sum_numericality, :visible_validate 
+  validate  :visible_validate 
 
   after_create :cteate_stock_account, :update_stock_accounts_history
   before_update :update_stock_accounts
@@ -71,17 +71,6 @@ class StockAccount < ApplicationRecord
 
   scope :companies, lambda { |user_id| where(user_id: user_id).includes(:stock_company) }
   scope :active, -> { where(visible: true) }
-
-  def stock_sum_numericality
-  	if (self.breo_stock_num.to_i)%100 > 0
-  		errors.add :breo_stock_num, "必须是100的倍数"
-  		false
-    elsif (self.capital_sum.to_i)%100 > 0
-      errors.add :capital_sum, "必须是100的倍数"
-  	else
-  		true
-  	end
-  end
 
   def cteate_stock_account
     if self.visible == true

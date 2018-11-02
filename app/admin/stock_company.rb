@@ -4,7 +4,7 @@ ActiveAdmin.register StockCompany do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 
-permit_params :list, :of, [:name, :description], :on, :model
+permit_params :list, :of, [:name, :stock_num, :description], :on, :model
 
 actions :all, except: [:destroy]
 
@@ -23,6 +23,7 @@ menu priority: 2, label: "公司管理"
 #   redirect_to admin_users_path, notice: resource.verified ? 'Locked!' : 'Cancel Locked!'
 # end
 filter :name
+filter :stock_num
 filter :description
 
 scope :all, default: true
@@ -35,9 +36,11 @@ index do
   @sum = StockCompany.sum_stock_price
   selectable_column
   column("#", :id) { |company| link_to company.id, admin_stock_company_path(company) }
-
   column(:name, sortable: false) do |company|
     company.name
+  end
+  column(:stock_num) do |company|
+    company.stock_num.to_i
   end
   column "工商登记入股金额合计" do |company|
     @sum["#{company.id}"][:sum_register_sum_price] if @sum["#{company.id}"]
@@ -77,6 +80,9 @@ end
 csv do
   @@sum = StockCompany.sum_stock_price
   column :name
+  column :stock_num do |company|
+    company.stock_num.to_i
+  end
   column "工商登记入股金额合计" do |company|
     @@sum["#{company.id}"][:sum_register_sum_price] if @@sum["#{company.id}"]
   end
@@ -123,6 +129,9 @@ show do
   attributes_table do
     row :id
     row :name
+    row :stock_num do |company|
+      company.stock_num.to_i
+    end
     row :description do |company|
       company.description.blank? ? '' : raw("<div style='text-align:left'>#{company.description}</div>")
     end
@@ -146,6 +155,7 @@ form html: { multipart: true } do |f|
   
   f.inputs "公司信息" do
     f.input :name, :hint => "未指定公司的名字暂用\"内部管理\"代替"
+    f.input :stock_num, :hint => "必须为正整数", :input_html => { :value => resource.stock_num.to_i }
     f.input :description
   end
   

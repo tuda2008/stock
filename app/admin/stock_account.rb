@@ -165,9 +165,10 @@ form html: { multipart: true } do |f|
     f.input :stock_company
     f.input :stock_price, :hint => "1股的价格"
     f.input :stock_sum_price
-    f.input :breo_stock_num, :hint => "这里填所选股东的\"增加倍轻松股份数\",通常为100的倍数"
-    f.input :breo_stock_percentage, :hint => "可含4位小数,不大于100"
+    f.input :breo_stock_num, :hint => "这里填所选股东的\"增加倍轻松股份数\",必须是正整数"
+    f.input :breo_stock_percentage, :hint => "可含4位小数,不大于100,不用输入%"
     f.input :capital_sum
+    f.input :capital_percentage
     f.input :register_price, :hint => "1股的价格"
     f.input :register_sum_price
     f.input :register_status, :as => :select, :collection => StockAccount::STATUSES
@@ -185,7 +186,11 @@ form html: { multipart: true } do |f|
 end
 
 sidebar "注意事项", :only => [:new, :edit] do
-    "1.认购倍轻松股份数必须是100的整数倍<br /> 2.勾选 '认购有效' 后，最好不要再修改、删除该认购信息".html_safe
+    "1.认购倍轻松股份数必须是正整数<br /> 2.勾选 '认购有效' 后，最好不要再修改、删除该认购信息".html_safe
+end
+
+sidebar "导入", :only => [:new, :edit, :index] do
+    "todo".html_safe
 end
 
 end

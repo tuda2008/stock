@@ -7,7 +7,7 @@ permit_params :email, :password, :password_confirmation
 
 menu priority: 6, label: "管理员"
 
-actions :all, except: [:destroy, :edit, :update]
+actions :all, except: [:destroy]
 
   filter :email
   filter :current_sign_in_at
@@ -29,6 +29,9 @@ actions :all, except: [:destroy, :edit, :update]
     end
     column :last_sign_in_ip, sortable: false
     column :sign_in_count
+    actions defaults: false do |user|
+      item "    编辑", edit_admin_admin_user_path(user)
+    end
   end
   
   show do 
