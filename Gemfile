@@ -1,4 +1,4 @@
-source 'https://gems.ruby-china.org'
+source 'https://gems.ruby-china.com'
 
 ruby '2.4.0'
 
@@ -11,6 +11,7 @@ end
 gem 'rails', '~> 5.2.0'
 # Use mysql2 as the database for Active Record
 gem 'mysql2', '~> 0.4.8'
+gem 'nokogiri', '1.8.4'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
@@ -40,6 +41,9 @@ gem 'devise', '~> 4.4.0'
 gem 'activeadmin', '~> 1.3.0'
 gem 'kaminari', '~> 1.1.0'
 gem 'sidekiq', '~> 5.1.0'
+
+# parse excel
+gem 'creek'
 
 group :development, :test do
   # write schema to model

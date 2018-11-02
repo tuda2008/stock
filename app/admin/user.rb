@@ -72,6 +72,10 @@ csv do
   end
 end
 
+collection_action :import, method: :get do
+  p "ssss"
+end
+
 show do
   attributes_table do
     row :id
@@ -125,7 +129,7 @@ form html: { multipart: true } do |f|
 end
 
 sidebar "导入", :only => [:new, :edit, :index] do
-    "todo".html_safe
+    link_to "批量导入股东信息", import_admin_users_path
 end
 
 end

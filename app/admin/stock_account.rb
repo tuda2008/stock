@@ -1,3 +1,4 @@
+require 'creek'
 ActiveAdmin.register StockAccount do
 
 # See permitted parameters documentation:
@@ -111,6 +112,15 @@ member_action :unvisible, method: :put do
   redirect_to admin_stock_accounts_path, notice: "已设为无效"
 end
 
+collection_action :import, method: :post do
+  file = params[:file]
+  Creek::Book.new file.path, check_file_extension: false
+end
+
+collection_action :import, method: :get do
+  render 'admin/stock_accounts/import'
+end
+
 show do
   @sum = StockCompany.sum_stock_price
   attributes_table do
@@ -190,7 +200,7 @@ sidebar "注意事项", :only => [:new, :edit] do
 end
 
 sidebar "导入", :only => [:new, :edit, :index] do
-    "todo".html_safe
+    link_to "批量导入股票认购信息", import_admin_stock_accounts_path
 end
 
 end
