@@ -5,8 +5,8 @@ ActiveAdmin.register StockAccount do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :list, :of, [:user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage,
-  :capital_sum, :register_price, :register_sum_price, :register_status, :register_at, :investment_sum_price,
-  :investment_at, :transfered_at, :change_type, :info, :visible], :on, :model
+  :capital_sum, :register_price, :register_sum_price, :register_status, :register_at, :investment_price, :investment_sum_price,
+  :investment_at, :transfered_at, :ransom_at, :meeting_sn, :change_type, :info, :visible], :on, :model
 
 actions :all, except: [:destroy]
 
@@ -71,21 +71,43 @@ index do
 end
 
 csv do
-  column(:stock_company) do |stock|
-    stock.stock_company.name
-  end
   column(:user) do |stock|
-    stock.user.name + " " + stock.user.cert_id
+    stock.user.name
+  end
+  column :breo_stock_num
+  column :breo_stock_percentage do |stock|
+    stock.breo_stock_percentage.to_f.round(5).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price
-  column :breo_stock_percentage do |stock|
-    stock.breo_stock_percentage.to_s + " %"
+  column(:stock_company) do |stock|
+    stock.stock_company.name
   end
-  column(:investment_at) do |stock|
+  column :capital_sum
+  column :capital_percentage do |stock|
+    stock.capital_percentage.to_f.round(5).to_s + " %"
+  end
+  column :register_price
+  column :register_sum_price
+  column :register_at do |stock|
+    stock.register_at.to_s
+  end
+  column :investment_price
+  column :investment_sum_price
+  column :investment_at do |stock|
     stock.investment_at.to_s
   end
-  column :visible
+  column :ransom_at do |stock|
+    stock.ransom_at.to_s
+  end
+  column :meeting_sn
+  column :change_type do |stock|
+    StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
+  end
+  column :transfered_at do |stock|
+    stock.transfered_at.to_s
+  end
+  column :info
 end
 
 batch_action "设为有效" do |ids|
@@ -112,15 +134,76 @@ member_action :unvisible, method: :put do
   redirect_to admin_stock_accounts_path, notice: "已设为无效"
 end
 
-collection_action :import, method: :post do
-  file = params[:file]
-  unless file.blank?
-    Creek::Book.new file.path, check_file_extension: false
-  end
-end
-
 collection_action :import, method: :get do
   render 'admin/stock_accounts/import'
+end
+
+collection_action :import_execl, method: :post do
+  file = params[:file]
+  unless file.blank?
+    begin
+      creek = Creek::Book.new file.path
+      sheet = creek.sheets[1]
+      errors = []
+      length = 0
+      types = {"股权激励": "#{StockAccount::INSPIRE}", "股东间股权转让": "#{StockAccount::TRANSFER}", 
+      "股票股利": "#{StockAccount::BONUS}", "私募入股": "#{StockAccount::PRIVATE_JOIN}", 
+      "离职退股": "#{StockAccount::WORK_JUMP}", "私募退股": "#{StockAccount::PRIVATE_OUT}"}
+      sheet.rows.each_with_index do |row, index|
+        next if index == 0
+        length = index
+        next if row.empty?
+        user = User.where(name: row["A#{index + 1}"]).first
+        if user.nil?
+          errors << "用户 #{row["A#{index + 1}"]} 不存在"
+          next
+        end
+        company = StockCompany.where(name: row["F#{index + 1}"]).first
+        if company.nil?
+          errors << "持股公司 #{row["A#{index + 1}"]} 不存在"
+          next
+        end
+        sa = StockAccount.new(user_id: user.id, breo_stock_num: row["B#{index + 1}"].to_i, 
+          breo_stock_percentage: row["C#{index + 1}"].to_f, stock_price: row["D#{index + 1}"].to_f, 
+          stock_sum_price: row["E#{index + 1}"], 
+          company_id: company.id,
+          capital_sum: row["G#{index + 1}"],
+          capital_percentage: row["H#{index + 1}"],
+          register_price: row["I#{index + 1}"], 
+          register_sum_price: row["J#{index + 1}"],
+          register_at: Date.parse(row["K#{index + 1}"]),
+          investment_price: row["L#{index + 1}"],
+          investment_sum_price: row["M#{index + 1}"], 
+          investment_at: Date.parse(row["N#{index + 1}"]),
+          ransom_at: Date.parse(row["O#{index + 1}"]),
+          meeting_sn: row["P#{index + 1}"],
+          change_type: types[row["Q#{index + 1}"]], 
+          transfered_at: Date.parse(row["R#{index + 1}"]),
+          info: row["S#{index + 1}"]
+        )
+        if sa.valid?
+          sa.save
+        else
+          errors << sa.errors.full_messages.to_sentence
+        end
+      end
+      if length < 2
+        flash[:warning] = "请在execl中输入有效数据后再导入"
+      elsif 
+        flash[:notice] = "导入数据成功"
+      end
+      unless errors.empty?
+        flash.discard(:notice)
+        flash.discard(:warning)
+        flash[:warning] = errors.join(';')
+      end
+    rescue
+      flash[:error] = "请选中有效的execl模板导入"
+    end
+  else
+    flash[:warning] = "请选中有效的execl模板导入"
+  end
+  redirect_to action: :import
 end
 
 show do
@@ -151,6 +234,7 @@ show do
     row :register_at do |stock|
       stock.register_at.blank? ? "" : stock.register_at.to_s
     end
+    row :investment_price
     row :investment_sum_price
     row :investment_at do |stock|
       stock.investment_at.to_s
@@ -158,6 +242,10 @@ show do
     row :transfered_at do |stock|
       stock.transfered_at.blank? ? "" : stock.transfered_at.to_s
     end
+    row :ransom_at do |stock|
+      stock.ransom_at.to_s
+    end
+    row :meeting_sn
     row :change_type do |stock|
       StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
     end
@@ -185,9 +273,12 @@ form html: { multipart: true } do |f|
     f.input :register_sum_price
     f.input :register_status, :as => :select, :collection => StockAccount::STATUSES
     f.input :register_at, as: :datepicker, :hint => "\"工商系统办结状态\" 为已办结时再填写该时间"
+    f.input :investment_price
     f.input :investment_sum_price
     f.input :investment_at, as: :datepicker
     f.input :transfered_at, as: :datepicker
+    f.input :ransom_at, as: :datepicker
+    f.input :meeting_sn
     f.input :change_type, :as => :select, :collection => StockAccount::TYPES
     f.input :info
 

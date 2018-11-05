@@ -1,4 +1,3 @@
-require 'creek'
 ActiveAdmin.register User do
 
 # See permitted parameters documentation:
@@ -55,7 +54,6 @@ index do
     user.locked_at.blank? ? "正常" : "已冻结于 " + user.locked_at.to_s
   end
   
-  
   actions defaults: false do |user|
     item "    编辑", edit_admin_user_path(user)
   end
@@ -64,10 +62,13 @@ end
 
 csv do
   column :name
-  column :mobile, sortable: false
-  column :card
-  column :cert_id
   column :department
+  column :cert_id
+  column :cert_address
+  column :bank_name
+  column :card
+  column :mobile
+  column :email
   column :user_cate do |user|
     User::CATES_NAME[user.user_cate.to_s.to_sym]
   end
@@ -77,11 +78,47 @@ collection_action :import, method: :get do
   render 'admin/users/import'
 end
 
-collection_action :import, method: :post do
+collection_action :import_execl, method: :post do
   file = params[:file]
   unless file.blank?
-    Creek::Book.new file.path, check_file_extension: false
+    begin
+      creek = Creek::Book.new file.path
+      sheet = creek.sheets[0]
+      length = 0
+      types = {"自然人": "1",  "法人股东": "2", "外资": "3"}
+      errors = []
+      sheet.rows.each_with_index do |row, index|
+        next if index == 0
+        length = index
+        next if row.empty?
+        user = User.new(name: row["A#{index + 1}"], department: row["B#{index + 1}"],
+          cert_id: row["C#{index + 1}"], cert_address: row["D#{index + 1}"],
+          bank_name: row["E#{index + 1}"], card: row["F#{index + 1}"],
+          mobile: row["G#{index + 1}"], email: row["H#{index + 1}"],
+          user_type: types[row["I#{index + 1}"]])
+        if user.valid?
+          user.save
+        else
+          errors << user.errors.full_messages.to_sentence
+        end
+      end
+      if length < 2
+        flash[:warning] = "请在execl中输入有效数据后再导入"
+      elsif 
+        flash[:notice] = "导入数据成功"
+      end
+      unless errors.empty?
+        flash.discard(:notice)
+        flash.discard(:warning)
+        flash[:warning] = errors.join(';')
+      end
+    rescue
+      flash[:error] = "请选中有效的execl模板导入"
+    end
+  else
+    flash[:warning] = "请选中有效的execl模板导入"
   end
+  redirect_to action: :import
 end
 
 show do

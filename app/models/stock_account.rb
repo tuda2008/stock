@@ -24,6 +24,9 @@
 #  info                  :string(255)
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  meeting_sn            :string(30)       default("")
+#  investment_price      :float(24)
+#  ransom_at             :datetime
 #
 # Indexes
 #
@@ -60,7 +63,7 @@ class StockAccount < ApplicationRecord
 
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :investment_at, presence: true
   validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 1, only_integer: true}
-  validates :stock_price, :register_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
+  validates :stock_price, :register_price, :investment_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
   validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0.0001, less_than_or_equal_to: 100}
   validates :stock_sum_price, :investment_sum_price, :register_sum_price, numericality: {greater_than_or_equal_to: 1000}
   validate  :visible_validate 

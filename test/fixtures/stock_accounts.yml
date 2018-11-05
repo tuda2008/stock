@@ -24,6 +24,9 @@
 #  info                  :string(255)
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  meeting_sn            :string(30)       default("")
+#  investment_price      :float(24)
+#  ransom_at             :datetime
 #
 # Indexes
 #
