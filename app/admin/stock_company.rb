@@ -38,9 +38,7 @@ index do
   @sum = StockCompany.sum_stock_price
   selectable_column
   column("#", :id) { |company| link_to company.id, admin_stock_company_path(company) }
-  column(:name, sortable: false) do |company|
-    company.name
-  end
+  column :name
   column :capital_sum
   column :stockholders_num
   column :holders_buy_sum_price

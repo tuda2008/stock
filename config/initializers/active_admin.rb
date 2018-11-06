@@ -118,7 +118,7 @@ ActiveAdmin.setup do |config|
   # roots for each namespace.
   #
   # Default:
-  config.root_to = 'account_statics#index'
+  config.root_to = 'stock_statics#index'
 
   # == Admin Comments
   #
