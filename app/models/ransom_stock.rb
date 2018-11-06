@@ -79,6 +79,7 @@ class RansomStock < ApplicationRecord
   def update_account_statics
     if self.visible == true
       UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
+      UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, false)
     end
   end
 
@@ -86,14 +87,17 @@ class RansomStock < ApplicationRecord
     if self.visible_changed?
       if self.visible == true
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
+        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, false)
       else
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num_was - self.breo_stock_num, self.breo_stock_percentage_was - self.breo_stock_percentage, 
-          self.stock_sum_price_was - self.stock_sum_price,  self.capital_sum_was - self.capital_sum)
+          self.stock_sum_price_was - self.stock_sum_price, self.capital_sum_was - self.capital_sum)
+        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum - self.capital_sum_was, false)
       end
     else
       if self.visible == true
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num_was - self.breo_stock_num, self.breo_stock_percentage_was - self.breo_stock_percentage, 
           self.stock_sum_price_was - self.stock_sum_price,  self.capital_sum_was - self.capital_sum)
+        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum - self.capital_sum_was, false)
       end
     end
   end

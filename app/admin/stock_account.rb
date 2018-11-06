@@ -26,6 +26,7 @@ menu priority: 2, label: "股票认购"
 # end
 filter :stock_company
 filter :user
+filter :meeting_sn
 filter :stock_price
 filter :investment_at
 filter :register_status, :as => :select, :collection => StockAccount::STATUSES
@@ -49,6 +50,7 @@ index do
   column(:user, sortable: false) do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
+  column :meeting_sn, sortable: false
   column :stock_price, sortable: false
   column :stock_sum_price, sortable: false
   column :breo_stock_percentage do |stock|

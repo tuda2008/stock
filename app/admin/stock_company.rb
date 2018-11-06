@@ -23,8 +23,10 @@ menu priority: 2, label: "公司管理"
 #   redirect_to admin_users_path, notice: resource.verified ? 'Locked!' : 'Cancel Locked!'
 # end
 filter :name
-filter :stock_num
-filter :description
+filter :capital_sum
+filter :stockholders_num
+filter :holders_buy_sum_price
+filter :ransom_sum_price
 
 scope :all, default: true
 
@@ -39,31 +41,11 @@ index do
   column(:name, sortable: false) do |company|
     company.name
   end
-  column(:stock_num) do |company|
-    company.stock_num.to_i
-  end
-  column "工商登记入股金额合计" do |company|
-    @sum["#{company.id}"][:sum_register_sum_price] if @sum["#{company.id}"]
-  end
-  column "增加所持公司工商登记出资额合计" do |company|
-    @sum["#{company.id}"][:sum_capital_sum] if @sum["#{company.id}"]
-  end
-  column "平均股价" do |company|
-    if @sum["#{company.id}"]
-      @sum["#{company.id}"][:sum_capital_sum] > 0 ? (@sum["#{company.id}"][:sum_register_sum_price]/@sum["#{company.id}"][:sum_capital_sum]).to_f.round(2) : ""
-    end
-  end
-  #column :legal_representative, sortable: false
-  #column :stockholders_num, sortable: false
-  #column :holders_stock_num, sortable: false
-  #column :holders_buy_sum_price, sortable: false
-  #column :ransom_stock_num, sortable: false
-  #column :ransom_sum_price, sortable: false
-  #column :holders_stock_sum_price, sortable: false
-  #column :stock_price, sortable: false
-  #column :estimate_market_price, sortable: false
-  
-  column "公司运营情况" do |company|
+  column :capital_sum
+  column :stockholders_num
+  column :holders_buy_sum_price
+  column :ransom_sum_price
+  column :visible do |company|
     company.visible ? "正常" : "不正常"
   end
   
@@ -78,23 +60,12 @@ index do
 end
 
 csv do
-  @@sum = StockCompany.sum_stock_price
   column :name
-  column :stock_num do |company|
-    company.stock_num.to_i
-  end
-  column "工商登记入股金额合计" do |company|
-    @@sum["#{company.id}"][:sum_register_sum_price] if @@sum["#{company.id}"]
-  end
-  column "增加所持公司工商登记出资额合计" do |company|
-    @@sum["#{company.id}"][:sum_capital_sum] if @@sum["#{company.id}"]
-  end
-  column "平均股价" do |company|
-    if @@sum["#{company.id}"]
-      @@sum["#{company.id}"][:sum_capital_sum] > 0 ? (@@sum["#{company.id}"][:sum_register_sum_price]/@@sum["#{company.id}"][:sum_capital_sum]).to_f.round(2) : ""
-    end
-  end
-  column "公司运营情况" do |company|
+  column :capital_sum
+  column :stockholders_num
+  column :holders_buy_sum_price
+  column :ransom_sum_price
+  column :visible do |company|
     company.visible ? "正常" : "不正常"
   end
 end
