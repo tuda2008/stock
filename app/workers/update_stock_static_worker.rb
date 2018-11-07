@@ -40,7 +40,7 @@ class UpdateStockStaticWorker
             'user_id', 'company_id',
             'breo_stock_num', 'breo_stock_percentage',
             'stock_price', 'stock_sum_price', 'capital_sum',
-            'capital_percentage', 'register_price', 'register_sum_price'))
+            'capital_percentage', 'register_price', 'register_sum_price', 'info'))
         ss.save if ss.valid?
       else
         ss = StockStatic.where(ori_id: id, stock_type: StockStatic::STOCK_RANSOM).first
