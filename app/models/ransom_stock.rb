@@ -72,7 +72,7 @@ class RansomStock < ApplicationRecord
 
   def update_stock_ransom_history
   	if self.saved_changes?
-  	  UpdateStockRansomHistoryWorker.perform_in(10.seconds, self.id, self.saved_changes.except("id", "created_at", "updated_at"))
+  	  UpdateStockRansomHistoryWorker.perform_in(10.seconds, Current.admin_user.id, self.id, self.saved_changes.except("id", "created_at", "updated_at"))
     end
   end
 

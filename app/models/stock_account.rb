@@ -105,7 +105,7 @@ class StockAccount < ApplicationRecord
 
   def update_stock_accounts_history
     if self.saved_changes?
-      UpdateStockAccountHistoryWorker.perform_in(15.seconds, self.id, self.saved_changes.except("id", "created_at", "updated_at"))
+      UpdateStockAccountHistoryWorker.perform_in(15.seconds, Current.admin_user.id, self.id, self.saved_changes.except("id", "created_at", "updated_at"))
     end
   end
 

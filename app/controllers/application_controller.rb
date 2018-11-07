@@ -3,6 +3,16 @@ class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  around_action :set_current_admin_user
+
+  def set_current_admin_user
+    Current.admin_user = current_admin_user
+    yield
+  ensure
+    # to address the thread variable leak issues in Puma/Thin webserver
+    Current.admin_user = nil
+  end
+
   protected
 
   def configure_permitted_parameters

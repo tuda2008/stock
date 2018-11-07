@@ -1,10 +1,10 @@
 class UpdateStockRansomHistoryWorker
   include Sidekiq::Worker
 
-  def perform(stock_id, value_changes_hash)
+  def perform(user_id, stock_id, value_changes_hash)
     rs = RansomStock.where(id: stock_id).first
     if rs
-      journal = Journal.new(:journalized => rs, :user => rs.user)
+      journal = Journal.new(:journalized => rs, :user_id => user_id)
       value_changes_hash.each do |key, val|
       	journal.details << JournalDetail.new(
 	        :prop_key => key,

@@ -34,7 +34,7 @@ class StockSplit < ApplicationRecord
 
   def update_stock_split_history
   	if self.saved_changes?
-  	  UpdateStockSplitHistoryWorker.perform_in(10.seconds, self.id, self.saved_changes.except("id", "created_at", "updated_at"))
+  	  UpdateStockSplitHistoryWorker.perform_in(10.seconds, Current.admin_user.id, self.id, self.saved_changes.except("id", "created_at", "updated_at"))
     end
   end
 

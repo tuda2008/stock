@@ -10,7 +10,7 @@ show do
     attributes_table do
       row :id
       row :user do |journal|
-        journal.user.name + " " + journal.user.cert_id
+        journal.admin_user.email
       end
       row "历史详情" do |journal|
         arrs << "<ul>"

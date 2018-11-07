@@ -23,14 +23,14 @@ menu priority: 2, label: "股票赎回历史查询", parent: "历史查询"
 
 content title: '股票赎回历史查询' do
   panel '最近赎回历史' do
-    @journals = Journal.stock_ransom.includes(:user, :details).page(params[:page]).per(10)
+    @journals = Journal.stock_ransom.includes(:admin_user, :details).page(params[:page]).per(10)
     @journals.reload
     paginated_collection(@journals, download_links: false) do
         table class: "index_table index" do 
             thead do 
                 tr do
                     th class: "col" do 
-                        "股东名"
+                        "操作员"
                     end 
                     th class: "col" do 
                         "历史详情"
@@ -49,7 +49,7 @@ content title: '股票赎回历史查询' do
                   
                 tr class: "even" do
                     td class: "col" do 
-                        journal.user.name
+                        journal.admin_user.email
                     end
                     td class: "col" do 
                         arrs.size > 2 ? link_to("#{arrs.first(2).join(", ")}......", admin_journal_path(journal)) : arrs.join(", ")

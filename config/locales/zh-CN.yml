@@ -128,7 +128,7 @@
         visible: "认购有效"
         info: "备注说明"
       journal:
-        user: "股东名"
+        user: "操作员"
         created_at: "操作时间"
       shipment:
         name: "姓名"

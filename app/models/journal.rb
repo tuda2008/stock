@@ -19,7 +19,7 @@
 
 class Journal < ApplicationRecord
   belongs_to :journalized, :polymorphic => true
-  belongs_to :user
+  belongs_to :admin_user, :class_name => "AdminUser", foreign_key: :user_id
   has_many :details, :class_name => "JournalDetail", :dependent => :delete_all, :inverse_of => :journal
 
   scope :default, -> { order('created_at desc') }

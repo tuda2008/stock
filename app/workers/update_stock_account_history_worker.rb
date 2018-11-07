@@ -1,10 +1,10 @@
 class UpdateStockAccountHistoryWorker
   include Sidekiq::Worker
 
-  def perform(stock_id, value_changes_hash)
+  def perform(user_id, stock_id, value_changes_hash)
     sa = StockAccount.where(id: stock_id).first
     if sa
-      journal = Journal.new(:journalized => sa, :user => sa.user)
+      journal = Journal.new(:journalized => sa, :user_id => user_id)
       value_changes_hash.each do |key, val|
       	journal.details << JournalDetail.new(
 	        :prop_key => key,
