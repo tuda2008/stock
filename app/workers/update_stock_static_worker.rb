@@ -36,12 +36,12 @@ class UpdateStockStaticWorker
         ss = StockStatic.new(ori_id: id, stock_type: StockStatic::STOCK_RANSOM) if ss.nil?
         ##更新
         ss.attributes = ss.attributes.merge({register_status: nil, meeting_sn: '', change_type: nil, info: ''}).merge(
-          sa.attributes.clone.slice(
+          rs.attributes.clone.slice(
             'user_id', 'company_id',
             'breo_stock_num', 'breo_stock_percentage',
             'stock_price', 'stock_sum_price', 'capital_sum',
             'capital_percentage', 'register_price', 'register_sum_price'))
-        ss.save
+        ss.save if ss.valid?
       else
         ss = StockStatic.where(ori_id: id, stock_type: StockStatic::STOCK_RANSOM).first
         unless ss.nil?
@@ -50,7 +50,7 @@ class UpdateStockStaticWorker
             stock_price: 0, stock_sum_price: 0, capital_sum: 0,
             capital_percentage: 0, register_price: 0, register_sum_price: 0,
             register_status: nil, meeting_sn: '', change_type: nil, info: ''})
-          ss.save
+          ss.save if ss.valid?
         end
       end
     end

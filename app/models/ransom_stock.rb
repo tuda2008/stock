@@ -8,9 +8,9 @@
 #  stock_num             :bigint(8)
 #  stock_price           :float(24)
 #  stock_sum_price       :float(24)
-#  breo_stock_num        :float(24)
+#  breo_stock_num        :integer
 #  breo_stock_percentage :float(24)
-#  capital_sum           :float(24)
+#  capital_sum           :integer
 #  capital_percentage    :float(24)
 #  register_price        :float(24)
 #  register_sum_price    :float(24)
@@ -46,7 +46,11 @@ class RansomStock < ApplicationRecord
 
   after_save :update_stock_ransom_history
   before_create :update_account_statics
+  after_create :update_stock_statics
   before_update :update_account_stock_statics
+  
+  scope :active, -> { where(visible: true) }
+  scope :inactive, -> { where(visible: false) }
 
   def breo_stock_num_validate
     account_static = AccountStatic.where(user_id: self.user_id, company_id: self.company_id).first
@@ -79,9 +83,12 @@ class RansomStock < ApplicationRecord
   def update_account_statics
     if self.visible == true
       UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
-      UpdateStockStaticWorker.perform_in(10.seconds, self.id, false)
       UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, false)
     end
+  end
+
+  def update_stock_statics
+    UpdateStockStaticWorker.perform_in(10.seconds, self.id, false)
   end
 
   def update_account_stock_statics

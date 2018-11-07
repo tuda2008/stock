@@ -70,6 +70,12 @@ csv do
   column :user_cate do |user|
     User::CATES_NAME[user.user_cate.to_s.to_sym]
   end
+  column :user_type do |user|
+    User::TYPE_NAME[user.user_type.to_s.to_sym]
+  end
+  column "账号是否正常" do |user|
+    user.locked_at.blank? ? "正常" : "已冻结于 " + user.locked_at.to_s
+  end
 end
 
 collection_action :import, method: :get do

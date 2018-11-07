@@ -5,7 +5,7 @@ ActiveAdmin.register StockAccount do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :list, :of, [:user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage,
-  :capital_sum, :register_price, :register_sum_price, :register_status, :register_at, :investment_price, :investment_sum_price,
+  :capital_sum, :capital_percentage, :register_price, :register_sum_price, :register_status, :register_at, :investment_price, :investment_sum_price,
   :investment_at, :transfered_at, :ransom_at, :meeting_sn, :change_type, :info, :visible], :on, :model
 
 actions :all, except: [:destroy]
@@ -207,7 +207,6 @@ collection_action :import_execl, method: :post do
 end
 
 show do
-  @sum = StockCompany.sum_stock_price
   attributes_table do
     row :id
     row :stock_company
@@ -218,13 +217,11 @@ show do
     row :stock_sum_price
     row :breo_stock_num
     row :breo_stock_percentage do |stock|
-      stock.breo_stock_percentage.to_s + " %"
+      stock.breo_stock_percentage.to_f.round(5).to_s + " %"
     end
     row :capital_sum
     row :capital_percentage do |stock|
-      if @sum[:sum_capital_sum] > 0 
-        (stock.capital_sum.to_f*100/@sum[:sum_capital_sum]).round(5).to_s + " %"
-      end
+      stock.capital_percentage.to_f.round(5).to_s + " %"
     end
     row :register_price
     row :register_sum_price

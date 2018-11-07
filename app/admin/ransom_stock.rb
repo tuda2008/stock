@@ -4,7 +4,7 @@ ActiveAdmin.register RansomStock do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :list, :of, [:user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, 
-  :capital_sum, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, :info, :visible], :on, :model
+  :capital_sum, :capital_percentage, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, :info, :visible], :on, :model
 
 actions :all, except: [:destroy]
 
@@ -18,10 +18,8 @@ filter :breo_stock_percentage
 filter :visible
 
 scope :all, default: true
-
-scope '已赎回', :visible do |stocks|
-  stocks.where(visible: true)
-end
+scope("已赎回S") { |ransom_stock| ransom_stock.active }
+scope("待赎回W") { |ransom_stock| ransom_stock.inactive }
 
 index do
   selectable_column
@@ -54,11 +52,25 @@ csv do
   column(:user) do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
+  column :breo_stock_num
+  column :breo_stock_percentage
+  column :capital_sum
+  column :capital_percentage
   column :stock_price
   column :stock_sum_price
-  column :breo_stock_percentage
-  column(:published_at) do |stock|
+  column :register_price
+  column :register_sum_price
+  column :tax
+  column :sum_price_after_tax
+  column :published_at do |stock|
     stock.published_at.to_s
+  end
+  column :tax_payed_at do |stock|
+    stock.tax_payed_at.to_s
+  end
+  column :info
+  column "已/待赎回" do |stock|
+    stock.visible ? "已赎回" : "待赎回"
   end
 end
 

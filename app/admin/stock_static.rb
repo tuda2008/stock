@@ -27,13 +27,13 @@ scope("所有认购B") { |static| static.buy }
 scope("所有赎回S") { |static| static.ransom }
 
 index do
-  column :user_id do |stock|
-    link_to_if(stock.stock_type == StockStatic::STOCK_BUY, (stock.user.name + " " + stock.user.cert_id), admin_stock_account_path(stock.ori_id)) do
-      link_to((stock.user.name + " " + stock.user.cert_id), admin_ransom_stock_path(stock.ori_id))
+  column :company_id do |stock|
+    link_to_if(stock.stock_type == StockStatic::STOCK_BUY, stock.stock_company.name, admin_stock_account_path(stock.ori_id)) do
+      link_to(stock.stock_company.name, admin_ransom_stock_path(stock.ori_id))
     end
   end
-  column :company_id do |stock|
-    stock.stock_company.name
+  column :user_id do |stock|
+    stock.user.name + " " + stock.user.cert_id
   end
   column :breo_stock_num
   column :breo_stock_percentage
@@ -50,11 +50,11 @@ index do
 end
 
 csv do
-  column :user_id do |stock|
-    stock.user.name + " " + stock.user.cert_id
-  end
   column :company_id do |stock|
     stock.stock_company.name
+  end
+  column :user_id do |stock|
+    stock.user.name + " " + stock.user.cert_id
   end
   column :breo_stock_num
   column :breo_stock_percentage
@@ -68,6 +68,9 @@ csv do
   column :meeting_sn
   column :change_type
   column :info
+  column "认购/赎回" do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? "认购" : "赎回"
+  end
 end
 
 sidebar "使用须知", :only => [:index] do

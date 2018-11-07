@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_07_065345) do
+ActiveRecord::Schema.define(version: 2018_11_07_113857) do
 
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -87,9 +87,9 @@ ActiveRecord::Schema.define(version: 2018_11_07_065345) do
     t.bigint "stock_num"
     t.float "stock_price"
     t.float "stock_sum_price"
-    t.float "breo_stock_num"
+    t.integer "breo_stock_num"
     t.float "breo_stock_percentage"
-    t.float "capital_sum"
+    t.integer "capital_sum"
     t.float "capital_percentage"
     t.float "register_price"
     t.float "register_sum_price"
@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 2018_11_07_065345) do
     t.string "info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "meeting_sn", limit: 30, default: ""
+    t.string "meeting_sn", limit: 60, default: ""
     t.float "investment_price"
     t.datetime "ransom_at"
     t.index ["change_type"], name: "index_stock_accounts_on_change_type"
@@ -155,7 +155,7 @@ ActiveRecord::Schema.define(version: 2018_11_07_065345) do
     t.float "holders_stock_sum_price", default: 0.0
     t.float "stock_price", default: 0.0
     t.float "capital_sum", default: 0.0
-    t.float "stock_num", default: 0.0
+    t.float "stock_num", default: 1.0
     t.index ["name"], name: "index_stock_companies_on_name", unique: true
     t.index ["visible"], name: "index_stock_companies_on_visible"
   end
@@ -180,9 +180,9 @@ ActiveRecord::Schema.define(version: 2018_11_07_065345) do
     t.integer "stock_type", default: 1
     t.float "stock_price"
     t.float "stock_sum_price"
-    t.float "breo_stock_num"
+    t.integer "breo_stock_num"
     t.float "breo_stock_percentage"
-    t.float "capital_sum"
+    t.integer "capital_sum"
     t.float "capital_percentage"
     t.float "register_price"
     t.float "register_sum_price"
