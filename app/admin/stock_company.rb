@@ -29,10 +29,8 @@ filter :holders_buy_sum_price
 filter :ransom_sum_price
 
 scope :all, default: true
-
-scope '正常运营', :visible do |companies|
-  companies.where(visible: true)
-end
+scope("正常运营A") { |company| company.active }
+scope("不正常运营I") { |company| company.inactive }
 
 index do
   @sum = StockCompany.sum_stock_price

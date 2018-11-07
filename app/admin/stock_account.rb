@@ -35,10 +35,8 @@ filter :info
 filter :visible
 
 scope :all, default: true
-
-scope '有效认购', :visible do |users|
-  users.where(visible: true)
-end
+scope("有效认购A") { |static| static.active }
+scope("无效认购I") { |static| static.inactive }
 
 index do
   selectable_column
@@ -100,7 +98,7 @@ csv do
     stock.investment_at.to_s
   end
   column :ransom_at do |stock|
-    stock.ransom_at.to_s
+    stock.ransom_at.nil? ? "" : stock.ransom_at.strftime("%Y-%m-%d")
   end
   column :meeting_sn
   column :change_type do |stock|
@@ -245,7 +243,7 @@ show do
       stock.transfered_at.blank? ? "" : stock.transfered_at.to_s
     end
     row :ransom_at do |stock|
-      stock.ransom_at.to_s
+      stock.ransom_at.nil? ? "" : stock.ransom_at.strftime("%Y-%m-%d")
     end
     row :meeting_sn
     row :change_type do |stock|

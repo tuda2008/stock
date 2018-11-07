@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_06_140024) do
+ActiveRecord::Schema.define(version: 2018_11_07_065345) do
 
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -113,9 +113,9 @@ ActiveRecord::Schema.define(version: 2018_11_06_140024) do
     t.bigint "stock_sum"
     t.float "stock_price"
     t.float "stock_sum_price"
-    t.float "breo_stock_num"
+    t.integer "breo_stock_num"
     t.float "breo_stock_percentage"
-    t.float "capital_sum"
+    t.integer "capital_sum"
     t.float "capital_percentage"
     t.float "register_price"
     t.float "register_sum_price"
@@ -192,11 +192,13 @@ ActiveRecord::Schema.define(version: 2018_11_06_140024) do
     t.string "info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "ori_id", null: false
     t.index ["change_type"], name: "index_stock_statics_on_change_type"
     t.index ["company_id", "stock_type"], name: "index_stock_statics_on_cs_type"
     t.index ["company_id"], name: "index_stock_statics_on_company_id"
     t.index ["meeting_sn"], name: "index_stock_statics_on_meeting_sn"
     t.index ["register_status"], name: "index_stock_statics_on_register_status"
+    t.index ["stock_type", "ori_id"], name: "index_stock_statics_on_ori_type"
     t.index ["stock_type"], name: "index_stock_statics_on_stock_type"
     t.index ["user_id", "company_id", "stock_type"], name: "index_stock_statics_on_ucs_type"
     t.index ["user_id", "stock_type"], name: "index_stock_statics_on_us_type"

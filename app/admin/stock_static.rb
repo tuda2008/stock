@@ -5,10 +5,10 @@ actions :index
 
 filter :user
 filter :stock_company
-filter :stock_price
-filter :stock_sum_price
 filter :breo_stock_num
 filter :breo_stock_percentage
+filter :stock_price
+filter :stock_sum_price
 filter :capital_sum
 filter :capital_percentage
 filter :register_price
@@ -27,21 +27,47 @@ scope("所有认购B") { |static| static.buy }
 scope("所有赎回S") { |static| static.ransom }
 
 index do
-  column "股东名" do |account|
-    link_to account.user.name, ""
+  column :user_id do |stock|
+    link_to_if(stock.stock_type == StockStatic::STOCK_BUY, (stock.user.name + " " + stock.user.cert_id), admin_stock_account_path(stock.ori_id)) do
+      link_to((stock.user.name + " " + stock.user.cert_id), admin_ransom_stock_path(stock.ori_id))
+    end
   end
-  column "公司名" do |account|
-    account.stock_company.name
+  column :company_id do |stock|
+    stock.stock_company.name
   end
+  column :breo_stock_num
+  column :breo_stock_percentage
+  column :stock_price
+  column :stock_sum_price
+  column :capital_sum
+  column :capital_percentage
+  column :register_price
+  column :register_sum_price
+  column :register_status
+  column :meeting_sn
+  column :change_type
+  column :info
 end
 
 csv do
-  column "股东名" do |account|
-    account.user.name
+  column :user_id do |stock|
+    stock.user.name + " " + stock.user.cert_id
   end
-  column "公司名" do |account|
-    account.stock_company.name
+  column :company_id do |stock|
+    stock.stock_company.name
   end
+  column :breo_stock_num
+  column :breo_stock_percentage
+  column :stock_price
+  column :stock_sum_price
+  column :capital_sum
+  column :capital_percentage
+  column :register_price
+  column :register_sum_price
+  column :register_status
+  column :meeting_sn
+  column :change_type
+  column :info
 end
 
 sidebar "使用须知", :only => [:index] do

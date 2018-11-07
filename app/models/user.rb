@@ -64,7 +64,8 @@ class User < ApplicationRecord
   validates :mobile, :email, :name, :card, :bank_name, :cert_id, :cert_address, :user_cate, :user_type, presence: true
   validates_uniqueness_of :mobile, :name, :email, :card, :cert_id
 
-  scope :active, -> { where(locked_at: "is null") }
+  scope :active, -> { where("locked_at is null") }
+  scope :inactive, -> { where("locked_at is not null") }
 
   protected
   	def password_required?

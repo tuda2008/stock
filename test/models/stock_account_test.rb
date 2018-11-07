@@ -8,9 +8,9 @@
 #  stock_sum             :bigint(8)
 #  stock_price           :float(24)
 #  stock_sum_price       :float(24)
-#  breo_stock_num        :float(24)
+#  breo_stock_num        :integer
 #  breo_stock_percentage :float(24)
-#  capital_sum           :float(24)
+#  capital_sum           :integer
 #  capital_percentage    :float(24)
 #  register_price        :float(24)
 #  register_sum_price    :float(24)

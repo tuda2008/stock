@@ -4,7 +4,7 @@ class UpdateStockCompanyWorker
   def perform(user_id, company_id, change_capital_value, is_buy = true, is_new = false)
     company = StockCompany.where(id: company_id).first
     return if company.nil?
-    
+    company.stock_num = 0
     if is_buy
       #认购
       company.stockholders_num += 1 if is_new

@@ -20,6 +20,7 @@
 #  info                  :string(255)
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  ori_id                :integer          not null
 #
 # Indexes
 #
@@ -27,6 +28,7 @@
 #  index_stock_statics_on_company_id       (company_id)
 #  index_stock_statics_on_cs_type          (company_id,stock_type)
 #  index_stock_statics_on_meeting_sn       (meeting_sn)
+#  index_stock_statics_on_ori_type         (stock_type,ori_id)
 #  index_stock_statics_on_register_status  (register_status)
 #  index_stock_statics_on_stock_type       (stock_type)
 #  index_stock_statics_on_ucs_type         (user_id,company_id,stock_type)

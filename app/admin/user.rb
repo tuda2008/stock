@@ -31,10 +31,8 @@ filter :user_type, :as => :select, :collection => User::TYPE
 
 
 scope :all, default: true
-
-scope '正常股东', :unlocked do |users|
-  users.where("locked_at is null")
-end
+scope("正常股东A") { |user| user.active }
+scope("冻结股东I") { |user| user.inactive }
 
 index do
   selectable_column

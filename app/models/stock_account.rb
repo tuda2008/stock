@@ -8,9 +8,9 @@
 #  stock_sum             :bigint(8)
 #  stock_price           :float(24)
 #  stock_sum_price       :float(24)
-#  breo_stock_num        :float(24)
+#  breo_stock_num        :integer
 #  breo_stock_percentage :float(24)
-#  capital_sum           :float(24)
+#  capital_sum           :integer
 #  capital_percentage    :float(24)
 #  register_price        :float(24)
 #  register_sum_price    :float(24)
@@ -55,7 +55,7 @@ class StockAccount < ApplicationRecord
   PRIVATE_OUT  = 6 #私募退股
 
   TYPES = [["股权激励", INSPIRE], ["股东间股权转让", TRANSFER], ["股票股利", BONUS], ["私募入股", PRIVATE_JOIN], ["离职退股", WORK_JUMP], ["私募退股", PRIVATE_OUT]]
-
+  TYPES_NAME = {"#{INSPIRE}": "股权激励", "#{TRANSFER}": "股东间股权转让", "#{BONUS}": "股票股利", "#{PRIVATE_JOIN}": "私募入股", "#{WORK_JUMP}": "离职退股", "#{PRIVATE_OUT}": "私募退股"}
 
   has_many :journals, :as => :journalized, :dependent => :destroy, :inverse_of => :journalized
   belongs_to :user, foreign_key: :user_id
@@ -74,10 +74,12 @@ class StockAccount < ApplicationRecord
 
   scope :companies, lambda { |user_id| where(user_id: user_id).includes(:stock_company) }
   scope :active, -> { where(visible: true) }
+  scope :inactive, -> { where(visible: false) }
 
   def cteate_stock_account
     if self.visible == true
       CreateAccountStaticWorker.perform_in(5.seconds, self.id)
+      UpdateStockStaticWorker.perform_in(10.seconds, self.id)
       UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, true, true)
     end
   end
@@ -98,6 +100,7 @@ class StockAccount < ApplicationRecord
         UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum - self.capital_sum_was, true, false)
       end
     end
+    UpdateStockStaticWorker.perform_in(10.seconds, self.id)
   end
 
   def update_stock_accounts_history

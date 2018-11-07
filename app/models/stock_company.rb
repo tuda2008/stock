@@ -30,8 +30,10 @@ class StockCompany < ApplicationRecord
   validates :name, :stock_num, presence: true
   validates :name, uniqueness: true
   validates :name, length: 3..50
-  validates :stock_num, numericality: {greater_than_or_equal_to: 1, only_integer: true}
   validates :description, :legal_representative, length: { maximum: 250 }
+
+  scope :active, -> { where(visible: true) }
+  scope :inactive, -> { where(visible: false) }
 
   def self.sum_stock_price
     sum = { sum_register_sum_price: 0, sum_capital_sum: 0 }
