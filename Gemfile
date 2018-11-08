@@ -38,7 +38,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 gem 'devise', '~> 4.4.0'
-gem 'activeadmin', '~> 1.3.0'
+gem 'activeadmin', github: 'tuda2008/activeadmin', :branch => '1-3-stable'
 gem 'kaminari', '~> 1.1.0'
 gem 'sidekiq', '~> 5.1.0'
 
