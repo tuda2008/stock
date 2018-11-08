@@ -18,8 +18,16 @@ actions :all, except: [:destroy]
   
   index do
     selectable_column
-    column('#', :id, sortable: false) { |user| link_to user.id, admin_admin_user_path(user) }
-    column(:email, sortable: false) { |user| link_to user.email, admin_admin_user_path(user) }
+    column('#', :id, sortable: false) do |user|
+      link_to_if(current_active_admin_user.id == user.id, user.id, admin_admin_user_path(user)) do
+        "#{user.id}"
+      end
+    end
+    column(:email, sortable: false) do |user|
+      link_to_if(current_active_admin_user.id == user.id, user.email, admin_admin_user_path(user)) do
+        user.email
+      end
+    end
     column(:current_sign_in_at) do |user|
       user.current_sign_in_at.nil? ? "" : user.current_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
     end
