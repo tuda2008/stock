@@ -35,7 +35,7 @@ class UpdateStockStaticWorker
         ss = StockStatic.where(ori_id: id, stock_type: StockStatic::STOCK_RANSOM).first
         ss = StockStatic.new(ori_id: id, stock_type: StockStatic::STOCK_RANSOM) if ss.nil?
         ##更新
-        ss.attributes = ss.attributes.merge({register_status: nil, meeting_sn: '', change_type: nil, info: ''}).merge(
+        ss.attributes = ss.attributes.merge({register_status: nil, meeting_sn: '', change_type: nil}).merge(
           rs.attributes.clone.slice(
             'user_id', 'company_id',
             'breo_stock_num', 'breo_stock_percentage',
