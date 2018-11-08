@@ -21,11 +21,11 @@ actions :all, except: [:destroy]
     column('#', :id, sortable: false) { |user| link_to user.id, admin_admin_user_path(user) }
     column(:email, sortable: false) { |user| link_to user.email, admin_admin_user_path(user) }
     column(:current_sign_in_at) do |user|
-      user.current_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
+      user.current_sign_in_at.nil? ? "" : user.current_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
     end
     column :current_sign_in_ip, sortable: false
     column(:last_sign_in_at) do |user|
-      user.last_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
+      user.current_sign_in_at.nil? ? "" : user.last_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
     end
     column :last_sign_in_ip, sortable: false
     column :sign_in_count
@@ -40,11 +40,11 @@ actions :all, except: [:destroy]
       row :email
       row :sign_in_count
       row(:current_sign_in_at) do |user|
-        user.current_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
+        user.current_sign_in_at.nil? ? "" : user.current_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
       end
       row :current_sign_in_ip
       row(:last_sign_in_at) do |user|
-        user.last_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
+        user.last_sign_in_at.nil? ? "" : user.last_sign_in_at.strftime("%Y-%m-%d %H:%M:%S")
       end
       row :last_sign_in_ip
     end
