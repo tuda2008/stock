@@ -26,11 +26,23 @@ menu priority: 2, label: "股票认购"
 # end
 filter :stock_company
 filter :user
-filter :meeting_sn
+filter :breo_stock_num
+filter :breo_stock_percentage
 filter :stock_price
-filter :investment_at
+filter :stock_sum_price
+filter :capital_sum
+filter :capital_percentage
+filter :register_price
+filter :register_sum_price
+filter :register_at
 filter :register_status, :as => :select, :collection => StockAccount::STATUSES
+filter :investment_price
+filter :investment_sum_price
+filter :investment_at
+filter :ransom_at
+filter :meeting_sn
 filter :change_type, :as => :select, :collection => StockAccount::TYPES
+filter :transfered_at
 filter :info
 filter :visible
 
@@ -41,23 +53,46 @@ scope("无效认购I") { |static| static.inactive }
 index do
   selectable_column
   column("#", :id) { |stock| link_to stock.id, admin_stock_account_path(stock) }
-
-  column(:stock_company, sortable: false) do |stock|
+  column(:company_id) do |stock|
     stock.stock_company.name
   end
-  column(:user, sortable: false) do |stock|
+  column(:user_id) do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
-  column :meeting_sn, sortable: false
-  column :stock_price, sortable: false
-  column :stock_sum_price, sortable: false
+  column :breo_stock_num
   column :breo_stock_percentage do |stock|
-    stock.breo_stock_percentage.to_s + " %"
+    stock.breo_stock_percentage.to_f.round(5).to_s + " %"
   end
-  column(:investment_at, sortable: true) do |stock|
+  column :stock_price
+  column :stock_sum_price
+  column :capital_sum
+  column :capital_percentage do |stock|
+    stock.capital_percentage.to_f.round(5).to_s + " %"
+  end
+  column :register_price
+  column :register_sum_price
+  column :register_at do |stock|
+    stock.register_at.to_s
+  end
+  column :register_status do |stock|
+    StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
+  end
+  column :investment_price
+  column :investment_sum_price
+  column :investment_at do |stock|
     stock.investment_at.to_s
   end
-  column :visible, sortable: true
+  column :ransom_at do |stock|
+    stock.ransom_at.nil? ? "" : stock.ransom_at.strftime("%Y-%m-%d")
+  end
+  column :meeting_sn
+  column :change_type do |stock|
+    StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
+  end
+  column :transfered_at do |stock|
+    stock.transfered_at.to_s
+  end
+  column :info
   
   actions defaults: false do |stock|
     unless stock.visible
@@ -71,6 +106,9 @@ index do
 end
 
 csv do
+  column(:stock_company) do |stock|
+    stock.stock_company.name
+  end
   column(:user) do |stock|
     stock.user.name
   end
@@ -80,9 +118,6 @@ csv do
   end
   column :stock_price
   column :stock_sum_price
-  column(:stock_company) do |stock|
-    stock.stock_company.name
-  end
   column :capital_sum
   column :capital_percentage do |stock|
     stock.capital_percentage.to_f.round(5).to_s + " %"
@@ -91,6 +126,9 @@ csv do
   column :register_sum_price
   column :register_at do |stock|
     stock.register_at.to_s
+  end
+  column :register_status do |stock|
+    StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
   end
   column :investment_price
   column :investment_sum_price

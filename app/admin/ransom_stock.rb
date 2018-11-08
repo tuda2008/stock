@@ -24,17 +24,31 @@ scope("待赎回W") { |ransom_stock| ransom_stock.inactive }
 index do
   selectable_column
   column("#", :id) { |ransom_stock| link_to ransom_stock.id, admin_ransom_stock_path(ransom_stock) }
-  column(:stock_company, sortable: false) do |stock|
+  column(:company_id) do |stock|
     stock.stock_company.name
   end
-  column(:user, sortable: false) do |stock|
+  column(:user_id) do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
-  column :stock_price, sortable: true
-  column :stock_sum_price, sortable: true
-  column :breo_stock_percentage, sortable: true
-  column(:published_at, sortable: true) do |stock|
+  column :breo_stock_num
+  column :breo_stock_percentage
+  column :capital_sum
+  column :capital_percentage
+  column :stock_price
+  column :stock_sum_price
+  column :register_price
+  column :register_sum_price
+  column :tax
+  column :sum_price_after_tax
+  column :published_at do |stock|
     stock.published_at.to_s
+  end
+  column :tax_payed_at do |stock|
+    stock.tax_payed_at.to_s
+  end
+  column :info
+  column "已/待赎回" do |stock|
+    stock.visible ? "已赎回" : "待赎回"
   end
   
   actions defaults: false do |stock|
