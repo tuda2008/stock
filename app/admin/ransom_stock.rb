@@ -12,9 +12,11 @@ menu priority: 3, label: "股票赎回"
 
 filter :stock_company
 filter :user
+filter :breo_stock_num
+filter :breo_stock_percentage
 filter :stock_price
 filter :stock_sum_price
-filter :breo_stock_percentage
+filter :published_at
 filter :visible
 
 scope :all, default: true
@@ -32,21 +34,11 @@ index do
   end
   column :breo_stock_num
   column :breo_stock_percentage
-  column :capital_sum
-  column :capital_percentage
   column :stock_price
   column :stock_sum_price
-  column :register_price
-  column :register_sum_price
-  column :tax
-  column :sum_price_after_tax
   column :published_at do |stock|
     stock.published_at.to_s
   end
-  column :tax_payed_at do |stock|
-    stock.tax_payed_at.to_s
-  end
-  column :info
   column "已/待赎回" do |stock|
     stock.visible ? "已赎回" : "待赎回"
   end

@@ -69,16 +69,6 @@ index do
   column :capital_percentage do |stock|
     stock.capital_percentage.to_f.round(5).to_s + " %"
   end
-  column :register_price
-  column :register_sum_price
-  column :register_at do |stock|
-    stock.register_at.to_s
-  end
-  column :register_status do |stock|
-    StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
-  end
-  column :investment_price
-  column :investment_sum_price
   column :investment_at do |stock|
     stock.investment_at.to_s
   end
@@ -86,14 +76,9 @@ index do
     stock.ransom_at.nil? ? "" : stock.ransom_at.strftime("%Y-%m-%d")
   end
   column :meeting_sn
-  column :change_type do |stock|
-    StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
-  end
   column :transfered_at do |stock|
     stock.transfered_at.to_s
   end
-  column :info
-  
   actions defaults: false do |stock|
     unless stock.visible
       item "有效", visible_admin_stock_account_path(stock), method: :put
@@ -312,7 +297,7 @@ form html: { multipart: true } do |f|
     f.input :investment_sum_price
     f.input :investment_at, as: :datepicker
     f.input :transfered_at, as: :datepicker
-    f.input :ransom_at, as: :datepicker
+    f.input :ransom_at, as: :datepicker, :input_html => { value: resource.ransom_at.nil? ? "" : resource.ransom_at.strftime("%Y-%m-%d") }
     f.input :meeting_sn
     f.input :change_type, :as => :select, :collection => StockAccount::TYPES
     f.input :info
