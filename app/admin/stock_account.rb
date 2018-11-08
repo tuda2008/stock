@@ -32,18 +32,10 @@ filter :stock_price
 filter :stock_sum_price
 filter :capital_sum
 filter :capital_percentage
-filter :register_price
-filter :register_sum_price
-filter :register_at
-filter :register_status, :as => :select, :collection => StockAccount::STATUSES
-filter :investment_price
-filter :investment_sum_price
 filter :investment_at
 filter :ransom_at
 filter :meeting_sn
-filter :change_type, :as => :select, :collection => StockAccount::TYPES
 filter :transfered_at
-filter :info
 filter :visible
 
 scope :all, default: true
