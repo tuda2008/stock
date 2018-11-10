@@ -161,19 +161,19 @@ collection_action :import_execl, method: :post do
       sheet = creek.sheets[1]
       errors = []
       length = 0
-      types = {"股权激励": "#{StockAccount::INSPIRE}", "股东间股权转让": "#{StockAccount::TRANSFER}", 
-      "股票股利": "#{StockAccount::BONUS}", "私募入股": "#{StockAccount::PRIVATE_JOIN}", 
-      "离职退股": "#{StockAccount::WORK_JUMP}", "私募退股": "#{StockAccount::PRIVATE_OUT}"}
+      types = {"股权激励" => "#{StockAccount::INSPIRE}", "股东间股权转让" => "#{StockAccount::TRANSFER}", 
+      "股票股利" => "#{StockAccount::BONUS}", "私募入股" => "#{StockAccount::PRIVATE_JOIN}", 
+      "离职退股" => "#{StockAccount::WORK_JUMP}", "私募退股" => "#{StockAccount::PRIVATE_OUT}"}
       sheet.rows.each_with_index do |row, index|
         next if index == 0
         length = index
         next if row.empty?
-        user = User.where(name: row["A#{index + 1}"]).first
+        user = User.where(name: row["A#{index + 1}"].strip).first
         if user.nil?
           errors << "用户 #{row["A#{index + 1}"]} 不存在"
           next
         end
-        company = StockCompany.where(name: row["F#{index + 1}"]).first
+        company = StockCompany.where(name: row["F#{index + 1}"].strip).first
         if company.nil?
           errors << "持股公司 #{row["A#{index + 1}"]} 不存在"
           next
@@ -186,15 +186,16 @@ collection_action :import_execl, method: :post do
           capital_percentage: row["H#{index + 1}"],
           register_price: row["I#{index + 1}"], 
           register_sum_price: row["J#{index + 1}"],
-          register_at: Date.parse(row["K#{index + 1}"]),
+          register_at: row["K#{index + 1}"].to_date,
           investment_price: row["L#{index + 1}"],
           investment_sum_price: row["M#{index + 1}"], 
-          investment_at: Date.parse(row["N#{index + 1}"]),
-          ransom_at: Date.parse(row["O#{index + 1}"]),
-          meeting_sn: row["P#{index + 1}"],
-          change_type: types[row["Q#{index + 1}"]], 
-          transfered_at: Date.parse(row["R#{index + 1}"]),
-          info: row["S#{index + 1}"]
+          investment_at: row["N#{index + 1}"].to_date,
+          ransom_at: row["O#{index + 1}"].to_date,
+          meeting_sn: row["P#{index + 1}"].strip,
+          change_type: types[row["Q#{index + 1}"].strip], 
+          transfered_at: row["R#{index + 1}"].to_date,
+          info: row["S#{index + 1}"].strip,
+          visible: true
         )
         if sa.valid?
           sa.save

@@ -95,11 +95,11 @@ collection_action :import_execl, method: :post do
         next if index == 0
         length = index
         next if row.empty?
-        user = User.new(name: row["A#{index + 1}"], department: row["B#{index + 1}"],
-          cert_id: row["C#{index + 1}"], cert_address: row["D#{index + 1}"],
-          bank_name: row["E#{index + 1}"], card: row["F#{index + 1}"],
-          mobile: row["G#{index + 1}"], email: row["H#{index + 1}"],
-          user_cate: cates[row["I#{index + 1}"]],
+        user = User.new(name: row["A#{index + 1}"].strip, department: row["B#{index + 1}"].strip,
+          cert_id: row["C#{index + 1}"], cert_address: row["D#{index + 1}"].strip,
+          bank_name: row["E#{index + 1}"].strip, card: row["F#{index + 1}"],
+          mobile: row["G#{index + 1}"].strip, email: row["H#{index + 1}"],
+          user_cate: cates[row["I#{index + 1}"].strip],
           user_type: User::EMPLOYEE)
         if user.valid?
           user.save
