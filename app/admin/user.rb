@@ -89,7 +89,7 @@ collection_action :import_execl, method: :post do
       creek = Creek::Book.new file.path
       sheet = creek.sheets[0]
       length = 0
-      types = {"自然人": "1",  "法人股东": "2", "外资": "3"}
+      cates = {"员工" => "1", "外部" => "2"}
       errors = []
       sheet.rows.each_with_index do |row, index|
         next if index == 0
@@ -99,7 +99,8 @@ collection_action :import_execl, method: :post do
           cert_id: row["C#{index + 1}"], cert_address: row["D#{index + 1}"],
           bank_name: row["E#{index + 1}"], card: row["F#{index + 1}"],
           mobile: row["G#{index + 1}"], email: row["H#{index + 1}"],
-          user_type: types[row["I#{index + 1}"]])
+          user_cate: cates[row["I#{index + 1}"]],
+          user_type: User::EMPLOYEE)
         if user.valid?
           user.save
         else

@@ -43,11 +43,11 @@
 #
 
 class User < ApplicationRecord
-  # 定义股东性质
+  # 定义股东类别
   EMPLOYEE = 1 # 员工
   EXTERNAL = 2 # 外部
 
-  # 定义股东类别
+  # 定义股东性质
   NATURAL = 1 # 自然人
   LEGAL = 2   # 法人股东
   FOREIGN = 3 # 外资
