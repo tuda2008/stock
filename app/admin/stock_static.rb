@@ -43,9 +43,13 @@ index do
   column :capital_percentage
   column :register_price
   column :register_sum_price
-  column :register_status
+  column :register_status do |stock|
+    StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
+  end
   column :meeting_sn
-  column :change_type
+  column :change_type do |stock|
+    StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
+  end
   column :info
 end
 
@@ -64,9 +68,13 @@ csv do
   column :capital_percentage
   column :register_price
   column :register_sum_price
-  column :register_status
+  column :register_status do |stock|
+    StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
+  end
   column :meeting_sn
-  column :change_type
+  column :change_type do |stock|
+    StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
+  end
   column :info
   column "认购/赎回" do |stock|
     stock.stock_type == StockStatic::STOCK_BUY ? "认购" : "赎回"

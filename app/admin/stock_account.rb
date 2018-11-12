@@ -73,11 +73,11 @@ index do
   end
   actions defaults: false do |stock|
     unless stock.visible
-      item "有效", visible_admin_stock_account_path(stock), method: :put
+      item "有效", visible_admin_stock_account_path(stock), method: :put, class: "action-division"
     else
-      item "无效", unvisible_admin_stock_account_path(stock), method: :put
+      item "无效", unvisible_admin_stock_account_path(stock), method: :put, class: "action-division"
     end
-    item "编辑", edit_admin_stock_account_path(stock)
+    item "编辑", edit_admin_stock_account_path(stock), class: "action-division"
   end
   
 end

@@ -38,7 +38,7 @@ actions :all, except: [:destroy]
     column :last_sign_in_ip, sortable: false
     column :sign_in_count
     actions defaults: false do |user|
-      item "    编辑", edit_admin_admin_user_path(user) if current_active_admin_user.id == user.id
+      item "编辑", edit_admin_admin_user_path(user), class: "action-division" if current_active_admin_user.id == user.id
     end
   end
   

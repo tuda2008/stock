@@ -45,9 +45,9 @@ index do
   
   actions defaults: false do |stock|
     unless stock.visible
-      item "确认赎回", visible_admin_ransom_stock_path(stock), method: :put
+      item "确认赎回", visible_admin_ransom_stock_path(stock), method: :put, class: "action-division"
     end
-    item "编辑", edit_admin_ransom_stock_path(stock)
+    item "编辑", edit_admin_ransom_stock_path(stock), class: "action-division"
   end
 end
 

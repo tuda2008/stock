@@ -53,7 +53,7 @@ index do
   end
   
   actions defaults: false do |user|
-    item "    编辑", edit_admin_user_path(user)
+    item "编辑", edit_admin_user_path(user), class: "action-division"
   end
   
 end
