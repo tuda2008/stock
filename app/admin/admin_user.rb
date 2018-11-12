@@ -67,4 +67,13 @@ actions :all, except: [:destroy]
     f.actions if !resource.nil? && current_active_admin_user.id == resource.id
   end
 
+  csv do
+    column :email
+    column :sign_in_count
+    column :current_sign_in_at
+    column :current_sign_in_ip
+    column :last_sign_in_at
+    column :last_sign_in_ip
+  end
+
 end

@@ -34,7 +34,9 @@ filter :capital_sum
 filter :capital_percentage
 filter :investment_at
 filter :ransom_at
+filter :register_status, as: :select, collection: StockAccount::STATUSES
 filter :meeting_sn
+filter :change_type, as: :select, collection: StockAccount::TYPES
 filter :transfered_at
 filter :visible
 

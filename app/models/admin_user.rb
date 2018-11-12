@@ -27,4 +27,15 @@ class AdminUser < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, 
          :recoverable, :rememberable, :trackable, :validatable
+
+  before_update :check_user
+
+  def check_user
+  	if Current.admin_user
+  	  unless Current.admin_user.id == self.id
+  	  	errors.add :id, "不能修改其他管理员账号"
+  	  	return false
+  	  end
+  	end
+  end
 end
