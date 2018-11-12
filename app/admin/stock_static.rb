@@ -35,14 +35,26 @@ index do
   column :user_id do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
-  column :breo_stock_num
-  column :breo_stock_percentage
+  column :breo_stock_num do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_num : -stock.breo_stock_num
+  end
+  column :breo_stock_percentage do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage : -stock.breo_stock_percentage
+  end
   column :stock_price
-  column :stock_sum_price
-  column :capital_sum
-  column :capital_percentage
+  column :stock_sum_price do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.stock_sum_price : -stock.stock_sum_price
+  end
+  column :capital_sum do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_sum : -stock.capital_sum
+  end
+  column :capital_percentage do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage : -stock.capital_percentage
+  end
   column :register_price
-  column :register_sum_price
+  column :register_sum_price do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.register_sum_price : -stock.register_sum_price
+  end
   column :register_status do |stock|
     StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
   end
@@ -60,14 +72,26 @@ csv do
   column :user_id do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
-  column :breo_stock_num
-  column :breo_stock_percentage
+  column :breo_stock_num do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_num : -stock.breo_stock_num
+  end
+  column :breo_stock_percentage do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage : -stock.breo_stock_percentage
+  end
   column :stock_price
-  column :stock_sum_price
-  column :capital_sum
-  column :capital_percentage
+  column :stock_sum_price do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.stock_sum_price : -stock.stock_sum_price
+  end
+  column :capital_sum do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_sum : -stock.capital_sum
+  end
+  column :capital_percentage do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage : -stock.capital_percentage
+  end
   column :register_price
-  column :register_sum_price
+  column :register_sum_price do |stock|
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.register_sum_price : -stock.register_sum_price
+  end
   column :register_status do |stock|
     StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
   end
@@ -81,11 +105,24 @@ csv do
   end
 end
 
+collection_action :export, method: :get do
+  render 'admin/stock_statics/export'
+end
+
+collection_action :export_execl, method: :post do
+
+end
+
 sidebar "使用须知", :only => [:index] do
     "第一步.在 '系统管理' -> '股东管理' -> '新建股东'<br /> 
      第二步.在 '公司管理' -> '新建公司'<br />
      第三步.在 '股票认购' -> '新建股票认购'<br />
      第四步.在 '股票赎回' -> '新建股票赎回'<br />".html_safe
 end
+
+
+#sidebar "导出", :only => [:new, :edit, :index] do
+#    link_to "按查询条件导出持股汇总", export_admin_stock_statics_path
+#end
 
 end
