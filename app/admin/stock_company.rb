@@ -47,11 +47,11 @@ index do
   
   actions defaults: false do |company|
     if company.visible
-      item "不正常", block_admin_stock_company_path(company), method: :put
+      item "不正常", block_admin_stock_company_path(company), method: :put, class: "action-division"
     else
-      item "正常", unblock_admin_stock_company_path(company), method: :put
+      item "正常", unblock_admin_stock_company_path(company), method: :put, class: "action-division"
     end
-    item "编辑", edit_admin_stock_company_path(company)
+    item "编辑", edit_admin_stock_company_path(company), class: "action-division"
   end
 end
 
