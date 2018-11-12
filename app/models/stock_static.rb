@@ -48,6 +48,8 @@ class StockStatic < ApplicationRecord
   STOCK_BUY = 1
   STOCK_RANSOM = 2
 
+  TYPES = [["认购", STOCK_BUY], ["赎回", STOCK_RANSOM]]
+
   scope :buy, -> { where(stock_type: STOCK_BUY) }
   scope :ransom, -> { where(stock_type: STOCK_RANSOM) }
 end

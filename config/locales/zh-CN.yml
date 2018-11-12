@@ -125,6 +125,7 @@
         register_status: "工商系统办结状态"
         change_type: "变动类别"
         meeting_sn: "股东会决议编号"
+        stock_type: "认购/赎回"
         visible: "认购有效"
         info: "备注说明"
       journal:

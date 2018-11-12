@@ -13,9 +13,10 @@ filter :capital_sum
 filter :capital_percentage
 filter :register_price
 filter :register_sum_price
-filter :register_status
+filter :register_status, as: :select, collection: StockAccount::STATUSES
 filter :meeting_sn
-filter :change_type
+filter :change_type, as: :select, collection: StockAccount::TYPES
+filter :stock_type, as: :select, collection: StockStatic::TYPES
 filter :info
 
 
@@ -100,17 +101,9 @@ csv do
     StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
   end
   column :info
-  column "认购/赎回" do |stock|
+  column :stock_type do |stock|
     stock.stock_type == StockStatic::STOCK_BUY ? "认购" : "赎回"
   end
-end
-
-collection_action :export, method: :get do
-  render 'admin/stock_statics/export'
-end
-
-collection_action :export_execl, method: :post do
-
 end
 
 sidebar "使用须知", :only => [:index] do
@@ -119,10 +112,5 @@ sidebar "使用须知", :only => [:index] do
      第三步.在 '股票认购' -> '新建股票认购'<br />
      第四步.在 '股票赎回' -> '新建股票赎回'<br />".html_safe
 end
-
-
-#sidebar "导出", :only => [:new, :edit, :index] do
-#    link_to "按查询条件导出持股汇总", export_admin_stock_statics_path
-#end
 
 end
