@@ -343,4 +343,12 @@ module ActiveAdmin
       end
     end
   end
+
+  class CSVBuilder
+    def self.default_for_resource(resource)
+      new resource: resource do
+        column :id
+      end
+    end
+  end
 end

@@ -1,5 +1,8 @@
 ActiveAdmin.register RansomStock do
 
+config.paginate = true
+config.per_page = 25
+
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
@@ -33,7 +36,9 @@ index do
     stock.user.name + " " + stock.user.cert_id
   end
   column :breo_stock_num
-  column :breo_stock_percentage
+  column :breo_stock_percentage do |stock|
+    stock.breo_stock_percentage.to_f.round(5).to_s + " %"
+  end
   column :stock_price
   column :stock_sum_price
   column :published_at do |stock|

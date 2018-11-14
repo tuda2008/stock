@@ -1,7 +1,9 @@
 ActiveAdmin.register StockStatic do
 
-actions :index
+config.paginate = true
+config.per_page = 50
 
+actions :index
 
 filter :user
 filter :stock_company
@@ -19,9 +21,7 @@ filter :change_type, as: :select, collection: StockAccount::TYPES
 filter :stock_type, as: :select, collection: StockStatic::TYPES
 filter :info
 
-
 menu priority: 1, label: "持股汇总"
-
 
 scope :all, default: true
 scope("所有认购B") { |static| static.buy }
@@ -40,7 +40,7 @@ index do
     stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_num : -stock.breo_stock_num
   end
   column :breo_stock_percentage do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage : -stock.breo_stock_percentage
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage.to_s + " %" : -stock.breo_stock_percentage.to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
@@ -50,7 +50,7 @@ index do
     stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_sum : -stock.capital_sum
   end
   column :capital_percentage do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage : -stock.capital_percentage
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.to_s + " %" : -stock.capital_percentage.to_s + " %"
   end
   column :register_price
   column :register_sum_price do |stock|
@@ -60,7 +60,7 @@ index do
     StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
   end
   column :meeting_sn
-  column :change_type do |stock|
+    column :change_type do |stock|
     StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
   end
   column :info

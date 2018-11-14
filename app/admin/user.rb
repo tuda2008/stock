@@ -1,5 +1,9 @@
 ActiveAdmin.register User do
 
+config.paginate = true
+config.per_page = 25
+
+
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
