@@ -35,18 +35,8 @@ class AccountStatic < ApplicationRecord
   scope :no_ransom, -> { where("ransom_stock_num=0") }
   scope :big, -> { where("breo_stock_percentage>=?", STOCK_PERCENTAGE) }
   scope :small, -> { where("breo_stock_percentage<?", STOCK_PERCENTAGE) }
-
-  def as_json(opts = {})
-    {
-      id: self.id,
-      user: self.user.name || "",
-      company: self.stock_company.name || "",
-      breo_stock_num: self.breo_stock_num,
-      stock_bonus: self.stock_bonus.to_f.round(2),
-      ransom_stock_num: self.ransom_stock_num,
-      ransom_sum_price: self.ransom_sum_price.to_f.round(2)
-    }
-  end
+  scope :has_stock, -> { where("breo_stock_num>0") }
+  scope :by_user, lambda { |user_id| where(user_id: user_id) }
 
   def self.stockholders_count(company_id)
     AccountStatic.group(:company_id).where("company_id=? and breo_stock_num>0", company_id).count

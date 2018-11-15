@@ -53,13 +53,17 @@ index do
     User::TYPE_NAME[user.user_type.to_s.to_sym]
   end
   column "账号是否正常" do |user|
-    user.locked_at.blank? ? "正常" : "已冻结于 " + user.locked_at.to_s
+    user.locked_at.blank? ? "正常" : "已冻结于 " + user.locked_at.strftime("%Y-%m-%d %H:%M:%S")
   end
-  
   actions defaults: false do |user|
+    if user.locked_at.nil?
+      item "冻结", lock_admin_user_path(user), method: :put, class: "action-division"
+    else
+      item "激活", unlock_admin_user_path(user), method: :put, class: "action-division"
+    end
+
     item "编辑", edit_admin_user_path(user), class: "action-division"
   end
-  
 end
 
 csv do
@@ -78,8 +82,23 @@ csv do
     User::TYPE_NAME[user.user_type.to_s.to_sym]
   end
   column "账号是否正常" do |user|
-    user.locked_at.blank? ? "正常" : "已冻结于 " + user.locked_at.to_s
+    user.locked_at.blank? ? "正常" : "已冻结于 " + user.locked_at.strftime("%Y-%m-%d %H:%M:%S")
   end
+end
+
+member_action :lock, method: :put do
+  if AccountStatic.by_user(resource.id).has_stock.any?
+    flash[:warning] = "该股东还有正常持股，不能冻结"
+    redirect_to admin_users_path
+  else
+    resource.lock!
+    redirect_to admin_users_path, notice: "已冻结"
+  end
+end
+
+member_action :unlock, method: :put do
+  resource.unlock!
+  redirect_to admin_users_path, notice: "已激活"
 end
 
 collection_action :download, method: :get do

@@ -67,6 +67,16 @@ class User < ApplicationRecord
   scope :active, -> { where("locked_at is null") }
   scope :inactive, -> { where("locked_at is not null") }
 
+  def lock!
+    self.locked_at = Time.now.utc
+    save!
+  end
+
+  def unlock!
+    self.locked_at = nil
+    save
+  end
+
   protected
   	def password_required?
   	  false
