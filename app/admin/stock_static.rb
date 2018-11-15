@@ -40,7 +40,7 @@ index do
     stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_num : -stock.breo_stock_num
   end
   column :breo_stock_percentage do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage.to_s + " %" : -stock.breo_stock_percentage.to_s + " %"
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage.round(5).to_s + " %" : (-stock.breo_stock_percentage.round(5)).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
@@ -50,7 +50,7 @@ index do
     stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_sum : -stock.capital_sum
   end
   column :capital_percentage do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.to_s + " %" : -stock.capital_percentage.to_s + " %"
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.round(5).to_s + " %" : (-stock.capital_percentage.round(5)).to_s + " %"
   end
   column :register_price
   column :register_sum_price do |stock|
@@ -77,7 +77,7 @@ csv do
     stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_num : -stock.breo_stock_num
   end
   column :breo_stock_percentage do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage : -stock.breo_stock_percentage
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage.round(5).to_s + " %" : (-stock.breo_stock_percentage.round(5)).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
@@ -87,7 +87,7 @@ csv do
     stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_sum : -stock.capital_sum
   end
   column :capital_percentage do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage : -stock.capital_percentage
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.round(5).to_s + " %" : (-stock.capital_percentage.round(5)).to_s + " %"
   end
   column :register_price
   column :register_sum_price do |stock|

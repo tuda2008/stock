@@ -350,5 +350,89 @@ module ActiveAdmin
         column :id
       end
     end
+
+    def build(controller, csv)
+      @collection  = controller.send :find_collection, except: :pagination
+      columns      = exec_columns controller.view_context
+      options      = ActiveAdmin.application.csv_options.merge self.options
+      bom          = options.delete :byte_order_mark
+      column_names = options.delete(:column_names) { true }
+      csv_options  = options.except :encoding_options, :humanize_name
+
+      csv << bom if bom
+
+      if column_names
+        csv << CSV.generate_line(columns.map{ |c| encode c.name, options }, csv_options)
+      end
+
+      ActiveRecord::Base.uncached do
+        need_static = true
+        statics = []
+        static_data = { "StockStatic" => { "sum_stock_num" => 0, "sum_stock_percentage" => 0, "sum_stock_sum_price" => 0, 
+                                            "sum_stock_capital_sum" => 0, "sum_stock_capital_percentage" => 0, "sum_stock_register_sum_price" => 0 },
+                        "StockCompany" => { "sum_stock_capital_sum" => 0, "sum_stock_holders_buy_sum_price" => 0, 
+                                            "sum_stock_ransom_sum_price" => 0, "sum_stock_stockholders_num" => 0 }, 
+                        "StockAccount" => { "sum_stock_num" => 0, "sum_stock_percentage" => 0, "sum_stock_sum_price" => 0, 
+                                            "sum_stock_capital_sum" => 0, "sum_stock_capital_percentage" => 0 },
+                        "RansomStock" => { "sum_stock_num" => 0, "sum_stock_percentage" => 0, "sum_stock_sum_price" => 0 }
+                      }
+        (1..paginated_collection.total_pages).each do |page|
+          paginated_collection(page).each do |resource|
+            resource = controller.send :apply_decorator, resource
+            csv << CSV.generate_line(build_row(resource, columns, options), csv_options)
+
+            resource_name = resource.class.to_s
+            case resource_name
+            when "StockStatic"
+              if resource.stock_type == StockStatic::STOCK_BUY
+                static_data[resource_name]["sum_stock_num"] += resource.breo_stock_num.to_i
+                static_data[resource_name]["sum_stock_percentage"] += resource.breo_stock_percentage.to_f
+                static_data[resource_name]["sum_stock_sum_price"] += resource.stock_sum_price.to_f
+                static_data[resource_name]["sum_stock_capital_sum"] += resource.capital_sum.to_f.to_f
+                static_data[resource_name]["sum_stock_capital_percentage"] += resource.capital_percentage.to_f
+                static_data[resource_name]["sum_stock_register_sum_price"] += resource.register_sum_price.to_f
+              else
+                static_data[resource_name]["sum_stock_num"] -= resource.breo_stock_num.to_i
+                static_data[resource_name]["sum_stock_percentage"] -= resource.breo_stock_percentage.to_f
+                static_data[resource_name]["sum_stock_sum_price"] -= resource.stock_sum_price.to_f
+                static_data[resource_name]["sum_stock_capital_sum"] -= resource.capital_sum.to_f.to_f
+                static_data[resource_name]["sum_stock_capital_percentage"] -= resource.capital_percentage.to_f
+                static_data[resource_name]["sum_stock_register_sum_price"] -= resource.register_sum_price.to_f
+              end
+              statics = ["合计", "", static_data[resource_name]["sum_stock_num"], static_data[resource_name]["sum_stock_percentage"].round(5).to_s + " %",
+                  "", static_data[resource_name]["sum_stock_sum_price"], static_data[resource_name]["sum_stock_capital_sum"],
+                  static_data[resource_name]["sum_stock_capital_percentage"].round(5).to_s + " %", "", static_data[resource_name]["sum_stock_register_sum_price"]]
+            when "StockCompany"
+              static_data[resource_name]["sum_stock_capital_sum"] += resource.capital_sum.to_f
+              static_data[resource_name]["sum_stock_stockholders_num"] += resource.stockholders_num.to_i
+              static_data[resource_name]["sum_stock_holders_buy_sum_price"] += resource.holders_buy_sum_price.to_f
+              static_data[resource_name]["sum_stock_ransom_sum_price"] += resource.ransom_sum_price.to_f.to_f
+              statics = ["合计", static_data[resource_name]["sum_stock_capital_sum"], static_data[resource_name]["sum_stock_stockholders_num"], 
+                  static_data[resource_name]["sum_stock_holders_buy_sum_price"], static_data[resource_name]["sum_stock_ransom_sum_price"]]
+            when "StockAccount"
+              static_data[resource_name]["sum_stock_num"] += resource.breo_stock_num.to_i
+              static_data[resource_name]["sum_stock_percentage"] += resource.breo_stock_percentage.to_f
+              static_data[resource_name]["sum_stock_sum_price"] += resource.stock_sum_price.to_f
+              static_data[resource_name]["sum_stock_capital_sum"] += resource.capital_sum.to_f.to_f
+              static_data[resource_name]["sum_stock_capital_percentage"] += resource.capital_percentage.to_f
+              statics = ["合计", "", static_data[resource_name]["sum_stock_num"], static_data[resource_name]["sum_stock_percentage"].round(5).to_s + " %",
+                  "", static_data[resource_name]["sum_stock_sum_price"], static_data[resource_name]["sum_stock_capital_sum"],
+                  static_data[resource_name]["sum_stock_capital_percentage"].round(5).to_s + " %"]
+            when "RansomStock"
+              static_data[resource_name]["sum_stock_num"] += resource.breo_stock_num.to_i
+              static_data[resource_name]["sum_stock_percentage"] += resource.breo_stock_percentage.to_f
+              static_data[resource_name]["sum_stock_sum_price"] += resource.stock_sum_price.to_i
+              statics = ["合计", "", static_data[resource_name]["sum_stock_num"], static_data[resource_name]["sum_stock_percentage"].round(5).to_s + " %", 
+                  "", "", "", static_data[resource_name]["sum_stock_sum_price"]]
+            else ""
+              need_static = false
+            end
+          end
+        end
+        csv << CSV.generate_line(statics) if need_static
+      end
+
+      csv
+    end
   end
 end
