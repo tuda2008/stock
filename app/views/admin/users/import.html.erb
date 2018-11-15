@@ -1,10 +1,13 @@
-
 <div class="container">
   <div class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title">股东信息批量导入</h3>
     </div>
     <div class="panel-body">
+      <span>没有模板？ <%= link_to "下载最新模板", "download" %></span>
+      <br />
+      <br />
+
       <%= form_tag({:action => 'import_execl'}, { method: :post, multipart: true }) do |form| %>
         <%= file_field_tag 'file' %>
         <br />

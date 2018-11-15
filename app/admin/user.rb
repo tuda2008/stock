@@ -82,6 +82,10 @@ csv do
   end
 end
 
+collection_action :download, method: :get do
+  send_file(Rails.root.join('public', 'import_sample.xlsx'))
+end
+
 collection_action :import, method: :get do
   render 'admin/users/import'
 end

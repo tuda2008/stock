@@ -171,6 +171,10 @@ member_action :unvisible, method: :put do
   redirect_to admin_stock_accounts_path, notice: "已设为无效"
 end
 
+collection_action :download, method: :get do
+  send_file(Rails.root.join('public', 'import_sample.xlsx'))
+end
+
 collection_action :import, method: :get do
   render 'admin/stock_accounts/import'
 end
