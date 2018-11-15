@@ -57,13 +57,19 @@ index do
   column(:user_id) do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
-  column :breo_stock_num
+  column :breo_stock_num do |stock|
+    number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
+  end
   column :breo_stock_percentage do |stock|
     stock.breo_stock_percentage.to_f.round(5).to_s + " %"
   end
   column :stock_price
-  column :stock_sum_price
-  column :capital_sum
+  column :stock_sum_price do |stock|
+    number_to_currency(stock.stock_sum_price, unit: '',  precision: 1)
+  end
+  column :capital_sum do |stock|
+    number_to_currency(stock.capital_sum, unit: '',  precision: 1)
+  end
   column :capital_percentage do |stock|
     stock.capital_percentage.to_f.round(5).to_s + " %"
   end
@@ -95,18 +101,26 @@ csv do
   column(:user) do |stock|
     stock.user.name
   end
-  column :breo_stock_num
+  column :breo_stock_num do |stock|
+    number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
+  end
   column :breo_stock_percentage do |stock|
     stock.breo_stock_percentage.to_f.round(5).to_s + " %"
   end
   column :stock_price
-  column :stock_sum_price
-  column :capital_sum
+  column :stock_sum_price do |stock|
+    number_to_currency(stock.stock_sum_price, unit: '',  precision: 1)
+  end
+  column :capital_sum do |stock|
+    number_to_currency(stock.capital_sum, unit: '',  precision: 1)
+  end
   column :capital_percentage do |stock|
     stock.capital_percentage.to_f.round(5).to_s + " %"
   end
   column :register_price
-  column :register_sum_price
+  column :register_sum_price do |stock|
+    number_to_currency(stock.register_sum_price, unit: '',  precision: 1)
+  end
   column :register_at do |stock|
     stock.register_at.to_s
   end
@@ -114,7 +128,9 @@ csv do
     StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
   end
   column :investment_price
-  column :investment_sum_price
+  column :investment_sum_price do |stock|
+    number_to_currency(stock.investment_sum_price, unit: '',  precision: 1)
+  end
   column :investment_at do |stock|
     stock.investment_at.to_s
   end

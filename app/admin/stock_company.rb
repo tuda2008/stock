@@ -36,14 +36,21 @@ scope("正常运营A") { |company| company.active }
 scope("不正常运营I") { |company| company.inactive }
 
 index do
-  @sum = StockCompany.sum_stock_price
   selectable_column
   column("#", :id) { |company| link_to company.id, admin_stock_company_path(company) }
   column :name
-  column :capital_sum
-  column :stockholders_num
-  column :holders_buy_sum_price
-  column :ransom_sum_price
+  column :capital_sum do |company|
+    number_to_currency(company.capital_sum, unit: '',  precision: 1) 
+  end
+  column :stockholders_num do |company|
+    number_to_currency(company.stockholders_num, unit: '',  precision: 0)
+  end
+  column :holders_buy_sum_price do |company|
+    number_to_currency(company.holders_buy_sum_price, unit: '',  precision: 1)
+  end
+  column :ransom_sum_price do |company|
+    number_to_currency(company.ransom_sum_price, unit: '',  precision: 1)
+  end
   column :visible do |company|
     company.visible ? "正常" : "不正常"
   end
@@ -60,10 +67,18 @@ end
 
 csv do
   column :name
-  column :capital_sum
-  column :stockholders_num
-  column :holders_buy_sum_price
-  column :ransom_sum_price
+  column :capital_sum do |company|
+    number_to_currency(company.capital_sum, unit: '',  precision: 1) 
+  end
+  column :stockholders_num do |company|
+    number_to_currency(company.stockholders_num, unit: '',  precision: 0)
+  end
+  column :holders_buy_sum_price do |company|
+    number_to_currency(company.holders_buy_sum_price, unit: '',  precision: 1)
+  end
+  column :ransom_sum_price do |company|
+    number_to_currency(company.ransom_sum_price, unit: '',  precision: 1)
+  end
   column :visible do |company|
     company.visible ? "正常" : "不正常"
   end

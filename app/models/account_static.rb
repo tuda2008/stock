@@ -47,4 +47,8 @@ class AccountStatic < ApplicationRecord
       ransom_sum_price: self.ransom_sum_price.to_f.round(2)
     }
   end
+
+  def self.stockholders_count(company_id)
+    AccountStatic.group(:company_id).where("company_id=? and breo_stock_num>0", company_id).count
+  end
 end

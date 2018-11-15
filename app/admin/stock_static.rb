@@ -37,24 +37,24 @@ index do
     stock.user.name + " " + stock.user.cert_id
   end
   column :breo_stock_num do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_num : -stock.breo_stock_num
+    stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.breo_stock_num, unit: '',  precision: 0) : number_to_currency(-stock.breo_stock_num, unit: '',  precision: 0)
   end
   column :breo_stock_percentage do |stock|
     stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage.round(5).to_s + " %" : (-stock.breo_stock_percentage.round(5)).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.stock_sum_price : -stock.stock_sum_price
+    stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.stock_sum_price, unit: '',  precision: 1) : number_to_currency(-stock.stock_sum_price, unit: '',  precision: 1)
   end
   column :capital_sum do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_sum : -stock.capital_sum
+    stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.capital_sum, unit: '',  precision: 1) : number_to_currency(-stock.capital_sum, unit: '',  precision: 1)
   end
   column :capital_percentage do |stock|
     stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.round(5).to_s + " %" : (-stock.capital_percentage.round(5)).to_s + " %"
   end
   column :register_price
   column :register_sum_price do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.register_sum_price : -stock.register_sum_price
+    stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.register_sum_price, unit: '',  precision: 1) : number_to_currency(-stock.register_sum_price, unit: '',  precision: 1)
   end
   column :register_status do |stock|
     StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
@@ -74,24 +74,24 @@ csv do
     stock.user.name + " " + stock.user.cert_id
   end
   column :breo_stock_num do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_num : -stock.breo_stock_num
+    stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.breo_stock_num, unit: '',  precision: 0) : number_to_currency(-stock.breo_stock_num, unit: '',  precision: 0)
   end
   column :breo_stock_percentage do |stock|
     stock.stock_type == StockStatic::STOCK_BUY ? stock.breo_stock_percentage.round(5).to_s + " %" : (-stock.breo_stock_percentage.round(5)).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.stock_sum_price : -stock.stock_sum_price
+    stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.stock_sum_price, unit: '',  precision: 1) : number_to_currency(-stock.stock_sum_price, unit: '',  precision: 1)
   end
   column :capital_sum do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_sum : -stock.capital_sum
+    stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.capital_sum, unit: '',  precision: 1) : number_to_currency(-stock.capital_sum, unit: '',  precision: 1)
   end
   column :capital_percentage do |stock|
     stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.round(5).to_s + " %" : (-stock.capital_percentage.round(5)).to_s + " %"
   end
   column :register_price
   column :register_sum_price do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.register_sum_price : -stock.register_sum_price
+    stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.register_sum_price, unit: '',  precision: 1) : number_to_currency(-stock.register_sum_price, unit: '',  precision: 1)
   end
   column :register_status do |stock|
     StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]

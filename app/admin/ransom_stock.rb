@@ -35,12 +35,16 @@ index do
   column(:user_id) do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
-  column :breo_stock_num
+  column :breo_stock_num do |stock|
+    number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
+  end
   column :breo_stock_percentage do |stock|
     stock.breo_stock_percentage.to_f.round(5).to_s + " %"
   end
   column :stock_price
-  column :stock_sum_price
+  column :stock_sum_price do |stock|
+    number_to_currency(stock.stock_sum_price, unit: '',  precision: 1)
+  end
   column :published_at do |stock|
     stock.published_at.to_s
   end
@@ -63,20 +67,32 @@ csv do
   column(:user) do |stock|
     stock.user.name + " " + stock.user.cert_id
   end
-  column :breo_stock_num
+  column :breo_stock_num do |stock|
+    number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
+  end
   column :breo_stock_percentage do |stock|
     stock.breo_stock_percentage.to_f.round(5).to_s + " %"
   end
-  column :capital_sum
+  column :capital_sum do |stock|
+    number_to_currency(stock.capital_sum, unit: '',  precision: 1)
+  end
   column :capital_percentage do |stock|
     stock.capital_percentage.to_f.round(5).to_s + " %"
   end
   column :stock_price
-  column :stock_sum_price
+  column :stock_sum_price do |stock|
+    number_to_currency(stock.stock_sum_price, unit: '',  precision: 1)
+  end
   column :register_price
-  column :register_sum_price
-  column :tax
-  column :sum_price_after_tax
+  column :register_sum_price do |stock|
+    number_to_currency(stock.register_sum_price, unit: '',  precision: 1)
+  end
+  column :tax do |stock|
+    number_to_currency(stock.tax, unit: '',  precision: 1)
+  end
+  column :sum_price_after_tax do |stock|
+    number_to_currency(stock.sum_price_after_tax, unit: '',  precision: 1)
+  end
   column :published_at do |stock|
     stock.published_at.to_s
   end
