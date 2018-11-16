@@ -27,6 +27,7 @@
 #  meeting_sn            :string(60)       default("")
 #  investment_price      :float(24)
 #  ransom_at             :datetime
+#  archived_at           :datetime
 #
 # Indexes
 #

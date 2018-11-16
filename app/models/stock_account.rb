@@ -27,6 +27,7 @@
 #  meeting_sn            :string(60)       default("")
 #  investment_price      :float(24)
 #  ransom_at             :datetime
+#  archived_at           :datetime
 #
 # Indexes
 #
@@ -64,9 +65,12 @@ class StockAccount < ApplicationRecord
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :investment_at, presence: true
   validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 1, only_integer: true}
   validates :stock_price, :register_price, :investment_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
-  validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0.0001, less_than_or_equal_to: 100}
+  validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 100}
   validates :stock_sum_price, :investment_sum_price, :register_sum_price, numericality: {greater_than_or_equal_to: 1000}
-  validate  :visible_validate 
+  validate  :visible_validate
+
+  validates_datetime :register_at, :after => :investment_at, :after_message => "必须在 合约入股时间 之后"
+  validates_datetime :ransom_at, :after => :register_at, :after_message => "必须在 工商系统办结时间 之后"
 
   after_create :cteate_stock_account, :update_stock_accounts_history
   before_update :update_stock_accounts
@@ -87,9 +91,11 @@ class StockAccount < ApplicationRecord
   def update_stock_accounts
     if self.visible_changed?
       if self.visible == true
+        self.archived_at = Time.now.utc
         CreateAccountStaticWorker.perform_in(5.seconds, self.id)
         UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, true, true)
       else
+        self.archived_at = nil
         UpdateAccountStaticSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num_was, -self.breo_stock_percentage_was, -self.stock_sum_price_was, -self.capital_sum_was)
         UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, -self.capital_sum_was, true, false)
       end
@@ -123,12 +129,18 @@ class StockAccount < ApplicationRecord
   	end
   end
 
+  def self.has_buy?
+    #StockAccount.where(user_id: self.user_id, company_id: self.company_id, enabled: true).where("published_at > ?", self.investment_at)
+  end
+
   def visible!
+    self.archived_at = Time.now.utc
     self.visible = true
     self.save!
   end
   
   def unvisible!
+    self.archived_at = nil
     self.visible = false
     self.save!
   end

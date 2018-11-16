@@ -45,6 +45,8 @@ gem 'sidekiq', '~> 5.1.0'
 # parse excel
 gem 'creek'
 
+gem 'validates_timeliness', '~> 5.0.0.alpha3'
+
 group :development, :test do
   # write schema to model
   gem "annotate", '~> 2.7.0'

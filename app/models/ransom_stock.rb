@@ -22,6 +22,7 @@
 #  visible               :boolean          default(FALSE)
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  archived_at           :datetime
 #
 # Indexes
 #
@@ -40,10 +41,10 @@ class RansomStock < ApplicationRecord
   validates :register_sum_price, :stock_sum_price, numericality: {greater_than_or_equal_to: 100}
   validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 1, only_integer: true}
   validates :stock_price, :register_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
-  validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0.0001, less_than_or_equal_to: 100}
+  validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 100}
   validates :tax, numericality: {greater_than_or_equal_to: 1}
   validate :breo_stock_num_validate
-
+  
   after_save :update_stock_ransom_history
   before_create :update_account_statics
   after_create :update_stock_statics
@@ -94,9 +95,11 @@ class RansomStock < ApplicationRecord
   def update_account_stock_statics
     if self.visible_changed?
       if self.visible == true
+        self.archived_at = Time.now.utc
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
         UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, false)
       else
+        self.archived_at = nil
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num_was - self.breo_stock_num, self.breo_stock_percentage_was - self.breo_stock_percentage, 
           self.stock_sum_price_was - self.stock_sum_price, self.capital_sum_was - self.capital_sum)
         UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, -self.capital_sum_was, false)
@@ -112,11 +115,13 @@ class RansomStock < ApplicationRecord
   end
 
   def visible!
+    self.archived_at = Time.now.utc
     self.visible = true
     self.save!
   end
   
-  def unvisible!
+  def unvisible
+    self.archived_at = nil
     self.visible = false
     self.save!
   end

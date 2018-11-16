@@ -106,7 +106,6 @@
         sum_price_after_tax: "税后实际股权款"
         published_at: "实际支付股权款时间"
         tax_payed_at: "实际缴纳税收时间"
-        published_at: "实际支付股权款时间"
         info: "备注说明"
         visible: "确认赎回"
       stock_static:
@@ -260,7 +259,6 @@
         order_id: '所属订单'
         recommending_id: '推荐人'
         recommended_id: '被推荐人'
-        
     errors:
       models:
         user: "用户"

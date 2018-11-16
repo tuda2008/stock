@@ -165,8 +165,8 @@ form html: { multipart: true } do |f|
   f.semantic_errors
   
   f.inputs "赎回股票信息" do
-    f.input :user, :as => :select, :collection => Hash[@users], :hint => "股东名 + 股东身份证"
-    f.input :stock_company, :as => :select, :collection => Hash[@companies]
+    f.input :user_id, :as => :select, :collection => Hash[@users], :hint => "股东名 + 股东身份证"
+    f.input :company_id, :as => :select, :collection => Hash[@companies]
     f.input :breo_stock_num, :hint => "不能大于买入倍轻松股份数"
     f.input :breo_stock_percentage, :hint => "不能大于买入倍轻松股份占比"
     f.input :capital_sum

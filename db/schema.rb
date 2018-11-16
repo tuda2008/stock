@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_07_113857) do
+ActiveRecord::Schema.define(version: 2018_11_16_023916) do
 
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(version: 2018_11_07_113857) do
     t.boolean "visible", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "archived_at"
     t.index ["company_id"], name: "index_ransom_stocks_on_company_id"
     t.index ["user_id", "company_id"], name: "index_ransom_stocks_on_user_company"
     t.index ["user_id"], name: "index_ransom_stocks_on_user_id"
@@ -132,6 +133,7 @@ ActiveRecord::Schema.define(version: 2018_11_07_113857) do
     t.string "meeting_sn", limit: 60, default: ""
     t.float "investment_price"
     t.datetime "ransom_at"
+    t.datetime "archived_at"
     t.index ["change_type"], name: "index_stock_accounts_on_change_type"
     t.index ["company_id"], name: "index_stock_accounts_on_company_id"
     t.index ["user_id", "company_id"], name: "index_stock_accounts_on_user_company_info"
