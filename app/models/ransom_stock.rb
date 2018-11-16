@@ -39,12 +39,12 @@ class RansomStock < ApplicationRecord
 
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :capital_sum, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, :info, presence: true
   validates :register_sum_price, :stock_sum_price, numericality: {greater_than_or_equal_to: 100}
-  validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 1, only_integer: true}
+  validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 0, only_integer: true}
   validates :stock_price, :register_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
   validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 100}
   validates :tax, numericality: {greater_than_or_equal_to: 1}
   validate :breo_stock_num_validate
-  
+
   after_save :update_stock_ransom_history
   before_create :update_account_statics
   after_create :update_stock_statics
