@@ -27,7 +27,7 @@ class AccountStatic < ApplicationRecord
   belongs_to :user, foreign_key: :user_id
   belongs_to :stock_company, foreign_key: :company_id
 
-  validates_uniqueness_of :user_id, scope: :company_id
+  validates :user_id, :uniqueness => { :scope => :company_id }
 
   STOCK_PERCENTAGE = 1
 

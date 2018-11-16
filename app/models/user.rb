@@ -62,7 +62,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable, authentication_keys: [:mobile]
 
   validates :mobile, :email, :name, :card, :bank_name, :cert_id, :cert_address, :user_cate, :user_type, presence: true
-  validates_uniqueness_of :mobile, :name, :email, :card, :cert_id
+  validates :mobile, :name, :card, :cert_id, uniqueness: true
 
   scope :active, -> { where("locked_at is null") }
   scope :inactive, -> { where("locked_at is not null") }

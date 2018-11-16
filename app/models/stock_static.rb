@@ -43,12 +43,12 @@ class StockStatic < ApplicationRecord
   has_one :buy_stock, -> { where(stock_type: STOCK_BUY) }, :class_name => "StockAccount", foreign_key: :ori_id
   has_one :ransom_stock, -> { where(stock_type: STOCK_RANSOM) }, :class_name => "RansomStock", foreign_key: :ori_id
 
-  validates_uniqueness_of :ori_id, scope: :stock_type
-
   STOCK_BUY = 1
   STOCK_RANSOM = 2
-
   TYPES = [["认购", STOCK_BUY], ["赎回", STOCK_RANSOM]]
+
+  validates :ori_id, :uniqueness => { :scope => :stock_type }
+  validates :stock_type, inclusion: { in: [STOCK_BUY, STOCK_RANSOM], message: "必须是认购或赎回" } 
 
   scope :buy, -> { where(stock_type: STOCK_BUY) }
   scope :ransom, -> { where(stock_type: STOCK_RANSOM) }
