@@ -64,7 +64,7 @@ actions :all, except: [:destroy]
       f.input :password
       f.input :password_confirmation
     end
-    f.actions if !resource.nil? && current_active_admin_user.id == resource.id
+    f.actions if resource.new_record? || (!resource.nil? && current_active_admin_user.id == resource.id)
   end
 
   csv do
