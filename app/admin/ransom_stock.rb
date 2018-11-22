@@ -39,7 +39,7 @@ index do
     number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
   end
   column :breo_stock_percentage do |stock|
-    stock.breo_stock_percentage.to_f.round(5).to_s + " %"
+    stock.breo_stock_percentage.to_f.round(4).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
@@ -56,7 +56,12 @@ index do
     unless stock.visible
       item "确认赎回", visible_admin_ransom_stock_path(stock), method: :put, class: "action-division"
     end
-    item "编辑", edit_admin_ransom_stock_path(stock), class: "action-division"
+    unless stock.archived_at.nil?
+      item "取消归档", unarchive_admin_ransom_stock_path(stock), method: :put, class: "action-division"
+    else
+      item "编辑", edit_admin_ransom_stock_path(stock), class: "action-division"
+      item "归档", archive_admin_ransom_stock_path(stock), method: :put, class: "action-division"
+    end
   end
 end
 
@@ -71,13 +76,13 @@ csv do
     number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
   end
   column :breo_stock_percentage do |stock|
-    stock.breo_stock_percentage.to_f.round(5).to_s + " %"
+    stock.breo_stock_percentage.to_f.round(4).to_s + " %"
   end
   column :capital_sum do |stock|
     number_to_currency(stock.capital_sum, unit: '',  precision: 1)
   end
   column :capital_percentage do |stock|
-    stock.capital_percentage.to_f.round(5).to_s + " %"
+    stock.capital_percentage.to_f.round(4).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
@@ -116,6 +121,16 @@ end
 member_action :visible, method: :put do
   resource.visible!
   redirect_to admin_ransom_stocks_path, notice: "已赎回"
+end
+
+member_action :archive, method: :put do
+  resource.archive!
+  redirect_to admin_ransom_stocks_path, notice: "已归档，归档后不能编辑"
+end
+
+member_action :unarchive, method: :put do
+  resource.unarchive!
+  redirect_to admin_ransom_stocks_path, notice: "已取消归档，当前您可以重新编辑"
 end
 
 collection_action :get_companies_by_user, :method => :post do
@@ -182,7 +197,7 @@ form html: { multipart: true } do |f|
     f.input :visible
   end
   
-  actions
+  actions if resource.new_record? || (!resource.nil? && resource.archived_at.nil?)
 end
 
 sidebar "注意事项", :only => [:new, :edit] do

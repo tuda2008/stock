@@ -25,3 +25,20 @@ a.action-division {
 table.index_table tr td {
 	vertical-align: middle !important;
 }
+
+a.account_static {
+	color:#006633;
+	text-decoration:none; 
+}
+a.account_static:hover {
+	color:#00CC33;
+	text-decoration:underline;
+}
+a.company_static {
+	color:#006633;
+	text-decoration:none; 
+}
+a.company_static:hover {
+	color:#00CC33;
+	text-decoration:underline;
+}

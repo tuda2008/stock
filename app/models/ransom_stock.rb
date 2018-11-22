@@ -95,7 +95,7 @@ class RansomStock < ApplicationRecord
   def update_account_stock_statics
     if self.visible_changed?
       if self.visible == true
-        self.archived_at = Time.now.utc
+        #self.archived_at = Time.now.utc
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
         UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, false)
       else
@@ -113,9 +113,19 @@ class RansomStock < ApplicationRecord
     end
     UpdateStockStaticWorker.perform_in(10.seconds, self.id, false)
   end
+  
+  def archive!
+    self.archived_at = Time.now.utc
+    self.save!
+  end
+
+  def unarchive!
+    self.archived_at = nil
+    self.save!
+  end
 
   def visible!
-    self.archived_at = Time.now.utc
+    #self.archived_at = Time.now.utc
     self.visible = true
     self.save!
   end

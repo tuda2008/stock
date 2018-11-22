@@ -41,7 +41,9 @@ scope("冻结股东I") { |user| user.inactive }
 index do
   selectable_column
   column("#", :id) { |user| link_to user.id, admin_user_path(user) }
-  column :name
+  column :name do |user|
+    link_to(user.name, admin_account_statics_path(q: {user_id_eq: user.id}), class: "account_static")
+  end
   column :mobile, sortable: false
   column :card
   column :cert_id

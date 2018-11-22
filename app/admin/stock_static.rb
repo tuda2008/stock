@@ -34,7 +34,7 @@ index do
     end
   end
   column :user_id do |stock|
-    stock.user.name + " " + stock.user.cert_id
+    link_to(stock.user.name + " " + stock.user.cert_id, admin_account_statics_path(q: {user_id_eq: stock.user_id}), class: "account_static")
   end
   column :breo_stock_num do |stock|
     stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.breo_stock_num, unit: '',  precision: 0) : number_to_currency(-stock.breo_stock_num, unit: '',  precision: 0)

@@ -399,9 +399,9 @@ module ActiveAdmin
                 static_data[resource_name]["sum_stock_capital_percentage"] -= resource.capital_percentage.to_f
                 static_data[resource_name]["sum_stock_register_sum_price"] -= resource.register_sum_price.to_f
               end
-              statics = ["合计", "", number_to_currency(static_data[resource_name]["sum_stock_num"], unit: '',  precision: 0), static_data[resource_name]["sum_stock_percentage"].round(5).to_s + " %",
+              statics = ["合计", "", number_to_currency(static_data[resource_name]["sum_stock_num"], unit: '',  precision: 0), static_data[resource_name]["sum_stock_percentage"].round(4).to_s + " %",
                   "", number_to_currency(static_data[resource_name]["sum_stock_sum_price"], unit: '',  precision: 0), number_to_currency(static_data[resource_name]["sum_stock_capital_sum"], unit: '',  precision: 0),
-                  static_data[resource_name]["sum_stock_capital_percentage"].round(5).to_s + " %", "", number_to_currency(static_data[resource_name]["sum_stock_register_sum_price"], unit: '',  precision: 0)]
+                  static_data[resource_name]["sum_stock_capital_percentage"].round(4).to_s + " %", "", number_to_currency(static_data[resource_name]["sum_stock_register_sum_price"], unit: '',  precision: 0)]
             when "StockCompany"
               static_data[resource_name]["sum_stock_capital_sum"] += resource.capital_sum.to_f
               static_data[resource_name]["sum_stock_stockholders_num"] += resource.stockholders_num.to_i
@@ -415,14 +415,14 @@ module ActiveAdmin
               static_data[resource_name]["sum_stock_sum_price"] += resource.stock_sum_price.to_f
               static_data[resource_name]["sum_stock_capital_sum"] += resource.capital_sum.to_f.to_f
               static_data[resource_name]["sum_stock_capital_percentage"] += resource.capital_percentage.to_f
-              statics = ["合计", "", number_to_currency(static_data[resource_name]["sum_stock_num"], unit: '',  precision: 0), static_data[resource_name]["sum_stock_percentage"].round(5).to_s + " %",
+              statics = ["合计", "", number_to_currency(static_data[resource_name]["sum_stock_num"], unit: '',  precision: 0), static_data[resource_name]["sum_stock_percentage"].round(4).to_s + " %",
                   "", number_to_currency(static_data[resource_name]["sum_stock_sum_price"], unit: '',  precision: 0), number_to_currency(static_data[resource_name]["sum_stock_capital_sum"], unit: '',  precision: 0),
-                  static_data[resource_name]["sum_stock_capital_percentage"].round(5).to_s + " %"]
+                  static_data[resource_name]["sum_stock_capital_percentage"].round(4).to_s + " %"]
             when "RansomStock"
               static_data[resource_name]["sum_stock_num"] += resource.breo_stock_num.to_i
               static_data[resource_name]["sum_stock_percentage"] += resource.breo_stock_percentage.to_f
               static_data[resource_name]["sum_stock_sum_price"] += resource.stock_sum_price.to_i
-              statics = ["合计", "", number_to_currency(static_data[resource_name]["sum_stock_num"], unit: '',  precision: 0), static_data[resource_name]["sum_stock_percentage"].round(5).to_s + " %", 
+              statics = ["合计", "", number_to_currency(static_data[resource_name]["sum_stock_num"], unit: '',  precision: 0), static_data[resource_name]["sum_stock_percentage"].round(4).to_s + " %", 
                   "", "", "", number_to_currency(static_data[resource_name]["sum_stock_sum_price"], unit: '',  precision: 0)]
             else ""
               need_static = false

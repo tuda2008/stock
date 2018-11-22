@@ -39,10 +39,13 @@
 #
 
 class StockAccount < ApplicationRecord
+  #extend Enumerize
   # 办结状态
   HANDLED   = 1 # 已办结
   HANDING   = 2 # 办理中
   NO_RECORD = 3 # 不备案
+
+  #enumerize :statuses, in: {:handled => 1, :handing => 2, :no_record => 3}
 
   STATUSES = [["已办结", HANDLED], ["办理中", HANDING], ["不备案", NO_RECORD]]
   STATUSES_NAME = {"#{HANDLED}": "已办结", "#{HANDING}": "办理中", "#{NO_RECORD}": "不备案"}
@@ -91,7 +94,7 @@ class StockAccount < ApplicationRecord
   def update_stock_accounts
     if self.visible_changed?
       if self.visible == true
-        self.archived_at = Time.now.utc
+        #self.archived_at = Time.now.utc
         CreateAccountStaticWorker.perform_in(5.seconds, self.id)
         UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, true, true)
       else
@@ -129,12 +132,18 @@ class StockAccount < ApplicationRecord
   	end
   end
 
-  def self.has_buy?
-    #StockAccount.where(user_id: self.user_id, company_id: self.company_id, enabled: true).where("published_at > ?", self.investment_at)
+  def archive!
+    self.archived_at = Time.now.utc
+    self.save!
+  end
+
+  def unarchive!
+    self.archived_at = nil
+    self.save!
   end
 
   def visible!
-    self.archived_at = Time.now.utc
+    #self.archived_at = Time.now.utc
     self.visible = true
     self.save!
   end

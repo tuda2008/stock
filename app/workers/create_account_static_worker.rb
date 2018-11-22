@@ -15,6 +15,13 @@ class CreateAccountStaticWorker
         acs.stock_sum_price += sa.stock_sum_price.to_f
       	
         acs.save if acs.valid?
+
+        breo_stock_sum = AccountStatic.where(company_id: sa.company_id).sum(:breo_stock_num)
+        if breo_stock_sum > 0 
+          AccountStatic.all.each do |as|
+            as.update_column(:current_breo_stock_percentage, (as.breo_stock_num*100/breo_stock_sum.to_f).round(4))
+          end
+        end
     end
   end
 end

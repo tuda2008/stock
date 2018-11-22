@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_16_023916) do
+ActiveRecord::Schema.define(version: 2018_11_21_141343) do
 
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 2018_11_16_023916) do
     t.datetime "updated_at", null: false
     t.integer "ransom_stock_num", default: 0
     t.float "ransom_sum_price", default: 0.0
+    t.float "current_breo_stock_percentage", default: 0.0
     t.index ["company_id"], name: "index_account_statics_on_company_id"
     t.index ["user_id", "company_id"], name: "index_account_statics_on_user_company"
     t.index ["user_id"], name: "index_account_statics_on_user_id"

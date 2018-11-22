@@ -21,7 +21,15 @@
       stock_static: "持股汇总"
       admin_user: "管理员"
       journal: "历史"
+      account_static: "当前持股"
     attributes:
+      account_static:
+        user: "股东名"
+        user_id: "股东名"
+        stock_company: "公司名"
+        company_id: "公司名"
+        breo_stock_num: "倍轻松股份数"
+        current_breo_stock_percentage: "倍轻松股份占比%"
       user:
         mobile: "手机"
         email: "邮箱"

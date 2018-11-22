@@ -38,7 +38,9 @@ scope("不正常运营I") { |company| company.inactive }
 index do
   selectable_column
   column("#", :id) { |company| link_to company.id, admin_stock_company_path(company) }
-  column :name
+  column :name do |company|
+    link_to(company.name, admin_account_statics_path(q: {stock_company_id_eq: company.id}), class: "company_static")
+  end
   column :capital_sum do |company|
     number_to_currency(company.capital_sum, unit: '',  precision: 1) 
   end

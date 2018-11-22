@@ -61,7 +61,7 @@ index do
     number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
   end
   column :breo_stock_percentage do |stock|
-    stock.breo_stock_percentage.to_f.round(5).to_s + " %"
+    stock.breo_stock_percentage.to_f.round(4).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
@@ -71,7 +71,7 @@ index do
     number_to_currency(stock.capital_sum, unit: '',  precision: 1)
   end
   column :capital_percentage do |stock|
-    stock.capital_percentage.to_f.round(5).to_s + " %"
+    stock.capital_percentage.to_f.round(4).to_s + " %"
   end
   column :investment_at do |stock|
     stock.investment_at.to_s
@@ -89,7 +89,12 @@ index do
     else
       item "无效", unvisible_admin_stock_account_path(stock), method: :put, class: "action-division"
     end
-    item "编辑", edit_admin_stock_account_path(stock), class: "action-division"
+    unless stock.archived_at.nil?
+      item "取消归档", unarchive_admin_stock_account_path(stock), method: :put, class: "action-division"
+    else
+      item "编辑", edit_admin_stock_account_path(stock), class: "action-division"
+      item "归档", archive_admin_stock_account_path(stock), method: :put, class: "action-division"
+    end
   end
   
 end
@@ -105,7 +110,7 @@ csv do
     number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
   end
   column :breo_stock_percentage do |stock|
-    stock.breo_stock_percentage.to_f.round(5).to_s + " %"
+    stock.breo_stock_percentage.to_f.round(4).to_s + " %"
   end
   column :stock_price
   column :stock_sum_price do |stock|
@@ -115,7 +120,7 @@ csv do
     number_to_currency(stock.capital_sum, unit: '',  precision: 1)
   end
   column :capital_percentage do |stock|
-    stock.capital_percentage.to_f.round(5).to_s + " %"
+    stock.capital_percentage.to_f.round(4).to_s + " %"
   end
   column :register_price
   column :register_sum_price do |stock|
@@ -169,6 +174,16 @@ end
 member_action :unvisible, method: :put do
   resource.unvisible!
   redirect_to admin_stock_accounts_path, notice: "已设为无效"
+end
+
+member_action :archive, method: :put do
+  resource.archive!
+  redirect_to admin_stock_accounts_path, notice: "已归档，归档后不能编辑"
+end
+
+member_action :unarchive, method: :put do
+  resource.unarchive!
+  redirect_to admin_stock_accounts_path, notice: "已取消归档，当前您可以重新编辑"
 end
 
 collection_action :download, method: :get do
@@ -259,11 +274,11 @@ show do
     row :stock_sum_price
     row :breo_stock_num
     row :breo_stock_percentage do |stock|
-      stock.breo_stock_percentage.to_f.round(5).to_s + " %"
+      stock.breo_stock_percentage.to_f.round(4).to_s + " %"
     end
     row :capital_sum
     row :capital_percentage do |stock|
-      stock.capital_percentage.to_f.round(5).to_s + " %"
+      stock.capital_percentage.to_f.round(4).to_s + " %"
     end
     row :register_price
     row :register_sum_price
@@ -324,7 +339,7 @@ form html: { multipart: true } do |f|
     f.input :visible
   end
   
-  actions
+  actions if resource.new_record? || (!resource.nil? && resource.archived_at.nil?)
 end
 
 sidebar "注意事项", :only => [:new, :edit] do
