@@ -8,7 +8,7 @@ filter :user
 filter :stock_company
 filter :breo_stock_num
 filter :current_breo_stock_percentage
-
+filter :current_company_stock_percentage
 
 index do
   column :company_id do |stock|
@@ -22,6 +22,9 @@ index do
   end
   column :current_breo_stock_percentage do |stock|
     stock.current_breo_stock_percentage.to_f.round(4).to_s + " %"
+  end
+  column :current_company_stock_percentage do |stock|
+    stock.current_company_stock_percentage.to_f.round(4).to_s + " %"
   end
 end
 
@@ -37,6 +40,9 @@ csv do
   end
   column :current_breo_stock_percentage do |stock|
     stock.current_breo_stock_percentage.to_f.round(4).to_s + " %"
+  end
+  column :current_company_stock_percentage do |stock|
+    stock.current_company_stock_percentage.to_f.round(4).to_s + " %"
   end
 end
 

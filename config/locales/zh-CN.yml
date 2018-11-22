@@ -30,6 +30,7 @@
         company_id: "公司名"
         breo_stock_num: "倍轻松股份数"
         current_breo_stock_percentage: "倍轻松股份占比%"
+        current_company_stock_percentage: "子公司股份占比%"
       user:
         mobile: "手机"
         email: "邮箱"
