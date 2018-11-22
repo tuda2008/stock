@@ -59,9 +59,9 @@ index do
   end
   actions defaults: false do |user|
     if user.locked_at.nil?
-      item "冻结", lock_admin_user_path(user), method: :put, class: "action-division"
+      item "冻结", lock_admin_user_path(user), method: :put, class: "action-division inactive"
     else
-      item "激活", unlock_admin_user_path(user), method: :put, class: "action-division"
+      item "激活", unlock_admin_user_path(user), method: :put, class: "action-division active"
     end
 
     item "编辑", edit_admin_user_path(user), class: "action-division"

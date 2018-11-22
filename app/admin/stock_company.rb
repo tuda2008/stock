@@ -59,9 +59,9 @@ index do
   
   actions defaults: false do |company|
     if company.visible
-      item "不正常", block_admin_stock_company_path(company), method: :put, class: "action-division"
+      item "不正常", block_admin_stock_company_path(company), method: :put, class: "action-division inactive"
     else
-      item "正常", unblock_admin_stock_company_path(company), method: :put, class: "action-division"
+      item "正常", unblock_admin_stock_company_path(company), method: :put, class: "action-division active"
     end
     item "编辑", edit_admin_stock_company_path(company), class: "action-division"
   end

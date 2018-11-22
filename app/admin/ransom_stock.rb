@@ -54,13 +54,13 @@ index do
   
   actions defaults: false do |stock|
     unless stock.visible
-      item "确认赎回", visible_admin_ransom_stock_path(stock), method: :put, class: "action-division"
+      item "确认赎回", visible_admin_ransom_stock_path(stock), method: :put, class: "action-division inactive"
     end
     unless stock.archived_at.nil?
-      item "取消归档", unarchive_admin_ransom_stock_path(stock), method: :put, class: "action-division"
+      item "取消归档", unarchive_admin_ransom_stock_path(stock), method: :put, class: "action-division active"
     else
       item "编辑", edit_admin_ransom_stock_path(stock), class: "action-division"
-      item "归档", archive_admin_ransom_stock_path(stock), method: :put, class: "action-division"
+      item "归档", archive_admin_ransom_stock_path(stock), method: :put, class: "action-division inactive"
     end
   end
 end
