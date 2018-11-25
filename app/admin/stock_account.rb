@@ -329,9 +329,9 @@ form html: { multipart: true } do |f|
     f.input :register_at, as: :datepicker, :hint => "\"工商系统办结状态\" 为已办结时再填写该时间"
     f.input :investment_price
     f.input :investment_sum_price
-    f.input :investment_at, as: :datepicker
+    f.input :investment_at, as: :datepicker, :required => true
     f.input :transfered_at, as: :datepicker
-    f.input :ransom_at, as: :datepicker, :input_html => { value: resource.ransom_at.nil? ? "" : resource.ransom_at.strftime("%Y-%m-%d") }
+    f.input :ransom_at, as: :datepicker
     f.input :meeting_sn
     f.input :change_type, :as => :select, :collection => StockAccount::TYPES
     f.input :info

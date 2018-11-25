@@ -62,7 +62,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable, authentication_keys: [:mobile]
 
   validates :mobile, :email, :name, :card, :bank_name, :cert_id, :cert_address, :user_cate, :user_type, presence: true
-  validates :mobile, :name, :card, :cert_id, uniqueness: true
+  validates :name, :card, :cert_id, uniqueness: true
+
+  validates :mobile, format: { with: /\A1[3|4|5|7|8][0-9]\d{4,8}\z/, message: "请输入11位正确手机号" }, length: { is: 11 }, 
+            :uniqueness => true
 
   scope :active, -> { where("locked_at is null") }
   scope :inactive, -> { where("locked_at is not null") }

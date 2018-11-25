@@ -135,7 +135,7 @@ end
 
 collection_action :get_companies_by_user, :method => :post do
   @user_id = params[:user_id]
-  @companies = StockAccount.companies(@user_id).uniq.map{|c| {name: c.stock_company.name, id: c.company_id} }
+  @companies = StockAccount.companies(@user_id).map{|c| {name: c.stock_company.name, id: c.company_id} }
   render :json => @companies and return
 end
 
@@ -181,7 +181,7 @@ form html: { multipart: true } do |f|
   
   f.inputs "赎回股票信息" do
     f.input :user_id, :as => :select, :collection => Hash[@users], :hint => "股东名 + 股东身份证"
-    f.input :company_id, :as => :select, :collection => Hash[@companies]
+    f.input :company_id, :as => :select, :collection => Hash[@companies], :required => true
     f.input :breo_stock_num, :hint => "不能大于买入倍轻松股份数"
     f.input :breo_stock_percentage, :hint => "不能大于买入倍轻松股份占比"
     f.input :capital_sum
@@ -191,8 +191,8 @@ form html: { multipart: true } do |f|
     f.input :register_price, :hint => "1股的价格"
     f.input :register_sum_price
     f.input :tax
-    f.input :published_at, as: :datepicker
-    f.input :tax_payed_at, as: :datepicker
+    f.input :published_at, as: :datepicker, :required => true
+    f.input :tax_payed_at, as: :datepicker, :required => true
     f.input :info
     f.input :visible
   end

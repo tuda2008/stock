@@ -65,21 +65,25 @@ class StockAccount < ApplicationRecord
   belongs_to :user, foreign_key: :user_id
   belongs_to :stock_company, foreign_key: :company_id
 
-  validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :investment_at, presence: true
+  validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, presence: true
   validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 0, only_integer: true}
-  validates :stock_price, :register_price, :investment_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
+  validates :stock_price, :register_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
+  validates :investment_price, numericality: {allow_blank: true, greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
   validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 100}
-  validates :stock_sum_price, :investment_sum_price, :register_sum_price, numericality: {greater_than_or_equal_to: 1000}
+  validates :stock_sum_price, :register_sum_price, numericality: {greater_than_or_equal_to: 1000}
+  validates :investment_sum_price, numericality: {allow_blank: true, greater_than_or_equal_to: 1000}
   validate  :visible_validate
 
-  validates_datetime :register_at, :after => :investment_at, :after_message => "必须在 合约入股时间 之后"
-  validates_datetime :ransom_at, :after => :register_at, :after_message => "必须在 工商系统办结时间 之后"
+  validates_date :investment_at
+  validates_date :register_at, allow_blank: true, :on_or_after => :investment_at, :on_or_after_message => "不能在 合约入股时间 之前"
+  validates_date :transfered_at, allow_blank: true
+  validates_date :ransom_at, allow_blank: true, :after => :register_at, :after_message => "必须在 工商系统办结时间 之后"
 
   after_create :cteate_stock_account, :update_stock_accounts_history
   before_update :update_stock_accounts
   after_update :update_stock_accounts_history
 
-  scope :companies, lambda { |user_id| where(user_id: user_id).includes(:stock_company) }
+  scope :companies, lambda { |user_id| where(user_id: user_id).group(:company_id).includes(:stock_company) }
   scope :active, -> { where(visible: true) }
   scope :inactive, -> { where(visible: false) }
 

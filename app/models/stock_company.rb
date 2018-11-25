@@ -31,6 +31,7 @@ class StockCompany < ApplicationRecord
   validates :name, uniqueness: true
   validates :name, length: 3..50
   validates :description, :legal_representative, length: { maximum: 250 }
+  validates :stock_num, numericality: {greater_than_or_equal_to: 1, only_integer: true}
 
   scope :active, -> { where(visible: true) }
   scope :inactive, -> { where(visible: false) }
