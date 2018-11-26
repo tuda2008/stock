@@ -50,7 +50,7 @@ index do
     stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.capital_sum, unit: '',  precision: 1) : number_to_currency(-stock.capital_sum, unit: '',  precision: 1)
   end
   column :capital_percentage do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.round(5).to_s + " %" : (-stock.capital_percentage.round(5)).to_s + " %"
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.to_f.round(5).to_s + " %" : (-stock.capital_percentage.to_f.round(5)).to_s + " %"
   end
   column :register_price
   column :register_sum_price do |stock|
@@ -87,7 +87,7 @@ csv do
     stock.stock_type == StockStatic::STOCK_BUY ? number_to_currency(stock.capital_sum, unit: '',  precision: 1) : number_to_currency(-stock.capital_sum, unit: '',  precision: 1)
   end
   column :capital_percentage do |stock|
-    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.round(5).to_s + " %" : (-stock.capital_percentage.round(5)).to_s + " %"
+    stock.stock_type == StockStatic::STOCK_BUY ? stock.capital_percentage.to_f.round(5).to_s + " %" : (-stock.capital_percentage.to_f.round(5)).to_s + " %"
   end
   column :register_price
   column :register_sum_price do |stock|

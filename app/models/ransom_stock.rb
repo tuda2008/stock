@@ -57,13 +57,24 @@ class RansomStock < ApplicationRecord
   def breo_stock_num_validate
     account_static = AccountStatic.where(user_id: self.user_id, company_id: self.company_id).first
     unless account_static.nil?
-      if account_static.breo_stock_num < self.breo_stock_num.to_i
-        errors.add :breo_stock_num, "赎回股数大于股东持有股数（#{account_static.breo_stock_num}）"
-        return false
-      end
-      if account_static.breo_stock_percentage < self.breo_stock_percentage.to_f
-        errors.add :breo_stock_percentage, "赎回股份占比大于股东持有股份占比（#{account_static.breo_stock_percentage}）"
-        return false
+      if self.visible_changed?
+        if account_static.breo_stock_num < self.breo_stock_num.to_i
+          errors.add :breo_stock_num, "赎回股数大于股东持有股数（#{account_static.breo_stock_num}）"
+          return false
+        end
+        if account_static.breo_stock_percentage < self.breo_stock_percentage.to_f
+          errors.add :breo_stock_percentage, "赎回股份占比大于股东持有股份占比（#{account_static.breo_stock_percentage}）"
+          return false
+        end
+      else
+        if self.visible && self.breo_stock_num_changed? && (account_static.breo_stock_num < (self.breo_stock_num - self.breo_stock_num_was))
+          errors.add :breo_stock_num, "赎回股数大于股东持有股数（#{account_static.breo_stock_num}）"
+          return false
+        end
+        if self.visible && self.breo_stock_percentage_changed? && (account_static.breo_stock_percentage < (self.breo_stock_percentage - self.breo_stock_percentage_was))
+          errors.add :breo_stock_percentage, "赎回股份占比大于股东持有股份占比（#{account_static.breo_stock_percentage}）"
+          return false
+        end
       end
     else
       errors.add :company_id, "所选股东未持有该公司股票"

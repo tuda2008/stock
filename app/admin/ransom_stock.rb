@@ -135,7 +135,7 @@ end
 
 collection_action :get_companies_by_user, :method => :post do
   @user_id = params[:user_id]
-  @companies = StockAccount.companies(@user_id).map{|c| {name: c.stock_company.name, id: c.company_id} }
+  @companies = StockAccount.companies(@user_id).map{|c| {name: c.stock_company.name, id: c.company_id} }.uniq
   render :json => @companies and return
 end
 

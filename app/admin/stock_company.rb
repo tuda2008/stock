@@ -142,7 +142,7 @@ form html: { multipart: true } do |f|
   
   f.inputs "公司信息" do
     f.input :name, :hint => "未指定公司的名字暂用\"内部管理\"代替"
-    f.input :stock_num, :hint => "必须为正整数", :input_html => { :value => resource.stock_num.to_i }
+    f.input :stock_num, :hint => "必须为正整数"
     f.input :description
   end
   

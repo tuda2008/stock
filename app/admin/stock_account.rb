@@ -321,10 +321,10 @@ form html: { multipart: true } do |f|
     f.input :stock_sum_price
     f.input :breo_stock_num, :hint => "这里填所选股东的\"增加倍轻松股份数\",必须是正整数"
     f.input :breo_stock_percentage, :hint => "可含4位小数,不大于100,不用输入%"
-    f.input :capital_sum
+    f.input :capital_sum, :required => true
     f.input :capital_percentage
-    f.input :register_price, :hint => "1股的价格"
-    f.input :register_sum_price
+    f.input :register_price, :hint => "1股的价格", :required => true
+    f.input :register_sum_price, :required => true
     f.input :register_status, :as => :select, :collection => StockAccount::STATUSES
     f.input :register_at, as: :datepicker, :hint => "\"工商系统办结状态\" 为已办结时再填写该时间"
     f.input :investment_price

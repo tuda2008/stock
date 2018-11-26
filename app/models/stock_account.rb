@@ -83,7 +83,7 @@ class StockAccount < ApplicationRecord
   before_update :update_stock_accounts
   after_update :update_stock_accounts_history
 
-  scope :companies, lambda { |user_id| where(user_id: user_id).group(:company_id).includes(:stock_company) }
+  scope :companies, lambda { |user_id| where(user_id: user_id).includes(:stock_company) }
   scope :active, -> { where(visible: true) }
   scope :inactive, -> { where(visible: false) }
 
