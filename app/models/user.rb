@@ -61,8 +61,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, 
          :recoverable, :rememberable, :trackable, :validatable, authentication_keys: [:mobile]
 
-  validates :mobile, :email, :name, :card, :bank_name, :cert_id, :cert_address, :user_cate, :user_type, presence: true
-  validates :name, :card, :cert_id, uniqueness: true
+  validates :mobile, :email, :name, :cert_id, :cert_address, :user_cate, :user_type, presence: true
+  validates :name, uniqueness: true
+  validates :card, :cert_id, allow_blank: true, uniqueness: true
 
   validates :mobile, format: { with: /\A1[3|4|5|7|8][0-9]\d{4,8}\z/, message: "请输入11位正确手机号" }, length: { is: 11 }, 
             :uniqueness => true
