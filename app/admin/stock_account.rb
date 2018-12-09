@@ -209,7 +209,10 @@ collection_action :import_execl, method: :post do
         next if index == 0
         length = index
         next if row.empty?
-        user = User.where(name: row["A#{index + 1}"].strip).first
+        start_index = row["A#{index + 1}"].strip.index(/\d/)
+        end_index = row["A#{index + 1}"].strip.rindex(/\w/)
+        id_str = row["A#{index + 1}"].strip[start_index..end_index]
+        user = User.where(cert_id: id_str).first
         if user.nil?
           errors << "用户 #{row["A#{index + 1}"]} 不存在"
           next
@@ -232,10 +235,10 @@ collection_action :import_execl, method: :post do
           investment_sum_price: row["M#{index + 1}"], 
           investment_at: row["N#{index + 1}"].to_date,
           ransom_at: row["O#{index + 1}"].to_date,
-          meeting_sn: row["P#{index + 1}"].strip,
-          change_type: types[row["Q#{index + 1}"].strip], 
+          meeting_sn: row["P#{index + 1}"].nil? ? "" : row["P#{index + 1}"].strip,
+          change_type: row["Q#{index + 1}"].nil? ? "" : types[row["Q#{index + 1}"].strip], 
           transfered_at: row["R#{index + 1}"].to_date,
-          info: row["S#{index + 1}"].strip,
+          info: row["S#{index + 1}"].nil? ? "" : row["S#{index + 1}"].strip,
           visible: true
         )
         if sa.valid?
@@ -254,7 +257,8 @@ collection_action :import_execl, method: :post do
         flash.discard(:warning)
         flash[:warning] = errors.join(';')
       end
-    rescue
+    rescue Exception => e  
+      p e.message  
       flash[:error] = "请选中有效的execl模板导入"
     end
   else

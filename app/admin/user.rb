@@ -119,17 +119,23 @@ collection_action :import_execl, method: :post do
       sheet = creek.sheets[0]
       length = 0
       cates = {"员工" => "1", "外部" => "2"}
+      types = {"自然人" => "1", "法人股东" => "2", "外资" => "3"}
+      errors = []
       errors = []
       sheet.rows.each_with_index do |row, index|
         next if index == 0
         length = index
         next if row.empty?
-        user = User.new(name: row["A#{index + 1}"].strip, department: row["B#{index + 1}"].strip,
-          cert_id: row["C#{index + 1}"], cert_address: row["D#{index + 1}"].strip,
-          bank_name: row["E#{index + 1}"].strip, card: row["F#{index + 1}"],
-          mobile: row["G#{index + 1}"].strip, email: row["H#{index + 1}"],
-          user_cate: cates[row["I#{index + 1}"].strip],
-          user_type: User::EMPLOYEE)
+        user = User.new(name: row["A#{index + 1}"].nil? ? "" : row["A#{index + 1}"].strip, 
+          department: row["B#{index + 1}"].nil? ? "" : row["B#{index + 1}"].strip,
+          cert_id: row["C#{index + 1}"].nil? ? "" : row["C#{index + 1}"].strip, 
+          cert_address: row["D#{index + 1}"].nil? ? "" : row["D#{index + 1}"].strip,
+          bank_name: row["E#{index + 1}"].nil? ? "" : row["E#{index + 1}"].strip, 
+          card: row["F#{index + 1}"].nil? ? "" : row["F#{index + 1}"],
+          mobile: row["G#{index + 1}"].nil? ? "" : row["G#{index + 1}"].strip,
+          email: row["H#{index + 1}"].nil? ? "" : row["H#{index + 1}"],
+          user_cate: row["I#{index + 1}"].nil? ? "" : cates[row["I#{index + 1}"].strip],
+          user_type: row["J#{index + 1}"].nil? ? "" : types[row["J#{index + 1}"].strip])
         if user.valid?
           user.save
         else
