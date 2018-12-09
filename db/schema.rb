@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_09_130614) do
+ActiveRecord::Schema.define(version: 2018_12_09_140156) do
 
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -240,8 +240,8 @@ ActiveRecord::Schema.define(version: 2018_12_09_130614) do
     t.datetime "updated_at", null: false
     t.index ["cert_id"], name: "index_users_on_cert_id", unique: true
     t.index ["department"], name: "index_users_on_department"
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["mobile"], name: "index_users_on_mobile", unique: true
+    t.index ["email"], name: "index_users_on_email"
+    t.index ["mobile"], name: "index_users_on_mobile"
     t.index ["name"], name: "index_users_on_name"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true

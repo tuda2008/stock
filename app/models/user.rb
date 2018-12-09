@@ -32,8 +32,8 @@
 #
 #  index_users_on_cert_id                  (cert_id) UNIQUE
 #  index_users_on_department               (department)
-#  index_users_on_email                    (email) UNIQUE
-#  index_users_on_mobile                   (mobile) UNIQUE
+#  index_users_on_email                    (email)
+#  index_users_on_mobile                   (mobile)
 #  index_users_on_name                     (name)
 #  index_users_on_reset_password_token     (reset_password_token) UNIQUE
 #  index_users_on_unlock_token             (unlock_token) UNIQUE
@@ -58,15 +58,13 @@ class User < ApplicationRecord
   TYPE_NAME = {"1": "自然人", "2": "法人股东", "3": "外资"}
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, 
-         :recoverable, :rememberable, :trackable, :validatable, authentication_keys: [:mobile]
+  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :validatable#, authentication_keys: [:mobile]
 
-  validates :mobile, :email, :name, :cert_id, :cert_address, :user_cate, :user_type, presence: true
-  validates :name, uniqueness: true
-  validates :card, :cert_id, allow_blank: true, uniqueness: true
+  validates :name, :department, :cert_id, :cert_address, :user_cate, :user_type, presence: true
+  validates :cert_id, uniqueness: true
 
-  validates :mobile, format: { with: /\A1[3|4|5|7|8][0-9]\d{4,8}\z/, message: "请输入11位正确手机号" }, length: { is: 11 }, 
-            :uniqueness => true
+  #validates :mobile, format: { with: /\A1[3|4|5|7|8][0-9]\d{4,8}\z/, message: "请输入11位正确手机号" }, length: { is: 11 }, 
+  #          :uniqueness => true
 
   scope :active, -> { where("locked_at is null") }
   scope :inactive, -> { where("locked_at is not null") }
@@ -81,9 +79,15 @@ class User < ApplicationRecord
     save
   end
 
-  protected
-  	def password_required?
-  	  false
-  	end
+  def email_required?
+    false
+  end
 
+  def password_required?
+  	false
+  end
+
+  def will_save_change_to_email?
+    false
+  end
 end

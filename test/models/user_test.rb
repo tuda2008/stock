@@ -32,8 +32,8 @@
 #
 #  index_users_on_cert_id                  (cert_id) UNIQUE
 #  index_users_on_department               (department)
-#  index_users_on_email                    (email) UNIQUE
-#  index_users_on_mobile                   (mobile) UNIQUE
+#  index_users_on_email                    (email)
+#  index_users_on_mobile                   (mobile)
 #  index_users_on_name                     (name)
 #  index_users_on_reset_password_token     (reset_password_token) UNIQUE
 #  index_users_on_unlock_token             (unlock_token) UNIQUE
