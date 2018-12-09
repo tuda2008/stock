@@ -117,6 +117,10 @@
         tax_payed_at: "实际缴纳税收时间"
         info: "备注说明"
         visible: "确认赎回"
+        register_status: "工商系统办结状态"
+        register_at: "工商系统办结时间"
+        change_type: "变动类别"
+        meeting_sn: "股东会决议编号"
       stock_static:
         user: "股东名"
         user_id: "股东名"

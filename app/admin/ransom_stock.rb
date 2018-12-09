@@ -7,7 +7,8 @@ config.per_page = 25
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 permit_params :list, :of, [:user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, 
-  :capital_sum, :capital_percentage, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, :info, :visible], :on, :model
+  :capital_sum, :capital_percentage, :register_price, :register_sum_price, :tax, :published_at, :tax_payed_at, :info, :visible,
+  :register_status, :register_at, :meeting_sn, :change_type], :on, :model
 
 actions :all, except: [:destroy]
 
@@ -20,6 +21,9 @@ filter :breo_stock_percentage
 filter :stock_price
 filter :stock_sum_price
 filter :published_at
+filter :register_status, as: :select, collection: StockAccount::STATUSES
+filter :meeting_sn
+filter :change_type, as: :select, collection: StockAccount::TYPES
 filter :visible
 
 scope :all, default: true
@@ -48,6 +52,7 @@ index do
   column :published_at do |stock|
     stock.published_at.to_s
   end
+  column :meeting_sn
   column "已/待赎回" do |stock|
     stock.visible ? "已赎回" : "待赎回"
   end
@@ -92,6 +97,12 @@ csv do
   column :register_sum_price do |stock|
     number_to_currency(stock.register_sum_price, unit: '',  precision: 1)
   end
+  column :register_status do |stock|
+    StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
+  end
+  column :register_at do |stock|
+    stock.register_at.blank? ? "" : stock.register_at.to_s
+  end
   column :tax do |stock|
     number_to_currency(stock.tax, unit: '',  precision: 1)
   end
@@ -103,6 +114,10 @@ csv do
   end
   column :tax_payed_at do |stock|
     stock.tax_payed_at.to_s
+  end
+  column :meeting_sn
+  column :change_type do |stock|
+    StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
   end
   column :info
   column "已/待赎回" do |stock|
@@ -139,6 +154,22 @@ collection_action :get_companies_by_user, :method => :post do
   render :json => @companies and return
 end
 
+collection_action :download, method: :get do
+  send_file(Rails.root.join('public', 'import_sample.xlsx'))
+end
+
+collection_action :import, method: :get do
+  render 'admin/ransom_stocks/import'
+end
+
+collection_action :import_execl, method: :post do
+  file = params[:file]
+  unless file.blank?
+    begin
+    end
+  end
+end
+
 show do
   attributes_table do
     row :id
@@ -154,6 +185,12 @@ show do
     row :stock_sum_price
     row :register_price
     row :register_sum_price
+    row :register_status do |stock|
+      StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
+    end
+    row :register_at do |stock|
+      stock.register_at.blank? ? "" : stock.register_at.to_s
+    end
     row :tax
     row :sum_price_after_tax
     row :published_at do |stock|
@@ -161,6 +198,10 @@ show do
     end
     row :tax_payed_at do |stock|
       stock.tax_payed_at.to_s
+    end
+    row :meeting_sn
+    row :change_type do |stock|
+      StockAccount::TYPES_NAME[stock.change_type.to_s.to_sym]
     end
     row :info
     row :visible
@@ -190,9 +231,13 @@ form html: { multipart: true } do |f|
     f.input :stock_sum_price
     f.input :register_price, :hint => "1股的价格"
     f.input :register_sum_price
+    f.input :register_status, :as => :select, :collection => StockAccount::STATUSES
+    f.input :register_at, as: :datepicker, :hint => "\"工商系统办结状态\" 为已办结时再填写该时间"
     f.input :tax
-    f.input :published_at, as: :datepicker, :required => true
-    f.input :tax_payed_at, as: :datepicker, :required => true
+    f.input :published_at, as: :datepicker
+    f.input :tax_payed_at, as: :datepicker
+    f.input :meeting_sn
+    f.input :change_type, :as => :select, :collection => StockAccount::TYPES
     f.input :info
     f.input :visible
   end
@@ -202,6 +247,10 @@ end
 
 sidebar "注意事项", :only => [:new, :edit] do
     "赎回信息最好一次性正确录入后不要修改删除".html_safe
+end
+
+sidebar "导入", :only => [:new, :edit, :index] do
+    link_to "批量导入股票赎回信息", import_admin_ransom_stocks_path
 end
 
 

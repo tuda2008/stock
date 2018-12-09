@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_22_032144) do
+ActiveRecord::Schema.define(version: 2018_12_09_130614) do
 
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -104,6 +104,10 @@ ActiveRecord::Schema.define(version: 2018_11_22_032144) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "archived_at"
+    t.integer "register_status"
+    t.datetime "register_at"
+    t.string "meeting_sn", limit: 60, default: ""
+    t.integer "change_type"
     t.index ["company_id"], name: "index_ransom_stocks_on_company_id"
     t.index ["user_id", "company_id"], name: "index_ransom_stocks_on_user_company"
     t.index ["user_id"], name: "index_ransom_stocks_on_user_id"
