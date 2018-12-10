@@ -202,6 +202,7 @@ collection_action :import_execl, method: :post do
       sheet = creek.sheets[0]
       errors = []
       length = 0
+      statuses = {"已办结" => "#{StockAccount::HANDLED}", "办理中" => "#{StockAccount::HANDING}", "不备案" => "#{StockAccount::NO_RECORD}"}
       types = {"股权激励" => "#{StockAccount::INSPIRE}", "股东间股权转让" => "#{StockAccount::TRANSFER}", 
       "股票股利" => "#{StockAccount::BONUS}", "私募入股" => "#{StockAccount::PRIVATE_JOIN}", 
       "离职退股" => "#{StockAccount::WORK_JUMP}", "私募退股" => "#{StockAccount::PRIVATE_OUT}"}
@@ -230,15 +231,16 @@ collection_action :import_execl, method: :post do
           capital_percentage: row["H#{index + 1}"].to_f,
           register_price: row["I#{index + 1}"].to_f, 
           register_sum_price: row["J#{index + 1}"].to_f,
-          register_at: row["K#{index + 1}"].nil? ? "" : row["K#{index + 1}"].to_date,
-          investment_price: row["L#{index + 1}"],
-          investment_sum_price: row["M#{index + 1}"], 
-          investment_at: row["N#{index + 1}"].nil? ? "" : row["N#{index + 1}"].to_date,
-          ransom_at: row["O#{index + 1}"].nil? ? "" : row["O#{index + 1}"].to_date,
-          meeting_sn: row["P#{index + 1}"].nil? ? "" : row["P#{index + 1}"].strip,
-          change_type: row["Q#{index + 1}"].nil? ? "" : types[row["Q#{index + 1}"].strip], 
-          transfered_at: row["R#{index + 1}"].nil? ? "" : row["R#{index + 1}"].to_date,
-          info: row["S#{index + 1}"].nil? ? "" : row["S#{index + 1}"].strip,
+          register_status: row["K#{index + 1}"].nil? ? "" : statuses[row["K#{index + 1}"].strip],
+          register_at: row["L#{index + 1}"].nil? ? "" : row["L#{index + 1}"].to_date,
+          investment_price: row["M#{index + 1}"],
+          investment_sum_price: row["N#{index + 1}"], 
+          investment_at: row["O#{index + 1}"].nil? ? "" : row["O#{index + 1}"].to_date,
+          ransom_at: row["P#{index + 1}"].nil? ? "" : row["P#{index + 1}"].to_date,
+          meeting_sn: row["Q#{index + 1}"].nil? ? "" : row["Q#{index + 1}"].strip,
+          change_type: row["R#{index + 1}"].nil? ? "" : types[row["R#{index + 1}"].strip], 
+          transfered_at: row["S#{index + 1}"].nil? ? "" : row["S#{index + 1}"].to_date,
+          info: row["T#{index + 1}"].nil? ? "" : row["T#{index + 1}"].strip,
           visible: true
         )
         if sa.valid?
