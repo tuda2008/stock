@@ -52,4 +52,8 @@ class StockStatic < ApplicationRecord
 
   scope :buy, -> { where(stock_type: STOCK_BUY) }
   scope :ransom, -> { where(stock_type: STOCK_RANSOM) }
+
+  def self.sum_capital(company_id)
+    StockStatic.select("stock_type, sum(capital_sum) as sum_capital_sum").where(:company_id => company_id).group(:stock_type).order("stock_type")
+  end
 end

@@ -5,14 +5,16 @@ class UpdateStockCompanyWorker
     company = StockCompany.where(id: company_id).first
     return if company.nil?
     company.stock_num = 0
-    if is_buy
-      #认购
-      company.holders_buy_sum_price += change_capital_value.to_f
-      company.capital_sum += change_capital_value.to_i
-    else
-      #赎回
-      company.ransom_sum_price += change_capital_value.to_f
-      company.capital_sum -= change_capital_value.to_i
+
+    ss = StockStatic.sum_capital(company_id)
+    ss.each do |static|
+      if static.stock_type == StockStatic::STOCK_BUY
+        company.holders_buy_sum_price = static.sum_capital_sum
+        company.capital_sum = static.sum_capital_sum
+      else
+        company.ransom_sum_price = static.sum_capital_sum
+        company.capital_sum -= static.sum_capital_sum
+      end
     end
     
     num = AccountStatic.stockholders_count(company_id)[company_id]

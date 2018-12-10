@@ -36,6 +36,7 @@ scope("正常运营A") { |company| company.active }
 scope("不正常运营I") { |company| company.inactive }
 
 index do
+  p StockStatic.sum_capital(1)
   selectable_column
   column("#", :id) { |company| link_to company.id, admin_stock_company_path(company) }
   column :name do |company|
