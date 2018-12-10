@@ -9,11 +9,11 @@ class UpdateStockCompanyWorker
     ss = StockStatic.sum_capital(company_id)
     ss.each do |static|
       if static.stock_type == StockStatic::STOCK_BUY
-        company.holders_buy_sum_price = static.sum_capital_sum
-        company.capital_sum = static.sum_capital_sum
+        company.holders_buy_sum_price = static.sum_capital_sum.to_f
+        company.capital_sum = static.sum_capital_sum.to_f
       else
-        company.ransom_sum_price = static.sum_capital_sum
-        company.capital_sum -= static.sum_capital_sum
+        company.ransom_sum_price = static.sum_capital_sum.to_f
+        company.capital_sum -= static.sum_capital_sum.to_f
       end
     end
     
