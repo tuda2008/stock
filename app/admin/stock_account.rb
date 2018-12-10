@@ -187,7 +187,7 @@ member_action :unarchive, method: :put do
 end
 
 collection_action :download, method: :get do
-  send_file(Rails.root.join('public', 'import_sample.xlsx'))
+  send_file(Rails.root.join('public', 'buy_sample.xlsx'))
 end
 
 collection_action :import, method: :get do
@@ -199,7 +199,7 @@ collection_action :import_execl, method: :post do
   unless file.blank?
     begin
       creek = Creek::Book.new file.path
-      sheet = creek.sheets[1]
+      sheet = creek.sheets[0]
       errors = []
       length = 0
       types = {"股权激励" => "#{StockAccount::INSPIRE}", "股东间股权转让" => "#{StockAccount::TRANSFER}", 
@@ -214,37 +214,37 @@ collection_action :import_execl, method: :post do
         id_str = row["A#{index + 1}"].strip[start_index..end_index]
         user = User.where(cert_id: id_str).first
         if user.nil?
-          errors << "用户 #{row["A#{index + 1}"]} 不存在"
+          errors << "第 #{index + 1} 行：" + "用户 #{row["A#{index + 1}"]} 不存在"
           next
         end
         company = StockCompany.where(name: row["F#{index + 1}"].strip).first
         if company.nil?
-          errors << "持股公司 #{row["A#{index + 1}"]} 不存在"
+          errors << "第 #{index + 1} 行：" + "持股公司 #{row["F#{index + 1}"]} 不存在"
           next
         end
         sa = StockAccount.new(user_id: user.id, breo_stock_num: row["B#{index + 1}"].to_i, 
           breo_stock_percentage: row["C#{index + 1}"].to_f, stock_price: row["D#{index + 1}"].to_f, 
-          stock_sum_price: row["E#{index + 1}"], 
+          stock_sum_price: row["E#{index + 1}"].to_f, 
           company_id: company.id,
-          capital_sum: row["G#{index + 1}"],
-          capital_percentage: row["H#{index + 1}"],
-          register_price: row["I#{index + 1}"], 
-          register_sum_price: row["J#{index + 1}"],
-          register_at: row["K#{index + 1}"].to_date,
+          capital_sum: row["G#{index + 1}"].to_i,
+          capital_percentage: row["H#{index + 1}"].to_f,
+          register_price: row["I#{index + 1}"].to_f, 
+          register_sum_price: row["J#{index + 1}"].to_f,
+          register_at: row["K#{index + 1}"].nil? ? "" : row["K#{index + 1}"].to_date,
           investment_price: row["L#{index + 1}"],
           investment_sum_price: row["M#{index + 1}"], 
-          investment_at: row["N#{index + 1}"].to_date,
-          ransom_at: row["O#{index + 1}"].to_date,
+          investment_at: row["N#{index + 1}"].nil? ? "" : row["N#{index + 1}"].to_date,
+          ransom_at: row["O#{index + 1}"].nil? ? "" : row["O#{index + 1}"].to_date,
           meeting_sn: row["P#{index + 1}"].nil? ? "" : row["P#{index + 1}"].strip,
           change_type: row["Q#{index + 1}"].nil? ? "" : types[row["Q#{index + 1}"].strip], 
-          transfered_at: row["R#{index + 1}"].to_date,
+          transfered_at: row["R#{index + 1}"].nil? ? "" : row["R#{index + 1}"].to_date,
           info: row["S#{index + 1}"].nil? ? "" : row["S#{index + 1}"].strip,
           visible: true
         )
         if sa.valid?
           sa.save
         else
-          errors << sa.errors.full_messages.to_sentence
+          errors << "第 #{index + 1} 行：" + sa.errors.full_messages.to_sentence
         end
       end
       if length < 2
@@ -257,8 +257,8 @@ collection_action :import_execl, method: :post do
         flash.discard(:warning)
         flash[:warning] = errors.join(';')
       end
-    rescue Exception => e  
-      p e.message  
+    rescue Exception => e
+      p e.message
       flash[:error] = "请选中有效的execl模板导入"
     end
   else

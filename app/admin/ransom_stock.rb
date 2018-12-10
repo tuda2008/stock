@@ -155,7 +155,7 @@ collection_action :get_companies_by_user, :method => :post do
 end
 
 collection_action :download, method: :get do
-  send_file(Rails.root.join('public', 'import_sample.xlsx'))
+  send_file(Rails.root.join('public', 'ransom_sample.xlsx'))
 end
 
 collection_action :import, method: :get do
@@ -166,8 +166,74 @@ collection_action :import_execl, method: :post do
   file = params[:file]
   unless file.blank?
     begin
+      creek = Creek::Book.new file.path
+      sheet = creek.sheets[0]
+      errors = []
+      length = 0
+      statuses = {"已办结" => "#{StockAccount::HANDLED}", "办理中" => "#{StockAccount::HANDING}", "不备案" => "#{StockAccount::NO_RECORD}"}
+      types = {"股权激励" => "#{StockAccount::INSPIRE}", "股东间股权转让" => "#{StockAccount::TRANSFER}", 
+      "股票股利" => "#{StockAccount::BONUS}", "私募入股" => "#{StockAccount::PRIVATE_JOIN}", 
+      "离职退股" => "#{StockAccount::WORK_JUMP}", "私募退股" => "#{StockAccount::PRIVATE_OUT}"}
+      sheet.rows.each_with_index do |row, index|
+        next if index == 0
+        length = index
+        next if row.empty?
+        start_index = row["A#{index + 1}"].strip.index(/\d/)
+        end_index = row["A#{index + 1}"].strip.rindex(/\w/)
+        id_str = row["A#{index + 1}"].strip[start_index..end_index]
+        user = User.where(cert_id: id_str).first
+        if user.nil?
+          errors << "第 #{index + 1} 行：" + "用户 #{row["A#{index + 1}"]} 不存在"
+          next
+        end
+        company = StockCompany.where(name: row["D#{index + 1}"].strip).first
+        if company.nil?
+          errors << "第 #{index + 1} 行：" + "持股公司 #{row["D#{index + 1}"]} 不存在"
+          next
+        end
+        rs = RansomStock.new(user_id: user.id, breo_stock_num: row["B#{index + 1}"].to_i, 
+          breo_stock_percentage: row["C#{index + 1}"].to_f, 
+          company_id: company.id,
+          capital_sum: row["E#{index + 1}"].to_i,
+          capital_percentage: row["F#{index + 1}"].to_f,
+          stock_price: row["G#{index + 1}"].to_f, 
+          stock_sum_price: row["H#{index + 1}"].to_f, 
+          register_price: row["I#{index + 1}"].to_f, 
+          register_sum_price: row["J#{index + 1}"].to_f,
+          register_status: row["K#{index + 1}"].nil? ? "" : statuses[row["K#{index + 1}"].strip],
+          register_at: row["L#{index + 1}"].nil? ? "" : row["L#{index + 1}"].to_date,
+          tax: row["M#{index + 1}"].to_f,
+          published_at: row["N#{index + 1}"].nil? ? "" : row["N#{index + 1}"].to_date,
+          tax_payed_at: row["O#{index + 1}"].nil? ? "" : row["O#{index + 1}"].to_date,
+          meeting_sn: row["P#{index + 1}"].nil? ? "" : row["P#{index + 1}"].strip,
+          change_type: row["Q#{index + 1}"].nil? ? "" : types[row["Q#{index + 1}"].strip], 
+          info: row["R#{index + 1}"].nil? ? "" : row["R#{index + 1}"].strip,
+          visible: true
+        )
+        if rs.valid?
+          rs.save
+        else
+          errors << "第 #{index + 1} 行：" + rs.errors.full_messages.to_sentence
+        end
+      end
+      if length < 2
+        flash[:warning] = "请在execl中输入有效数据后再导入"
+      elsif 
+        flash[:notice] = "导入数据成功"
+      end
+      unless errors.empty?
+        flash.discard(:notice)
+        flash.discard(:warning)
+        flash[:warning] = errors.join(';')
+      end
+    rescue Exception => e
+      p e.message
+      flash[:error] = "请选中有效的execl模板导入"
     end
+  else
+    flash[:warning] = "请选中有效的execl模板导入"
   end
+  redirect_to action: :import
 end
 
 show do

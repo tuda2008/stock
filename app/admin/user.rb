@@ -104,7 +104,7 @@ member_action :unlock, method: :put do
 end
 
 collection_action :download, method: :get do
-  send_file(Rails.root.join('public', 'import_sample.xlsx'))
+  send_file(Rails.root.join('public', 'user_sample.xlsx'))
 end
 
 collection_action :import, method: :get do
@@ -139,7 +139,7 @@ collection_action :import_execl, method: :post do
         if user.valid?
           user.save
         else
-          errors << user.errors.full_messages.to_sentence
+          errors << "第 #{index + 1} 行：" + user.errors.full_messages.to_sentence
         end
       end
       if length < 2
