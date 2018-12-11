@@ -75,9 +75,8 @@ class StockAccount < ApplicationRecord
   validates :investment_sum_price, numericality: {allow_blank: true, greater_than_or_equal_to: 1000}
   validate  :visible_validate
 
-  validates_date :investment_at
   validates_date :register_at, allow_blank: true, :on_or_after => :investment_at, :on_or_after_message => "不能在 合约入股时间 之前"
-  validates_date :transfered_at, allow_blank: true
+  validates_date :investment_at, :transfered_at, allow_blank: true
   validates_date :ransom_at, allow_blank: true, :after => :register_at, :after_message => "必须在 工商系统办结时间 之后"
 
   after_create :cteate_stock_account, :update_stock_accounts_history
