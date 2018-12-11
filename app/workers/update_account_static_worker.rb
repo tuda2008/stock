@@ -21,7 +21,7 @@ class UpdateAccountStaticWorker
         acs.save if acs.valid?
       end
 
-      sc = StockCompany.where(company_id: ss.company_id).first
+      sc = StockCompany.where(id: ss.company_id).first
       if sc && sc.breo_stock_num > 0 
         AccountStatic.where(company_id: ss.company_id).each do |as|
           as.update_column(:current_company_stock_percentage, (as.breo_stock_num*100/sc.breo_stock_num.to_f).round(4))
