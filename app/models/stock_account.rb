@@ -57,9 +57,10 @@ class StockAccount < ApplicationRecord
   PRIVATE_JOIN = 4 #私募入股
   WORK_JUMP    = 5 #离职退股
   PRIVATE_OUT  = 6 #私募退股
+  RATIO_NO_CHNAGE  = 7 #同比例稀释
 
-  TYPES = [["股权激励", INSPIRE], ["股东间股权转让", TRANSFER], ["股票股利", BONUS], ["私募入股", PRIVATE_JOIN], ["离职退股", WORK_JUMP], ["私募退股", PRIVATE_OUT]]
-  TYPES_NAME = {"#{INSPIRE}": "股权激励", "#{TRANSFER}": "股东间股权转让", "#{BONUS}": "股票股利", "#{PRIVATE_JOIN}": "私募入股", "#{WORK_JUMP}": "离职退股", "#{PRIVATE_OUT}": "私募退股"}
+  TYPES = [["股权激励", INSPIRE], ["股东间股权转让", TRANSFER], ["股票股利", BONUS], ["私募入股", PRIVATE_JOIN], ["离职退股", WORK_JUMP], ["私募退股", PRIVATE_OUT], ["同比例稀释", RATIO_NO_CHNAGE]]
+  TYPES_NAME = {"#{INSPIRE}": "股权激励", "#{TRANSFER}": "股东间股权转让", "#{BONUS}": "股票股利", "#{PRIVATE_JOIN}": "私募入股", "#{WORK_JUMP}": "离职退股", "#{PRIVATE_OUT}": "私募退股", "#{RATIO_NO_CHNAGE}": "同比例稀释"}
 
   has_many :journals, :as => :journalized, :dependent => :destroy, :inverse_of => :journalized
   belongs_to :user, foreign_key: :user_id

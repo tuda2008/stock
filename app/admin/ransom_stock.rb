@@ -173,7 +173,7 @@ collection_action :import_execl, method: :post do
       statuses = {"已办结" => "#{StockAccount::HANDLED}", "办理中" => "#{StockAccount::HANDING}", "不备案" => "#{StockAccount::NO_RECORD}"}
       types = {"股权激励" => "#{StockAccount::INSPIRE}", "股东间股权转让" => "#{StockAccount::TRANSFER}", 
       "股票股利" => "#{StockAccount::BONUS}", "私募入股" => "#{StockAccount::PRIVATE_JOIN}", 
-      "离职退股" => "#{StockAccount::WORK_JUMP}", "私募退股" => "#{StockAccount::PRIVATE_OUT}"}
+      "离职退股" => "#{StockAccount::WORK_JUMP}", "私募退股" => "#{StockAccount::PRIVATE_OUT}", "同比例稀释" => "#{StockAccount::RATIO_NO_CHNAGE}"}
       sheet.rows.each_with_index do |row, index|
         next if index == 0
         length = index

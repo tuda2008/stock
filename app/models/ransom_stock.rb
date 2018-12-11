@@ -42,8 +42,8 @@ class RansomStock < ApplicationRecord
   belongs_to :stock_company, foreign_key: :company_id
 
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, :capital_sum, :register_price, :register_sum_price, :tax, presence: true
-  validates :register_sum_price, :stock_sum_price, numericality: {greater_than_or_equal_to: 0}
-  validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 0, only_integer: true}
+  validates :register_sum_price, :stock_sum_price, :capital_sum, numericality: {greater_than_or_equal_to: 0}
+  validates :breo_stock_num, numericality: {greater_than_or_equal_to: 0, only_integer: true}
   validates :stock_price, :register_price, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 10000}
   validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 100}
   validates :tax, numericality: {greater_than_or_equal_to: 0}
