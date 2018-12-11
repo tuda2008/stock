@@ -16,6 +16,15 @@ class UpdateStockCompanyWorker
         company.capital_sum -= static.sum_capital_sum.to_f
       end
     end
+
+    ssn = StockStatic.sum_breo_stock_num_by_company(company_id)
+    ssn.each do |static|
+      if static.stock_type == StockStatic::STOCK_BUY
+        company.breo_stock_num = static.sum_breo_stock_num.to_f
+      else 
+        company.breo_stock_num -= static.sum_breo_stock_num.to_f
+      end
+    end
     
     num = AccountStatic.stockholders_count(company_id)[company_id]
     company.stockholders_num = num.to_i

@@ -80,7 +80,7 @@ class StockAccount < ApplicationRecord
   validates_date :investment_at, :transfered_at, allow_blank: true
   validates_date :ransom_at, allow_blank: true, :after => :register_at, :after_message => "必须在 工商系统办结时间 之后"
 
-  after_create :cteate_stock_account, :update_stock_accounts_history
+  after_create :create_stock_account, :update_stock_accounts_history
   before_update :update_stock_accounts
   after_update :update_stock_accounts_history
 
@@ -88,38 +88,38 @@ class StockAccount < ApplicationRecord
   scope :active, -> { where(visible: true) }
   scope :inactive, -> { where(visible: false) }
 
-  def cteate_stock_account
+  def create_stock_account
     if self.visible == true
-      CreateAccountStaticWorker.perform_in(5.seconds, self.id)
-      UpdateStockStaticWorker.perform_in(10.seconds, self.id)
-      UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, true, true)
+      UpdateStockStaticWorker.perform_in(1.seconds, self.id)
+      CreateAccountStaticWorker.perform_in(3.seconds, self.id)
+      UpdateStockCompanyWorker.perform_in(5.seconds, self.user_id, self.company_id, self.capital_sum, true, true)
     end
   end
 
   def update_stock_accounts
+    UpdateStockStaticWorker.perform_in(1.seconds, self.id) if self.visible == true
     if self.visible_changed?
       if self.visible == true
         #self.archived_at = Time.now.utc
-        CreateAccountStaticWorker.perform_in(5.seconds, self.id)
-        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, true, true)
+        CreateAccountStaticWorker.perform_in(3.seconds, self.id)
+        UpdateStockCompanyWorker.perform_in(5.seconds, self.user_id, self.company_id, self.capital_sum, true, true)
       else
         self.archived_at = nil
+        UpdateStockCompanyWorker.perform_in(3.seconds, self.user_id, self.company_id, -self.capital_sum_was, true, false)
         UpdateAccountStaticSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num_was, -self.breo_stock_percentage_was, -self.stock_sum_price_was, -self.capital_sum_was)
-        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, -self.capital_sum_was, true, false)
       end
     else
       if (self.visible == true)
+        UpdateStockCompanyWorker.perform_in(3.seconds, self.user_id, self.company_id, self.capital_sum - self.capital_sum_was, true, false)
         UpdateAccountStaticSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num - self.breo_stock_num_was, self.breo_stock_percentage - self.breo_stock_percentage_was, 
           self.stock_sum_price - self.stock_sum_price_was, self.capital_sum - self.capital_sum_was)
-        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum - self.capital_sum_was, true, false)
       end
     end
-    UpdateStockStaticWorker.perform_in(10.seconds, self.id)
   end
 
   def update_stock_accounts_history
     if self.saved_changes?
-      UpdateStockAccountHistoryWorker.perform_in(15.seconds, Current.admin_user.id, self.id, self.saved_changes.except("id", "created_at", "updated_at"))
+      UpdateStockAccountHistoryWorker.perform_in(10.seconds, Current.admin_user.id, self.id, self.saved_changes.except("id", "created_at", "updated_at"))
     end
   end
 

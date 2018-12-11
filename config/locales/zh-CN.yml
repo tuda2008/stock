@@ -88,6 +88,7 @@
         ransom_stock_num: "赎回总股数"
         holders_stock_sum_price: "现股东持股总额"
         stock_price: "每股现价"
+        breo_stock_num: "倍轻松股份数"
       stock_split:
         company_id: "公司名"
         stock_company: "公司名"
@@ -143,79 +144,6 @@
       journal:
         user: "操作员"
         created_at: "操作时间"
-      shipment:
-        name: "姓名"
-        mobile: "手机"
-        address: "收货地址"
-        region: "所在区域"
-      page:
-        title: '标题'
-        slug: '链接'
-        body: '内容'
-        created_at: '创建时间'
-      coupon:
-        title: '标题'
-        body: '内容'
-        note: '使用说明'
-        value: '优惠额度'
-        max_value: '最大优惠额度'
-        coupon_type: '优惠券类型'
-        use_type: '发放方式'
-        created_at: '优惠券创建时间'
-        expired_days: '有效期'
-      discounting:
-        discounted_at: '优惠券激活时间'
-        created_at: '创建时间'
-        coupon_id: '优惠券'
-        user_id: '用户'
-        expired_on: '有效期'
-      discount_event:
-        code: '优惠码'
-        title: '活动简介'
-        body: '活动详情'
-        expired_on: '活动截止日期'
-        score: '活动权重'
-        coupon_ids: '优惠券'
-        created_at: '创建时间'
-      site_config:
-        key: '配置项'
-        value: '配置值'
-        note: '描述'
-      partner:
-        name: '姓名'
-        mobile: '手机'
-        address: '服务地址'
-        service_scope: '经营范围'
-        pay_type: '收款方式'
-        pay_card_no: '收款账号'
-        orders_count: '订单数'
-        pay_account: '收款人姓名'
-      trade:
-        money: '支付金额'
-        partner_id: '合作伙伴'
-        operator: '操作人'
-        orders: '支付的订单'
-        note: '备注'
-      order_product:
-        sku: '产品编号'
-        product_images: '产品图片'
-        price: '产品单价'
-        unit: '计量单位'
-        quantity: '采购时计量'
-        shipment_quantity: '打包后计量'
-        order_id: '所属订单'
-        pack_cost: '包装成本'
-        shipment_cost: '物流成本'
-        pay_buyer_loss: '赔偿买家'
-      invite:
-        title: '分享标题'
-        share_body: '分享内容'
-        body: '活动详情'
-        link: '活动链接'
-        icon: '活动图标'
-        inviter_benefits: '邀请人实惠'
-        invitee_benefits: '被邀请人实惠'
-        score: '权重'
       admin_user:
         email: "邮箱"
         password: "密码"
@@ -228,50 +156,6 @@
         sign_in_count: "登录次数"
         created_at: "创建时间"
         updated_at: "更新时间"
-      category:
-        name: "类别名"
-        image: "缩略图"
-        sort: "显示顺序"
-        products_count: "产品总数"
-        created_at: "创建时间"
-      product: 
-        category: "所属类别"
-        title: "产品标题"
-        intro: "产品简介"
-        price: "产品促销价格"
-        m_price: "产品市场价格"
-        on_sale: "是否上架"
-        images: "产品缩略图"
-        detail_images: "产品简介图"
-        param_images: "产品参数图"
-        stock: "库存"
-        visit: "访问量"
-        visible: "是否可见"
-        created_at: "创建时间"
-      order:
-        user_id: '用户'
-        product_id: '产品'
-        order_no: '订单号'
-        note: '订单备注'
-        state: '订单状态'
-        quantity: '购买数量'
-        total_fee: '订单总价'
-        discount_fee: '订单优惠'
-        created_at: '下单时间'
-      banner:
-        image: "广告图片"
-        link: "链接地址"
-        sort: "显示顺序"
-      express:
-        name: "快递名字"
-        exp_no: '运单号'
-        company_code: '快递公司代号'
-        order_id: '所属订单'
-      reward:
-        money: '奖励金额'
-        order_id: '所属订单'
-        recommending_id: '推荐人'
-        recommended_id: '被推荐人'
     errors:
       models:
         user: "用户"

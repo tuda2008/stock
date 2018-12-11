@@ -99,35 +99,37 @@ class RansomStock < ApplicationRecord
 
   def update_account_statics
     if self.visible == true
+      UpdateStockCompanyWorker.perform_in(3.seconds, self.user_id, self.company_id, self.capital_sum, false)
       UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
-      UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, false)
     end
   end
 
   def update_stock_statics
-    UpdateStockStaticWorker.perform_in(10.seconds, self.id, false)
+    if self.visible == true
+      UpdateStockStaticWorker.perform_in(1.seconds, self.id, false)
+    end
   end
 
   def update_account_stock_statics
+    UpdateStockStaticWorker.perform_in(1.seconds, self.id, false) if self.visible == true
     if self.visible_changed?
       if self.visible == true
         #self.archived_at = Time.now.utc
+        UpdateStockCompanyWorker.perform_in(3.seconds, self.user_id, self.company_id, self.capital_sum, false)
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, -self.breo_stock_num, -self.breo_stock_percentage, -self.stock_sum_price, -self.capital_sum)
-        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum, false)
       else
         self.archived_at = nil
-        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num_was - self.breo_stock_num, self.breo_stock_percentage_was - self.breo_stock_percentage, 
-          self.stock_sum_price_was - self.stock_sum_price, self.capital_sum_was - self.capital_sum)
-        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, -self.capital_sum_was, false)
+        UpdateStockCompanyWorker.perform_in(3.seconds, self.user_id, self.company_id, -self.capital_sum_was, false)
+        UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num_was, self.breo_stock_percentage_was, 
+          self.stock_sum_price_was, self.capital_sum_was)
       end
     else
       if self.visible == true
+        UpdateStockCompanyWorker.perform_in(3.seconds, self.user_id, self.company_id, self.capital_sum - self.capital_sum_was, false)
         UpdateAccountStockSumWorker.perform_in(5.seconds, self.user_id, self.company_id, self.breo_stock_num_was - self.breo_stock_num, self.breo_stock_percentage_was - self.breo_stock_percentage, 
           self.stock_sum_price_was - self.stock_sum_price,  self.capital_sum_was - self.capital_sum)
-        UpdateStockCompanyWorker.perform_in(15.seconds, self.user_id, self.company_id, self.capital_sum - self.capital_sum_was, false)
       end
     end
-    UpdateStockStaticWorker.perform_in(10.seconds, self.id, false)
   end
   
   def archive!

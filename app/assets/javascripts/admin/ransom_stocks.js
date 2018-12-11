@@ -29,6 +29,7 @@ $(function() {
                 + '<td class="col"></td>'
                 + '<td class="col"></td>'
                 + '<td class="col"></td>'
+                + '<td class="col"></td>'
                 + '</tr>';
   $("#index_table_ransom_stocks tbody:last").append(rowItem);
 });

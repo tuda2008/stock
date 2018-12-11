@@ -56,4 +56,20 @@ class StockStatic < ApplicationRecord
   def self.sum_capital(company_id)
     StockStatic.select("stock_type, sum(capital_sum) as sum_capital_sum").where(company_id: company_id).group(:stock_type).order("stock_type")
   end
+
+  def self.sum_breo_stock_num
+    StockStatic.select("company_id, stock_type, sum(breo_stock_num) as sum_breo_stock_num").group(:company_id, :stock_type).order("stock_type")
+  end
+
+  def self.sum_breo_stock_num_by_company(company_id)
+    StockStatic.select("stock_type, sum(breo_stock_num) as sum_breo_stock_num").where(company_id: company_id).group(:stock_type).order("stock_type")
+  end
+
+  def self.sum_breo_stock_num_by_user(user_id)
+    StockStatic.select("company_id, stock_type, sum(breo_stock_num) as sum_breo_stock_num").where(user_id: user_id).group(:company_id, :stock_type).order("stock_type")
+  end
+
+  def self.sum_breo_stock_num_by_company_and_user(company_id, user_id)
+    StockStatic.select("stock_type, sum(breo_stock_num) as sum_breo_stock_num").where(company_id: company_id, user_id: user_id).group(:stock_type).order("stock_type")
+  end
 end

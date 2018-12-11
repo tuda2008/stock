@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_10_233123) do
+ActiveRecord::Schema.define(version: 2018_12_11_114549) do
 
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -156,14 +156,15 @@ ActiveRecord::Schema.define(version: 2018_12_10_233123) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "stockholders_num", default: 0
-    t.decimal "holders_stock_num", precision: 10, scale: 1, default: "0.0"
+    t.decimal "holders_stock_num", precision: 20, scale: 1, default: "0.0"
     t.decimal "holders_buy_sum_price", precision: 20, scale: 1, default: "0.0"
-    t.decimal "ransom_stock_num", precision: 10, scale: 1, default: "0.0"
+    t.decimal "ransom_stock_num", precision: 20, scale: 1, default: "0.0"
     t.decimal "ransom_sum_price", precision: 20, scale: 1, default: "0.0"
-    t.decimal "holders_stock_sum_price", precision: 10, scale: 1, default: "0.0"
+    t.decimal "holders_stock_sum_price", precision: 20, scale: 1, default: "0.0"
     t.decimal "stock_price", precision: 5, scale: 2, default: "0.0"
     t.decimal "capital_sum", precision: 20, scale: 1, default: "0.0"
-    t.decimal "stock_num", precision: 10, scale: 1, default: "1.0"
+    t.decimal "stock_num", precision: 20, scale: 1, default: "1.0"
+    t.decimal "breo_stock_num", precision: 20, scale: 1
     t.index ["name"], name: "index_stock_companies_on_name", unique: true
     t.index ["visible"], name: "index_stock_companies_on_visible"
   end
