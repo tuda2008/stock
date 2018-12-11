@@ -276,28 +276,44 @@ show do
     row :user do |stock|
       stock.user.name + " " + stock.user.cert_id
     end
-    row :stock_price
-    row :stock_sum_price
-    row :breo_stock_num
+    row :stock_price do |stock|
+      number_to_currency(stock.stock_price, unit: '',  precision: 2)
+    end
+    row :stock_sum_price do |stock|
+      number_to_currency(stock.stock_sum_price, unit: '',  precision: 1)
+    end
+    row :breo_stock_num do |stock|
+      number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
+    end
     row :breo_stock_percentage do |stock|
       stock.breo_stock_percentage.to_f.round(4).to_s + " %"
     end
-    row :capital_sum
+    row :capital_sum do |stock|
+      number_to_currency(stock.capital_sum, unit: '',  precision: 1)
+    end
     row :capital_percentage do |stock|
       stock.capital_percentage.to_f.round(4).to_s + " %"
     end
-    row :register_price
-    row :register_sum_price
+    row :register_price do |stock|
+      number_to_currency(stock.register_price, unit: '',  precision: 2)
+    end
+    row :register_sum_price do |stock|
+      number_to_currency(stock.register_price, unit: '',  precision: 1)
+    end
     row :register_status do |stock|
       StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
     end
     row :register_at do |stock|
       stock.register_at.blank? ? "" : stock.register_at.to_s
     end
-    row :investment_price
-    row :investment_sum_price
+    row :investment_price do |stock|
+      number_to_currency(stock.investment_price, unit: '',  precision: 2)
+    end
+    row :investment_sum_price do |stock|
+      number_to_currency(stock.investment_sum_price, unit: '',  precision: 1)
+    end
     row :investment_at do |stock|
-      stock.investment_at.to_s
+      stock.investment_at.blank? ? "" : stock.investment_at.to_s
     end
     row :transfered_at do |stock|
       stock.transfered_at.blank? ? "" : stock.transfered_at.to_s

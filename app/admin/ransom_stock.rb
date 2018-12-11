@@ -194,7 +194,7 @@ collection_action :import_execl, method: :post do
         rs = RansomStock.new(user_id: user.id, breo_stock_num: row["B#{index + 1}"].to_i, 
           breo_stock_percentage: row["C#{index + 1}"].to_f, 
           company_id: company.id,
-          capital_sum: row["E#{index + 1}"].to_i,
+          capital_sum: row["E#{index + 1}"].to_f,
           capital_percentage: row["F#{index + 1}"].to_f,
           stock_price: row["G#{index + 1}"].to_f, 
           stock_sum_price: row["H#{index + 1}"].to_f, 
@@ -243,27 +243,47 @@ show do
     row :user do |stock|
       stock.user.name + " " + stock.user.cert_id
     end
-    row :breo_stock_num
-    row :breo_stock_percentage
-    row :capital_sum
-    row :capital_percentage
-    row :stock_price
-    row :stock_sum_price
-    row :register_price
-    row :register_sum_price
+    row :breo_stock_num do |stock|
+      number_to_currency(stock.breo_stock_num, unit: '',  precision: 0)
+    end
+    row :breo_stock_percentage do |stock|
+      stock.breo_stock_percentage.to_f.round(4).to_s + " %"
+    end
+    row :capital_sum do |stock|
+      number_to_currency(stock.capital_sum, unit: '',  precision: 1)
+    end
+    row :capital_percentage do |stock|
+      stock.capital_percentage.to_f.round(4).to_s + " %"
+    end
+    row :stock_price do |stock|
+      number_to_currency(stock.stock_price, unit: '',  precision: 2)
+    end
+    row :stock_sum_price do |stock|
+      number_to_currency(stock.stock_sum_price, unit: '',  precision: 1)
+    end
+    row :register_price do |stock|
+      number_to_currency(stock.register_price, unit: '',  precision: 2)
+    end
+    row :register_sum_price do |stock|
+      number_to_currency(stock.register_sum_price, unit: '',  precision: 1)
+    end
     row :register_status do |stock|
       StockAccount::STATUSES_NAME[stock.register_status.to_s.to_sym]
     end
     row :register_at do |stock|
       stock.register_at.blank? ? "" : stock.register_at.to_s
     end
-    row :tax
-    row :sum_price_after_tax
+    row :tax do |stock|
+      number_to_currency(stock.tax, unit: '',  precision: 2)
+    end
+    row :sum_price_after_tax do |stock|
+      number_to_currency(stock.sum_price_after_tax, unit: '',  precision: 2)
+    end
     row :published_at do |stock|
-      stock.published_at.to_s
+      stock.published_at.blank? ? "" : stock.published_at.to_s
     end
     row :tax_payed_at do |stock|
-      stock.tax_payed_at.to_s
+      stock.tax_payed_at.blank? ? "" : stock.tax_payed_at.to_s
     end
     row :meeting_sn
     row :change_type do |stock|
