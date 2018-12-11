@@ -6,14 +6,14 @@
 #  user_id               :integer
 #  company_id            :bigint(8)
 #  stock_type            :integer          default(1)
-#  stock_price           :float(24)
-#  stock_sum_price       :float(24)
-#  breo_stock_num        :integer
-#  breo_stock_percentage :float(24)
-#  capital_sum           :integer
-#  capital_percentage    :float(24)
-#  register_price        :float(24)
-#  register_sum_price    :float(24)
+#  stock_price           :decimal(5, 2)
+#  stock_sum_price       :decimal(20, 1)
+#  breo_stock_num        :bigint(8)
+#  breo_stock_percentage :decimal(8, 4)
+#  capital_sum           :decimal(20, 1)
+#  capital_percentage    :decimal(8, 4)
+#  register_price        :decimal(5, 2)
+#  register_sum_price    :decimal(20, 1)
 #  register_status       :integer
 #  meeting_sn            :string(60)       default("")
 #  change_type           :integer

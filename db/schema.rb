@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_10_122252) do
+ActiveRecord::Schema.define(version: 2018_12_10_233123) do
 
   create_table "account_statics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
@@ -87,16 +87,16 @@ ActiveRecord::Schema.define(version: 2018_12_10_122252) do
     t.integer "user_id"
     t.integer "company_id"
     t.bigint "stock_num"
-    t.float "stock_price"
-    t.float "stock_sum_price"
-    t.integer "breo_stock_num"
-    t.float "breo_stock_percentage"
-    t.integer "capital_sum"
-    t.float "capital_percentage"
-    t.float "register_price"
-    t.float "register_sum_price"
-    t.float "tax"
-    t.float "sum_price_after_tax"
+    t.decimal "stock_price", precision: 5, scale: 2
+    t.decimal "stock_sum_price", precision: 20, scale: 1
+    t.bigint "breo_stock_num"
+    t.decimal "breo_stock_percentage", precision: 8, scale: 4
+    t.decimal "capital_sum", precision: 20, scale: 1
+    t.decimal "capital_percentage", precision: 8, scale: 4
+    t.decimal "register_price", precision: 5, scale: 2
+    t.decimal "register_sum_price", precision: 20, scale: 1
+    t.decimal "tax", precision: 18, scale: 2
+    t.decimal "sum_price_after_tax", precision: 20, scale: 2
     t.date "published_at"
     t.date "tax_payed_at"
     t.string "info"
@@ -118,17 +118,17 @@ ActiveRecord::Schema.define(version: 2018_12_10_122252) do
     t.integer "user_id"
     t.bigint "company_id"
     t.bigint "stock_sum"
-    t.float "stock_price"
-    t.float "stock_sum_price"
-    t.integer "breo_stock_num"
-    t.float "breo_stock_percentage"
-    t.integer "capital_sum"
-    t.float "capital_percentage"
-    t.float "register_price"
-    t.float "register_sum_price"
+    t.decimal "stock_price", precision: 5, scale: 2
+    t.decimal "stock_sum_price", precision: 20, scale: 1
+    t.bigint "breo_stock_num"
+    t.decimal "breo_stock_percentage", precision: 8, scale: 4
+    t.decimal "capital_sum", precision: 20, scale: 1
+    t.decimal "capital_percentage", precision: 8, scale: 4
+    t.decimal "register_price", precision: 5, scale: 2
+    t.decimal "register_sum_price", precision: 20, scale: 1
     t.integer "register_status"
     t.date "register_at"
-    t.float "investment_sum_price"
+    t.decimal "investment_sum_price", precision: 20, scale: 1
     t.date "investment_at"
     t.date "transfered_at"
     t.integer "change_type"
@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 2018_12_10_122252) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "meeting_sn", limit: 60, default: ""
-    t.float "investment_price"
+    t.decimal "investment_price", precision: 5, scale: 2
     t.datetime "ransom_at"
     t.datetime "archived_at"
     t.index ["change_type"], name: "index_stock_accounts_on_change_type"
@@ -156,14 +156,14 @@ ActiveRecord::Schema.define(version: 2018_12_10_122252) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "stockholders_num", default: 0
-    t.float "holders_stock_num", default: 0.0
-    t.decimal "holders_buy_sum_price", precision: 10, scale: 1, default: "0.0"
-    t.float "ransom_stock_num", default: 0.0
-    t.decimal "ransom_sum_price", precision: 10, scale: 1, default: "0.0"
-    t.float "holders_stock_sum_price", default: 0.0
-    t.float "stock_price", default: 0.0
-    t.decimal "capital_sum", precision: 10, scale: 1, default: "0.0"
-    t.float "stock_num", default: 1.0
+    t.decimal "holders_stock_num", precision: 10, scale: 1, default: "0.0"
+    t.decimal "holders_buy_sum_price", precision: 20, scale: 1, default: "0.0"
+    t.decimal "ransom_stock_num", precision: 10, scale: 1, default: "0.0"
+    t.decimal "ransom_sum_price", precision: 20, scale: 1, default: "0.0"
+    t.decimal "holders_stock_sum_price", precision: 10, scale: 1, default: "0.0"
+    t.decimal "stock_price", precision: 5, scale: 2, default: "0.0"
+    t.decimal "capital_sum", precision: 20, scale: 1, default: "0.0"
+    t.decimal "stock_num", precision: 10, scale: 1, default: "1.0"
     t.index ["name"], name: "index_stock_companies_on_name", unique: true
     t.index ["visible"], name: "index_stock_companies_on_visible"
   end
@@ -186,14 +186,14 @@ ActiveRecord::Schema.define(version: 2018_12_10_122252) do
     t.integer "user_id"
     t.bigint "company_id"
     t.integer "stock_type", default: 1
-    t.float "stock_price"
-    t.float "stock_sum_price"
-    t.integer "breo_stock_num"
-    t.float "breo_stock_percentage"
-    t.integer "capital_sum"
-    t.float "capital_percentage"
-    t.float "register_price"
-    t.float "register_sum_price"
+    t.decimal "stock_price", precision: 5, scale: 2
+    t.decimal "stock_sum_price", precision: 20, scale: 1
+    t.bigint "breo_stock_num"
+    t.decimal "breo_stock_percentage", precision: 8, scale: 4
+    t.decimal "capital_sum", precision: 20, scale: 1
+    t.decimal "capital_percentage", precision: 8, scale: 4
+    t.decimal "register_price", precision: 5, scale: 2
+    t.decimal "register_sum_price", precision: 20, scale: 1
     t.integer "register_status"
     t.string "meeting_sn", limit: 60, default: ""
     t.integer "change_type"

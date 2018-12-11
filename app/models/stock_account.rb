@@ -6,17 +6,17 @@
 #  user_id               :integer
 #  company_id            :bigint(8)
 #  stock_sum             :bigint(8)
-#  stock_price           :float(24)
-#  stock_sum_price       :float(24)
-#  breo_stock_num        :integer
-#  breo_stock_percentage :float(24)
-#  capital_sum           :integer
-#  capital_percentage    :float(24)
-#  register_price        :float(24)
-#  register_sum_price    :float(24)
+#  stock_price           :decimal(5, 2)
+#  stock_sum_price       :decimal(20, 1)
+#  breo_stock_num        :bigint(8)
+#  breo_stock_percentage :decimal(8, 4)
+#  capital_sum           :decimal(20, 1)
+#  capital_percentage    :decimal(8, 4)
+#  register_price        :decimal(5, 2)
+#  register_sum_price    :decimal(20, 1)
 #  register_status       :integer
 #  register_at           :date
-#  investment_sum_price  :float(24)
+#  investment_sum_price  :decimal(20, 1)
 #  investment_at         :date
 #  transfered_at         :date
 #  change_type           :integer
@@ -25,7 +25,7 @@
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  meeting_sn            :string(60)       default("")
-#  investment_price      :float(24)
+#  investment_price      :decimal(5, 2)
 #  ransom_at             :datetime
 #  archived_at           :datetime
 #
@@ -66,7 +66,8 @@ class StockAccount < ApplicationRecord
   belongs_to :stock_company, foreign_key: :company_id
 
   validates :user_id, :company_id, :stock_price, :stock_sum_price, :breo_stock_num, :breo_stock_percentage, presence: true
-  validates :breo_stock_num, :capital_sum, numericality: {greater_than_or_equal_to: 0, only_integer: true}
+  validates :breo_stock_num, numericality: {greater_than_or_equal_to: 0, only_integer: true}
+  validates :capital_sum, numericality: {greater_than_or_equal_to: 0}
   validates :stock_price, :register_price, numericality: {greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
   validates :investment_price, numericality: {allow_blank: true, greater_than_or_equal_to: 0.1, less_than_or_equal_to: 1000}
   validates :breo_stock_percentage, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 100}

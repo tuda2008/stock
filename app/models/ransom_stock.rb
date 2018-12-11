@@ -6,16 +6,16 @@
 #  user_id               :integer
 #  company_id            :integer
 #  stock_num             :bigint(8)
-#  stock_price           :float(24)
-#  stock_sum_price       :float(24)
-#  breo_stock_num        :integer
-#  breo_stock_percentage :float(24)
-#  capital_sum           :integer
-#  capital_percentage    :float(24)
-#  register_price        :float(24)
-#  register_sum_price    :float(24)
-#  tax                   :float(24)
-#  sum_price_after_tax   :float(24)
+#  stock_price           :decimal(5, 2)
+#  stock_sum_price       :decimal(20, 1)
+#  breo_stock_num        :bigint(8)
+#  breo_stock_percentage :decimal(8, 4)
+#  capital_sum           :decimal(20, 1)
+#  capital_percentage    :decimal(8, 4)
+#  register_price        :decimal(5, 2)
+#  register_sum_price    :decimal(20, 1)
+#  tax                   :decimal(18, 2)
+#  sum_price_after_tax   :decimal(20, 2)
 #  published_at          :date
 #  tax_payed_at          :date
 #  info                  :string(255)

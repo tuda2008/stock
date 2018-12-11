@@ -227,7 +227,7 @@ collection_action :import_execl, method: :post do
           breo_stock_percentage: row["C#{index + 1}"].to_f, stock_price: row["D#{index + 1}"].to_f, 
           stock_sum_price: row["E#{index + 1}"].to_f, 
           company_id: company.id,
-          capital_sum: row["G#{index + 1}"].to_i,
+          capital_sum: row["G#{index + 1}"].to_f,
           capital_percentage: row["H#{index + 1}"].to_f,
           register_price: row["I#{index + 1}"].to_f, 
           register_sum_price: row["J#{index + 1}"].to_f,

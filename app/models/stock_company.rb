@@ -11,14 +11,14 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  stockholders_num        :integer          default(0)
-#  holders_stock_num       :float(24)        default(0.0)
-#  holders_buy_sum_price   :decimal(10, 1)   default(0.0)
-#  ransom_stock_num        :float(24)        default(0.0)
-#  ransom_sum_price        :decimal(10, 1)   default(0.0)
-#  holders_stock_sum_price :float(24)        default(0.0)
-#  stock_price             :float(24)        default(0.0)
-#  capital_sum             :decimal(10, 1)   default(0.0)
-#  stock_num               :float(24)        default(1.0)
+#  holders_stock_num       :decimal(10, 1)   default(0.0)
+#  holders_buy_sum_price   :decimal(20, 1)   default(0.0)
+#  ransom_stock_num        :decimal(10, 1)   default(0.0)
+#  ransom_sum_price        :decimal(20, 1)   default(0.0)
+#  holders_stock_sum_price :decimal(10, 1)   default(0.0)
+#  stock_price             :decimal(5, 2)    default(0.0)
+#  capital_sum             :decimal(20, 1)   default(0.0)
+#  stock_num               :decimal(10, 1)   default(1.0)
 #
 # Indexes
 #
