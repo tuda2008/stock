@@ -374,7 +374,8 @@ module ActiveAdmin
                                             "sum_stock_ransom_sum_price" => 0, "sum_stock_holders_buy_sum_price" => 0 }, 
                         "StockAccount" => { "sum_stock_num" => 0, "sum_stock_percentage" => 0, "sum_stock_sum_price" => 0, 
                                             "sum_stock_capital_sum" => 0, "sum_stock_capital_percentage" => 0 },
-                        "RansomStock" => { "sum_stock_num" => 0, "sum_stock_percentage" => 0, "sum_stock_sum_price" => 0 }
+                        "RansomStock" => { "sum_stock_num" => 0, "sum_stock_percentage" => 0, "sum_stock_sum_price" => 0 },
+                        "AccountStatic" => { "sum_stock_num" => 0, "sum_breo_stock_percentage" => 0, "sum_stock_percentage" => 0 }
                       }
         (1..paginated_collection.total_pages).each do |page|
           paginated_collection(page).each do |resource|
@@ -424,7 +425,13 @@ module ActiveAdmin
               static_data[resource_name]["sum_stock_sum_price"] += resource.stock_sum_price.to_i
               statics = ["合计", "", number_to_currency(static_data[resource_name]["sum_stock_num"], unit: '',  precision: 0), static_data[resource_name]["sum_stock_percentage"].round(4).to_s + " %", 
                   "", "", "", number_to_currency(static_data[resource_name]["sum_stock_sum_price"], unit: '',  precision: 0)]
-            else ""
+            when "AccountStatic"
+              static_data[resource_name]["sum_stock_num"] += resource.breo_stock_num.to_i
+              static_data[resource_name]["sum_breo_stock_percentage"] += resource.current_breo_stock_percentage.to_f
+              static_data[resource_name]["sum_stock_percentage"] += resource.current_company_stock_percentage.to_f
+              statics = ["合计", "", number_to_currency(static_data[resource_name]["sum_stock_num"], unit: '',  precision: 0), static_data[resource_name]["sum_breo_stock_percentage"].round(4).to_s + " %", 
+                  static_data[resource_name]["sum_stock_percentage"].round(4).to_s + " %"]
+            else
               need_static = false
             end
           end
